@@ -56,6 +56,7 @@ export interface ClientWork {
   status: WorkStatus;
 
   active: boolean;
+  isDisplay:boolean;
    editRequestNote?: string;
 
   createdAt?: Timestamp | null;
@@ -118,6 +119,8 @@ const mapWorkDocument = (
       "sent_to_client",
 
     active:
+      data.active ?? false,
+    isDisplay:
       data.active ?? false,
 
        editRequestNote:
@@ -411,6 +414,8 @@ async getRecentWorks(
           data.status ||
           "sent_to_client",
         active:
+          data.active ?? false,
+        isDisplay:
           data.active ?? false,
         createdAt:
           data.createdAt || null,

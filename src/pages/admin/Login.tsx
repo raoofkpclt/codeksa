@@ -17,13 +17,28 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   setMounted(true);
+  //   const timer = setTimeout(() => {
+  //     emailRef.current?.focus();
+  //   }, 650);
+  //   return () => clearTimeout(timer);
+  // }, []);
+
   useEffect(() => {
+  const id = requestAnimationFrame(() => {
     setMounted(true);
-    const timer = setTimeout(() => {
-      emailRef.current?.focus();
-    }, 650);
-    return () => clearTimeout(timer);
-  }, []);
+  });
+
+  const timer = setTimeout(() => {
+    emailRef.current?.focus();
+  }, 650);
+
+  return () => {
+    cancelAnimationFrame(id);
+    clearTimeout(timer);
+  };
+}, []);
 
   const handleLogin = async () => {
     setError("");
@@ -36,8 +51,10 @@ const Login = () => {
       const user = await AuthService.login(email, password);
       console.log("Logged In", user.user);
       navigate("/admin/home");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error){
       setError(err.message || "Invalid credentials. Try again.");
+      }
       setPassword("");
       passRef.current?.focus();
     } finally {

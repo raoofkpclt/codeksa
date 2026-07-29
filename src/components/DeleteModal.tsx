@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import type { Client } from "../utils/types";
 
 type DeleteModalProps = {
-  isOpen: boolean;
-  client: Client | null;
+  client: Client;
   loading?: boolean;
   error?: string | null;
   onClose: () => void;
   onConfirm: (password: string) => Promise<void>;
 };
-
 const DeleteModal = ({
-  isOpen,
   client,
   loading = false,
   error = null,
@@ -22,14 +19,7 @@ const DeleteModal = ({
   const [showPassword, setShowPassword] =
     useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      setPassword("");
-      setShowPassword(false);
-    }
-  }, [isOpen, client?.id]);
-
-  if (!isOpen || !client) return null;
+ 
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>

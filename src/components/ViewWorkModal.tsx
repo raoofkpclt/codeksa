@@ -1,7 +1,4 @@
-import type {
-  Work,
-  WorkStatus,
-} from "../utils/types";
+import type { Work, WorkStatus } from "../utils/types";
 
 type ViewWorkModalProps = {
   isOpen: boolean;
@@ -9,9 +6,7 @@ type ViewWorkModalProps = {
   onClose: () => void;
 };
 
-const getStatusLabel = (
-  status: WorkStatus
-) => {
+const getStatusLabel = (status: WorkStatus) => {
   switch (status) {
     case "sent_to_client":
       return "Sent to Client";
@@ -27,11 +22,7 @@ const getStatusLabel = (
   }
 };
 
-const ViewWorkModal = ({
-  isOpen,
-  work,
-  onClose,
-}: ViewWorkModalProps) => {
+const ViewWorkModal = ({ isOpen, work, onClose }: ViewWorkModalProps) => {
   if (!isOpen || !work) {
     return null;
   }
@@ -76,9 +67,20 @@ const ViewWorkModal = ({
               </p>
 
               <p className="mt-2 text-sm text-white">
-                {getStatusLabel(
-                  work.status
-                )}
+                {getStatusLabel(work.status)}
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-white/30">
+                Display
+              </p>
+
+              <p
+                className={`mt-2 text-sm font-medium ${
+                  work.isDisplay ? "text-emerald-400" : "text-rose-400"
+                }`}
+              >
+                {work.isDisplay ? "Visible" : "Hidden"}
               </p>
             </div>
 
@@ -87,9 +89,7 @@ const ViewWorkModal = ({
                 Posting Date
               </p>
 
-              <p className="mt-2 text-sm text-white">
-                {work.postingDate}
-              </p>
+              <p className="mt-2 text-sm text-white">{work.postingDate}</p>
             </div>
           </div>
 
@@ -109,49 +109,46 @@ const ViewWorkModal = ({
     Client Edit Request Note
 ================================= */}
 
-{work.status ===
-  "requested_to_edit" &&
-  work.editRequestNote && (
-    <div className="mt-5 overflow-hidden rounded-xl border border-blue-500/20 bg-blue-500/[0.06]">
-      {/* Header */}
+          {work.status === "requested_to_edit" && work.editRequestNote && (
+            <div className="mt-5 overflow-hidden rounded-xl border border-blue-500/20 bg-blue-500/[0.06]">
+              {/* Header */}
 
-      <div className="flex items-center gap-3 border-b border-blue-500/15 px-4 py-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-          </svg>
-        </div>
+              <div className="flex items-center gap-3 border-b border-blue-500/15 px-4 py-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                  </svg>
+                </div>
 
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-blue-400">
-            Client Edit Request
-          </p>
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-blue-400">
+                    Client Edit Request
+                  </p>
 
-          <p className="mt-0.5 text-[10px] text-white/30">
-            Changes requested by{" "}
-            {work.clientName}
-          </p>
-        </div>
-      </div>
+                  <p className="mt-0.5 text-[10px] text-white/30">
+                    Changes requested by {work.clientName}
+                  </p>
+                </div>
+              </div>
 
-      {/* Note */}
+              {/* Note */}
 
-      <div className="p-4">
-        <p className="whitespace-pre-wrap text-sm leading-6 text-white/70">
-          {work.editRequestNote}
-        </p>
-      </div>
-    </div>
-  )}
+              <div className="p-4">
+                <p className="whitespace-pre-wrap text-sm leading-6 text-white/70">
+                  {work.editRequestNote}
+                </p>
+              </div>
+            </div>
+          )}
 
           <div className="mt-6">
             <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/30">
@@ -159,31 +156,26 @@ const ViewWorkModal = ({
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              {work.media?.map(
-                (media, index) => (
-                  <div
-                    key={`${media.key}-${index}`}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-black"
-                  >
-                    {work.postType ===
-                    "poster" ? (
-                      <img
-                        src={media.url}
-                        alt={
-                          media.fileName
-                        }
-                        className="max-h-[600px] w-full object-contain"
-                      />
-                    ) : (
-                      <video
-                        src={media.url}
-                        controls
-                        className="max-h-[600px] w-full"
-                      />
-                    )}
-                  </div>
-                )
-              )}
+              {work.media?.map((media, index) => (
+                <div
+                  key={`${media.key}-${index}`}
+                  className="overflow-hidden rounded-2xl border border-white/10 bg-black"
+                >
+                  {work.postType === "poster" ? (
+                    <img
+                      src={media.url}
+                      alt={media.fileName}
+                      className="max-h-[600px] w-full object-contain"
+                    />
+                  ) : (
+                    <video
+                      src={media.url}
+                      controls
+                      className="max-h-[600px] w-full"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>

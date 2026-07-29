@@ -100,6 +100,7 @@ const WorkService = {
         {
           ...data,
           active,
+          isDisplay:false,
           createdAt:
             serverTimestamp(),
           updatedAt:
@@ -153,6 +154,22 @@ const WorkService = {
         serverTimestamp(),
     });
   },
+
+  async updateDisplay(
+  workId: string,
+  isDisplay: boolean
+) {
+  const workRef = doc(
+    db,
+    WORK_COLLECTION,
+    workId
+  );
+
+  await updateDoc(workRef, {
+    isDisplay,
+    updatedAt: serverTimestamp(),
+  });
+},
 
   async updateStatus(
     workId: string,

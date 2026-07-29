@@ -115,134 +115,96 @@ const Works = () => {
   // Open Confirmation
   // =======================================
 
- const openAction = (
-  work: ClientWork,
-  action: ActionType
-) => {
-  setSelectedWork(work);
-  setPendingAction(action);
+  const openAction = (work: ClientWork, action: ActionType) => {
+    setSelectedWork(work);
+    setPendingAction(action);
 
-  if (action === "edit") {
-    setEditRequestNote("");
-  }
-};
+    if (action === "edit") {
+      setEditRequestNote("");
+    }
+  };
 
   // =======================================
   // Close Confirmation
   // =======================================
 
-const closeAction = () => {
-  if (actionLoading) return;
+  const closeAction = () => {
+    if (actionLoading) return;
 
-  setSelectedWork(null);
-  setPendingAction(null);
-  setEditRequestNote("");
-};
+    setSelectedWork(null);
+    setPendingAction(null);
+    setEditRequestNote("");
+  };
 
   // =======================================
   // Confirm Action
   // =======================================
 
- const handleConfirmAction =
-  async () => {
-    if (
-      !selectedWork ||
-      !pendingAction
-    ) {
+  const handleConfirmAction = async () => {
+    if (!selectedWork || !pendingAction) {
       return;
     }
 
     // Validate edit note
-    if (
-      pendingAction === "edit" &&
-      !editRequestNote.trim()
-    ) {
-      setError(
-        "Please describe the changes you need."
-      );
+    if (pendingAction === "edit" && !editRequestNote.trim()) {
+      setError("Please describe the changes you need.");
 
       return;
     }
 
     try {
-      setActionLoading(
-        selectedWork.id
-      );
+      setActionLoading(selectedWork.id);
 
-      if (
-        pendingAction ===
-        "approve"
-      ) {
-        await ClientWorkService.approveWork(
-          selectedWork.id
-        );
+      if (pendingAction === "approve") {
+        await ClientWorkService.approveWork(selectedWork.id);
       }
 
-      if (
-        pendingAction ===
-        "edit"
-      ) {
+      if (pendingAction === "edit") {
         await ClientWorkService.requestEdit(
           selectedWork.id,
-          editRequestNote.trim()
+          editRequestNote.trim(),
         );
       }
 
-      if (
-        pendingAction ===
-        "reject"
-      ) {
-        await ClientWorkService.rejectWork(
-          selectedWork.id
-        );
+      if (pendingAction === "reject") {
+        await ClientWorkService.rejectWork(selectedWork.id);
       }
 
       const newStatus: WorkStatus =
-        pendingAction ===
-        "approve"
+        pendingAction === "approve"
           ? "approved"
-          : pendingAction ===
-              "edit"
+          : pendingAction === "edit"
             ? "requested_to_edit"
             : "rejected";
 
-      setWorks(
-        (currentWorks) =>
-          currentWorks.map(
-            (work) =>
-              work.id ===
-              selectedWork.id
-                ? {
-                    ...work,
+      setWorks((currentWorks) =>
+        currentWorks.map((work) =>
+          work.id === selectedWork.id
+            ? {
+                ...work,
 
-                    status:
-                      newStatus,
+                status: newStatus,
 
-                    ...(pendingAction ===
-                    "edit"
-                      ? {
-                          editRequestNote:
-                            editRequestNote.trim(),
-                        }
-                      : {}),
-                  }
-                : work
-          )
+                ...(pendingAction === "edit"
+                  ? {
+                      editRequestNote: editRequestNote.trim(),
+                    }
+                  : {}),
+              }
+            : work,
+        ),
       );
 
       setEditRequestNote("");
       setSelectedWork(null);
       setPendingAction(null);
     } catch (error) {
-      console.error(
-        "Work action failed:",
-        error
-      );
+      console.error("Work action failed:", error);
 
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to update work status."
+          : "Failed to update work status.",
       );
     } finally {
       setActionLoading(null);
@@ -665,75 +627,61 @@ const closeAction = () => {
 
             {/* Modal Body */}
 
-           <div className="p-5">
-  <p className="text-sm leading-6 text-white/50">
-    Are you sure you want to{" "}
-    <span className="font-semibold text-white/80">
-      {pendingAction ===
-      "approve"
-        ? "approve"
-        : pendingAction ===
-            "edit"
-          ? "request changes for"
-          : "reject"}
-    </span>{" "}
-    the work{" "}
-    <span className="font-semibold text-white">
-      "{selectedWork.postName}"
-    </span>
-    ?
-  </p>
+            <div className="p-5">
+              <p className="text-sm leading-6 text-white/50">
+                Are you sure you want to{" "}
+                <span className="font-semibold text-white/80">
+                  {pendingAction === "approve"
+                    ? "approve"
+                    : pendingAction === "edit"
+                      ? "request changes for"
+                      : "reject"}
+                </span>{" "}
+                the work{" "}
+                <span className="font-semibold text-white">
+                  "{selectedWork.postName}"
+                </span>
+                ?
+              </p>
 
-  {/* =================================
+              {/* =================================
       Edit Request Note
   ================================== */}
 
-  {pendingAction ===
-    "edit" && (
-    <div className="mt-5">
-      <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.1em] text-white/40">
-        Changes Required
-      </label>
+              {pendingAction === "edit" && (
+                <div className="mt-5">
+                  <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.1em] text-white/40">
+                    Changes Required
+                  </label>
 
-      <textarea
-        value={
-          editRequestNote
-        }
-        onChange={(event) =>
-          setEditRequestNote(
-            event.target.value
-          )
-        }
-        maxLength={1000}
-        rows={6}
-        autoFocus
-        placeholder="Example: Please change the background color, update the offer text, and move the logo to the top-right corner..."
-        className="w-full resize-none border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/20 focus:border-blue-500/50"
-      />
+                  <textarea
+                    value={editRequestNote}
+                    onChange={(event) => setEditRequestNote(event.target.value)}
+                    maxLength={1000}
+                    rows={6}
+                    autoFocus
+                    placeholder="Example: Please change the background color, update the offer text, and move the logo to the top-right corner..."
+                    className="w-full resize-none border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/20 focus:border-blue-500/50"
+                  />
 
-      <div className="mt-2 flex items-center justify-between">
-        <p className="text-[10px] text-white/25">
-          Describe exactly what
-          should be changed.
-        </p>
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="text-[10px] text-white/25">
+                      Describe exactly what should be changed.
+                    </p>
 
-        <p
-          className={`text-[10px] ${
-            editRequestNote.length >
-            900
-              ? "text-amber-400"
-              : "text-white/25"
-          }`}
-        >
-          {
-            editRequestNote.length
-          }
-          /1000
-        </p>
-      </div>
-    </div>
-  )}
-
+                    <p
+                      className={`text-[10px] ${
+                        editRequestNote.length > 900
+                          ? "text-amber-400"
+                          : "text-white/25"
+                      }`}
+                    >
+                      {editRequestNote.length}
+                      /1000
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Modal Footer */}

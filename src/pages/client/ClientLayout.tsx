@@ -1,10 +1,5 @@
-import { useState } from "react";
-import {
-  Outlet,
-  useNavigate,
-  useLocation,
-  Link,
-} from "react-router-dom";
+import { useState, type ReactNode } from "react";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 
 import AuthService from "../../service/firebaseService/auth";
 
@@ -28,13 +23,18 @@ const navItems = [
     path: "/client/profile",
     icon: "user",
   },
+  {
+    label: "Client Uploads",
+    path: "/client/clientUploads",
+    icon: "cloud",
+  },
 ];
 
 // =========================================
 // Icons
 // =========================================
 
-const icons: Record<string, JSX.Element> = {
+const icons: Record<string, ReactNode> = {
   home: (
     <svg
       width="18"
@@ -62,15 +62,25 @@ const icons: Record<string, JSX.Element> = {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <rect
-        x="2"
-        y="7"
-        width="20"
-        height="14"
-        rx="2"
-        ry="2"
-      />
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </svg>
+  ),
+  cloud: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 16l-4-4-4 4" />
+      <path d="M12 12v9" />
+      <path d="M20.39 18.39A5.5 5.5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.3" />
+      <path d="M16 16h1a3 3 0 0 0 0-6" />
     </svg>
   ),
 
@@ -96,11 +106,9 @@ const icons: Record<string, JSX.Element> = {
 // =========================================
 
 const ClientLayout = () => {
-  const [collapsed, setCollapsed] =
-    useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-  const [notifOpen, setNotifOpen] =
-    useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -149,10 +157,7 @@ const ClientLayout = () => {
   // =========================================
 
   const currentPage =
-    navItems.find(
-      (item) =>
-        item.path === location.pathname
-    )?.label || "Home";
+    navItems.find((item) => item.path === location.pathname)?.label || "Home";
 
   return (
     <div className="flex min-h-screen bg-[#0B0B0F] text-white font-sans [font-family:'Inter',sans-serif]">
@@ -174,20 +179,24 @@ const ClientLayout = () => {
 
       <aside
         className={`relative z-20 flex flex-col bg-white/[0.03] border-r border-white/[0.08] transition-all duration-300 ${
-          collapsed
-            ? "w-[72px]"
-            : "w-[240px]"
+          collapsed ? "w-[72px]" : "w-[240px]"
         }`}
       >
         {/* =================================
             Brand
         ================================== */}
 
-        <div className="flex items-center gap-2.5 px-5 py-6 border-b border-white/[0.08]">
-          <div className="w-2 h-2 rounded-full bg-[#8B5CF6] flex-shrink-0" />
+        <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-5">
+          <img
+            src="/logo/backgroundless-2.png"
+            alt="CODE Logo"
+            className={`object-contain transition-all duration-300 ${
+              collapsed ? "h-10 w-10" : "h-12 w-auto max-w-[140px]"
+            }`}
+          />
 
           {!collapsed && (
-            <span className="text-sm font-black tracking-[-0.02em] uppercase">
+            <span className="text-lg font-bold tracking-[0.08em] uppercase text-white">
               CODE
             </span>
           )}
@@ -199,34 +208,22 @@ const ClientLayout = () => {
 
         <nav className="flex-1 px-3 py-5 flex flex-col gap-1">
           {navItems.map((item) => {
-            const active =
-              location.pathname ===
-              item.path;
+            const active = location.pathname === item.path;
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                title={
-                  collapsed
-                    ? item.label
-                    : undefined
-                }
+                title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium tracking-[0.01em] transition-colors duration-150 ${
                   active
                     ? "bg-[#8B5CF6]/10 text-[#8B5CF6] border-l-2 border-[#8B5CF6]"
                     : "text-white/50 hover:text-white/90 hover:bg-white/[0.04] border-l-2 border-transparent"
                 }`}
               >
-                <span className="flex-shrink-0">
-                  {icons[item.icon]}
-                </span>
+                <span className="flex-shrink-0">{icons[item.icon]}</span>
 
-                {!collapsed && (
-                  <span>
-                    {item.label}
-                  </span>
-                )}
+                {!collapsed && <span>{item.label}</span>}
               </Link>
             );
           })}
@@ -237,11 +234,7 @@ const ClientLayout = () => {
         ================================== */}
 
         <button
-          onClick={() =>
-            setCollapsed(
-              (value) => !value
-            )
-          }
+          onClick={() => setCollapsed((value) => !value)}
           className="flex items-center justify-center gap-2 px-3 py-3 mx-3 mb-3 text-[11px] text-white/30 hover:text-white/60 border-t border-white/[0.08] transition-colors"
         >
           <svg
@@ -254,11 +247,8 @@ const ClientLayout = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             style={{
-              transform: collapsed
-                ? "rotate(180deg)"
-                : "none",
-              transition:
-                "transform 0.2s",
+              transform: collapsed ? "rotate(180deg)" : "none",
+              transition: "transform 0.2s",
             }}
           >
             <polyline points="11 17 6 12 11 7" />
@@ -266,9 +256,7 @@ const ClientLayout = () => {
           </svg>
 
           {!collapsed && (
-            <span className="uppercase tracking-[0.1em]">
-              Collapse
-            </span>
+            <span className="uppercase tracking-[0.1em]">Collapse</span>
           )}
         </button>
       </aside>
@@ -306,11 +294,7 @@ const ClientLayout = () => {
 
             <div className="relative">
               <button
-                onClick={() =>
-                  setNotifOpen(
-                    (value) => !value
-                  )
-                }
+                onClick={() => setNotifOpen((value) => !value)}
                 className="relative w-9 h-9 flex items-center justify-center border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
               >
                 <svg
@@ -327,12 +311,9 @@ const ClientLayout = () => {
                   <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
 
-                {notifications.length >
-                  0 && (
+                {notifications.length > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[9px] font-bold bg-[#8B5CF6] rounded-full">
-                    {
-                      notifications.length
-                    }
+                    {notifications.length}
                   </span>
                 )}
               </button>
@@ -348,28 +329,20 @@ const ClientLayout = () => {
                   </div>
 
                   <div className="max-h-72 overflow-y-auto">
-                    {notifications.map(
-                      (notification) => (
-                        <div
-                          key={
-                            notification.id
-                          }
-                          className="px-4 py-3 border-b border-white/[0.05] hover:bg-white/[0.03] transition-colors"
-                        >
-                          <p className="text-[13px] text-white/80">
-                            {
-                              notification.text
-                            }
-                          </p>
+                    {notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className="px-4 py-3 border-b border-white/[0.05] hover:bg-white/[0.03] transition-colors"
+                      >
+                        <p className="text-[13px] text-white/80">
+                          {notification.text}
+                        </p>
 
-                          <p className="text-[10px] text-white/30 mt-1">
-                            {
-                              notification.time
-                            }
-                          </p>
-                        </div>
-                      )
-                    )}
+                        <p className="text-[10px] text-white/30 mt-1">
+                          {notification.time}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -395,14 +368,8 @@ const ClientLayout = () => {
               >
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
-                <line
-                  x1="21"
-                  y1="12"
-                  x2="9"
-                  y2="12"
-                />
+                <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
-
               Logout
             </button>
           </div>

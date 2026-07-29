@@ -1,11 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { uploadFile } from "../service/s3Service/upload";
-// ⚠️ Change this import path to your actual uploadFile location
 
 export type AddClientData = {
   name: string;
@@ -34,38 +29,31 @@ const AddClientModal = ({
   onClose,
   onSave,
 }: AddClientModalProps) => {
-  const [formData, setFormData] =
-    useState<AddClientData>(initialFormData);
+  const [formData, setFormData] = useState<AddClientData>(initialFormData);
 
-  const [logoFile, setLogoFile] =
-    useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
-  const [logoPreview, setLogoPreview] =
-    useState<string>("");
+  const [logoPreview, setLogoPreview] = useState<string>("");
 
-  const [uploading, setUploading] =
-    useState(false);
+  const [uploading, setUploading] = useState(false);
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const fileInputRef =
-    useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const isLoading = loading || uploading;
 
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(initialFormData);
-      setLogoFile(null);
-      setLogoPreview("");
-      setShowPassword(false);
-      setError(null);
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     setFormData(initialFormData);
+  //     setLogoFile(null);
+  //     setLogoPreview("");
+  //     setShowPassword(false);
+  //     setError(null);
+  //   }
+  // }, [isOpen]);
 
   useEffect(() => {
     return () => {
@@ -77,9 +65,7 @@ const AddClientModal = ({
 
   if (!isOpen) return null;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
@@ -92,18 +78,14 @@ const AddClientModal = ({
     }
   };
 
-  const handleLogoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
     // Only images for client logo
     if (!file.type.startsWith("image/")) {
-      setError(
-        "Please select a valid image file."
-      );
+      setError("Please select a valid image file.");
 
       e.target.value = "";
       return;
@@ -113,9 +95,7 @@ const AddClientModal = ({
     const maxSize = 5 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      setError(
-        "Logo image must be less than 5MB."
-      );
+      setError("Logo image must be less than 5MB.");
 
       e.target.value = "";
       return;
@@ -126,8 +106,7 @@ const AddClientModal = ({
       URL.revokeObjectURL(logoPreview);
     }
 
-    const previewUrl =
-      URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(file);
 
     setLogoFile(file);
     setLogoPreview(previewUrl);
@@ -147,9 +126,7 @@ const AddClientModal = ({
     }
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.name.trim()) {
@@ -163,9 +140,7 @@ const AddClientModal = ({
     }
 
     if (formData.password.length < 6) {
-      setError(
-        "Password must contain at least 6 characters."
-      );
+      setError("Password must contain at least 6 characters.");
       return;
     }
 
@@ -178,27 +153,19 @@ const AddClientModal = ({
       if (logoFile) {
         setUploading(true);
 
-        const uploadedFile = await uploadFile(
-          logoFile,
-          "clients/logos"
-        );
+        const uploadedFile = await uploadFile(logoFile, "clients/logos");
 
         // 2. Get S3 URL
         logoUrl = uploadedFile.url;
 
-        console.log(
-          "S3 Upload Success:",
-          uploadedFile
-        );
+        console.log("S3 Upload Success:", uploadedFile);
       }
 
       // 3. Send S3 URL to parent
       await onSave({
         name: formData.name.trim(),
 
-        email: formData.email
-          .trim()
-          .toLowerCase(),
+        email: formData.email.trim().toLowerCase(),
 
         password: formData.password,
 
@@ -222,15 +189,12 @@ const AddClientModal = ({
         fileInputRef.current.value = "";
       }
     } catch (error) {
-      console.error(
-        "Create client error:",
-        error
-      );
+      console.error("Create client error:", error);
 
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to create client. Please try again."
+          : "Failed to create client. Please try again.",
       );
     } finally {
       setUploading(false);
@@ -264,12 +228,9 @@ const AddClientModal = ({
     >
       <div
         className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111116] shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
-        onMouseDown={(e) =>
-          e.stopPropagation()
-        }
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
-
           {/* Header */}
           <div className="flex items-start justify-between border-b border-white/10 p-6">
             <div>
@@ -278,8 +239,7 @@ const AddClientModal = ({
               </h2>
 
               <p className="mt-1 text-sm text-white/40">
-                Create a new client account and
-                login credentials.
+                Create a new client account and login credentials.
               </p>
             </div>
 
@@ -295,13 +255,10 @@ const AddClientModal = ({
 
           {/* Form Content */}
           <div className="space-y-5 p-6">
-
             {/* Error */}
             {error && (
               <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3">
-                <p className="text-sm text-rose-400">
-                  {error}
-                </p>
+                <p className="text-sm text-rose-400">{error}</p>
               </div>
             )}
 
@@ -312,25 +269,19 @@ const AddClientModal = ({
               </label>
 
               <div className="flex items-center gap-4">
-
                 {/* Preview */}
                 <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white">
                   <img
-                    src={
-                      logoPreview ||
-                      "/logo.png"
-                    }
+                    src={logoPreview || "/logo.png"}
                     alt="Client logo preview"
                     className="h-full w-full object-contain p-2"
                     onError={(e) => {
-                      e.currentTarget.src =
-                        "/logo.png";
+                      e.currentTarget.src = "/logo.png";
                     }}
                   />
                 </div>
 
                 <div className="flex-1">
-
                   {/* Hidden Input */}
                   <input
                     ref={fileInputRef}
@@ -342,13 +293,10 @@ const AddClientModal = ({
                   />
 
                   <div className="flex flex-wrap gap-2">
-
                     {/* Choose Image */}
                     <button
                       type="button"
-                      onClick={() =>
-                        fileInputRef.current?.click()
-                      }
+                      onClick={() => fileInputRef.current?.click()}
                       disabled={isLoading}
                       className="rounded-xl bg-violet-600 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
@@ -369,8 +317,7 @@ const AddClientModal = ({
                   </div>
 
                   <p className="mt-2 text-xs text-white/25">
-                    Upload JPG, PNG, WEBP or other
-                    image formats. Maximum 5MB.
+                    Upload JPG, PNG, WEBP or other image formats. Maximum 5MB.
                   </p>
 
                   {/* Selected File */}
@@ -429,11 +376,7 @@ const AddClientModal = ({
 
               <div className="relative">
                 <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -447,17 +390,11 @@ const AddClientModal = ({
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword(
-                      (prev) => !prev
-                    )
-                  }
+                  onClick={() => setShowPassword((prev) => !prev)}
                   disabled={isLoading}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-wider text-violet-400 transition hover:text-violet-300 disabled:opacity-40"
                 >
-                  {showPassword
-                    ? "Hide"
-                    : "Show"}
+                  {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
 
@@ -468,13 +405,11 @@ const AddClientModal = ({
 
             {/* Status */}
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm font-medium text-white">
-                Account Status
-              </p>
+              <p className="text-sm font-medium text-white">Account Status</p>
 
               <p className="mt-1 text-xs text-white/35">
-                Admin-created clients are activated
-                immediately with onboarding completed.
+                Admin-created clients are activated immediately with onboarding
+                completed.
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -487,7 +422,6 @@ const AddClientModal = ({
                 </span>
               </div>
             </div>
-
           </div>
 
           {/* Footer */}
@@ -510,16 +444,13 @@ const AddClientModal = ({
                 <>
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
 
-                  {uploading
-                    ? "Uploading..."
-                    : "Creating..."}
+                  {uploading ? "Uploading..." : "Creating..."}
                 </>
               ) : (
                 "Create Client"
               )}
             </button>
           </div>
-
         </form>
       </div>
     </div>

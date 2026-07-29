@@ -1,15 +1,6 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import type {
-  Client,
-  Work,
-  WorkStatus,
-  WorkType,
-} from "../utils/types";
+import type { Client, Work, WorkStatus, WorkType } from "../utils/types";
 
 import ClientService from "../service/firebaseService/clientService";
 
@@ -20,12 +11,7 @@ type AddWorkModalProps = {
   loading: boolean;
   onClose: () => void;
 
-  onSave: (
-    data: Omit<
-      Work,
-      "id" | "createdAt" | "updatedAt"
-    >
-  ) => Promise<void>;
+  onSave: (data: Omit<Work, "id" | "createdAt" | "updatedAt">) => Promise<void>;
 };
 
 const DEFAULT_CLIENT_LOGO =
@@ -37,55 +23,34 @@ const AddWorkModal = ({
   onClose,
   onSave,
 }: AddWorkModalProps) => {
-  const [clients, setClients] =
-    useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
 
-  const [clientsLoading, setClientsLoading] =
-    useState(false);
+  const [clientsLoading, setClientsLoading] = useState(false);
 
-  const [clientId, setClientId] =
-    useState("");
+  const [clientId, setClientId] = useState("");
 
-  const [postType, setPostType] =
-    useState<WorkType>("poster");
+  const [postType, setPostType] = useState<WorkType>("poster");
 
-  const [postName, setPostName] =
-    useState("");
+  const [postName, setPostName] = useState("");
 
-  const [description, setDescription] =
-    useState("");
+  const [description, setDescription] = useState("");
 
-  const [postingDate, setPostingDate] =
-    useState("");
+  const [postingDate, setPostingDate] = useState("");
 
-  const [status, setStatus] =
-    useState<WorkStatus>(
-      "sent_to_client"
-    );
+  const [status, setStatus] = useState<WorkStatus>("sent_to_client");
 
-  const [files, setFiles] =
-    useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const [uploading, setUploading] =
-    useState(false);
+  const [uploading, setUploading] = useState(false);
 
-  const [
-    uploadProgress,
-    setUploadProgress,
-  ] = useState("");
+  const [uploadProgress, setUploadProgress] = useState("");
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const selectedClient =
-    useMemo(
-      () =>
-        clients.find(
-          (client) =>
-            client.id === clientId
-        ),
-      [clients, clientId]
-    );
+  const selectedClient = useMemo(
+    () => clients.find((client) => client.id === clientId),
+    [clients, clientId],
+  );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -96,22 +61,13 @@ const AddWorkModal = ({
       try {
         setClientsLoading(true);
 
-        const data =
-          await ClientService.getAllClients();
+        const data = await ClientService.getAllClients();
 
         if (!cancelled) {
-          setClients(
-            (data as Client[]).filter(
-              (client) =>
-                client.active
-            )
-          );
+          setClients((data as Client[]).filter((client) => client.active));
         }
       } catch (error) {
-        console.error(
-          "Failed to load clients:",
-          error
-        );
+        console.error("Failed to load clients:", error);
       } finally {
         if (!cancelled) {
           setClientsLoading(false);
@@ -126,16 +82,16 @@ const AddWorkModal = ({
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    setFiles([]);
-    setError(null);
-  }, [postType]);
+  // useEffect(() => {
+  //   setFiles([]);
+  //   setError(null);
+  // }, [postType]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      resetForm();
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (!isOpen) {
+  //     resetForm();
+  //   }
+  // }, [isOpen]);
 
   const resetForm = () => {
     setClientId("");
@@ -149,54 +105,30 @@ const AddWorkModal = ({
     setUploadProgress("");
   };
 
-  const handleFiles = (
-    event:
-      React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const selected =
-      Array.from(
-        event.target.files || []
-      );
+  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(event.target.files || []);
 
     if (postType === "reel") {
       if (selected.length > 1) {
-        setError(
-          "Only one video can be uploaded for a reel."
-        );
+        setError("Only one video can be uploaded for a reel.");
 
         return;
       }
 
-      const invalid =
-        selected.find(
-          (file) =>
-            !file.type.startsWith(
-              "video/"
-            )
-        );
+      const invalid = selected.find((file) => !file.type.startsWith("video/"));
 
       if (invalid) {
-        setError(
-          "Please select a valid video file."
-        );
+        setError("Please select a valid video file.");
 
         return;
       }
     }
 
     if (postType === "poster") {
-      const invalid =
-        selected.find(
-          (file) =>
-            !file.type.startsWith(
-              "image/"
-            )
-        );
+      const invalid = selected.find((file) => !file.type.startsWith("image/"));
 
       if (invalid) {
-        setError(
-          "Poster uploads must contain images only."
-        );
+        setError("Poster uploads must contain images only.");
 
         return;
       }
@@ -206,40 +138,25 @@ const AddWorkModal = ({
     setFiles(selected);
   };
 
-  const removeFile = (
-    index: number
-  ) => {
-    setFiles((prev) =>
-      prev.filter(
-        (_, itemIndex) =>
-          itemIndex !== index
-      )
-    );
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
   };
 
-  const handleSubmit = async (
-    event: React.FormEvent
-  ) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!selectedClient?.id) {
-      setError(
-        "Please select a client."
-      );
+      setError("Please select a client.");
       return;
     }
 
     if (!postName.trim()) {
-      setError(
-        "Post name is required."
-      );
+      setError("Post name is required.");
       return;
     }
 
     if (!postingDate) {
-      setError(
-        "Posting date is required."
-      );
+      setError("Posting date is required.");
       return;
     }
 
@@ -247,7 +164,7 @@ const AddWorkModal = ({
       setError(
         postType === "poster"
           ? "Please upload at least one poster image."
-          : "Please upload a reel video."
+          : "Please upload a reel video.",
       );
 
       return;
@@ -257,41 +174,30 @@ const AddWorkModal = ({
       setUploading(true);
       setError(null);
 
-      const media =
-        await WorkMediaService
-          .uploadMultipleFiles(
-            files,
-            selectedClient.id,
-            postType,
-            (completed, total) => {
-              setUploadProgress(
-                `Uploading ${completed}/${total}`
-              );
-            }
-          );
+      const media = await WorkMediaService.uploadMultipleFiles(
+        files,
+        selectedClient.id,
+        postType,
+        (completed, total) => {
+          setUploadProgress(`Uploading ${completed}/${total}`);
+        },
+      );
 
       const active =
-        status === "approved" &&
-        new Date(postingDate) <=
-          new Date();
+        status === "approved" && new Date(postingDate) <= new Date();
 
       await onSave({
-        clientId:
-          selectedClient.id,
+        clientId: selectedClient.id,
 
-        clientName:
-          selectedClient.name,
+        clientName: selectedClient.name,
 
-        clientLogo:
-          selectedClient.logo || "",
+        clientLogo: selectedClient.logo || "",
 
         postType,
 
-        postName:
-          postName.trim(),
+        postName: postName.trim(),
 
-        description:
-          description.trim(),
+        description: description.trim(),
 
         postingDate,
 
@@ -300,29 +206,32 @@ const AddWorkModal = ({
         status,
 
         active,
+        isDisplay: false,
       });
 
       resetForm();
-    } catch (error: any) {
-      console.error(
-        "Failed to create work:",
-        error
-      );
+      onClose();
+    } catch (error: unknown) {
+      console.error("Failed to create work:", error);
 
       setError(
-        error?.message ||
-          "Failed to create work."
+        error instanceof Error ? error.message : "Failed to create work.",
       );
     } finally {
       setUploading(false);
       setUploadProgress("");
     }
   };
+  const handleClose = () => {
+    if (busy) return;
+
+    resetForm();
+    onClose();
+  };
 
   if (!isOpen) return null;
 
-  const busy =
-    loading || uploading;
+  const busy = loading || uploading;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
@@ -339,14 +248,13 @@ const AddWorkModal = ({
             </h2>
 
             <p className="mt-1 text-sm text-white/35">
-              Upload poster or reel content
-              for client approval.
+              Upload poster or reel content for client approval.
             </p>
           </div>
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={busy}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-xl text-white/50 transition hover:text-white disabled:opacity-50"
           >
@@ -354,10 +262,7 @@ const AddWorkModal = ({
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="p-5 sm:p-6"
-        >
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6">
           <div className="grid gap-5 sm:grid-cols-2">
             {/* Client */}
             <div className="sm:col-span-2">
@@ -367,32 +272,19 @@ const AddWorkModal = ({
 
               <select
                 value={clientId}
-                onChange={(event) =>
-                  setClientId(
-                    event.target.value
-                  )
-                }
-                disabled={
-                  clientsLoading || busy
-                }
+                onChange={(event) => setClientId(event.target.value)}
+                disabled={clientsLoading || busy}
                 className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
               >
                 <option value="">
-                  {clientsLoading
-                    ? "Loading clients..."
-                    : "Choose client"}
+                  {clientsLoading ? "Loading clients..." : "Choose client"}
                 </option>
 
-                {clients.map(
-                  (client) => (
-                    <option
-                      key={client.id}
-                      value={client.id}
-                    >
-                      {client.name}
-                    </option>
-                  )
-                )}
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -400,13 +292,8 @@ const AddWorkModal = ({
             {selectedClient && (
               <div className="sm:col-span-2 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <img
-                  src={
-                    selectedClient.logo ||
-                    DEFAULT_CLIENT_LOGO
-                  }
-                  alt={
-                    selectedClient.name
-                  }
+                  src={selectedClient.logo || DEFAULT_CLIENT_LOGO}
+                  alt={selectedClient.name}
                   className="h-14 w-14 rounded-xl object-cover"
                 />
 
@@ -430,22 +317,19 @@ const AddWorkModal = ({
 
               <select
                 value={postType}
-                onChange={(event) =>
-                  setPostType(
-                    event.target
-                      .value as WorkType
-                  )
-                }
+                onChange={(event) => {
+                  const value = event.target.value as WorkType;
+
+                  setPostType(value);
+                  setFiles([]);
+                  setError(null);
+                }}
                 disabled={busy}
                 className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
               >
-                <option value="poster">
-                  Poster
-                </option>
+                <option value="poster">Poster</option>
 
-                <option value="reel">
-                  Reel
-                </option>
+                <option value="reel">Reel</option>
               </select>
             </div>
 
@@ -458,11 +342,7 @@ const AddWorkModal = ({
               <input
                 type="date"
                 value={postingDate}
-                onChange={(event) =>
-                  setPostingDate(
-                    event.target.value
-                  )
-                }
+                onChange={(event) => setPostingDate(event.target.value)}
                 disabled={busy}
                 className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
               />
@@ -476,11 +356,7 @@ const AddWorkModal = ({
 
               <input
                 value={postName}
-                onChange={(event) =>
-                  setPostName(
-                    event.target.value
-                  )
-                }
+                onChange={(event) => setPostName(event.target.value)}
                 disabled={busy}
                 placeholder="Example: Eid Campaign Poster"
                 className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none placeholder:text-white/20 focus:border-violet-500/50"
@@ -495,11 +371,7 @@ const AddWorkModal = ({
 
               <textarea
                 value={description}
-                onChange={(event) =>
-                  setDescription(
-                    event.target.value
-                  )
-                }
+                onChange={(event) => setDescription(event.target.value)}
                 disabled={busy}
                 rows={4}
                 placeholder="Enter post description, caption details or approval notes..."
@@ -516,44 +388,29 @@ const AddWorkModal = ({
               <select
                 value={status}
                 onChange={(event) =>
-                  setStatus(
-                    event.target
-                      .value as WorkStatus
-                  )
+                  setStatus(event.target.value as WorkStatus)
                 }
                 disabled={busy}
                 className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
               >
-                <option value="sent_to_client">
-                  Sent to Client
-                </option>
+                <option value="sent_to_client">Sent to Client</option>
 
-                <option value="requested_to_edit">
-                  Requested to Edit
-                </option>
+                <option value="requested_to_edit">Requested to Edit</option>
 
-                <option value="approved">
-                  Approved
-                </option>
+                <option value="approved">Approved</option>
 
-                <option value="rejected">
-                  Rejected
-                </option>
+                <option value="rejected">Rejected</option>
               </select>
             </div>
 
             {/* Upload */}
             <div className="sm:col-span-2">
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                {postType === "poster"
-                  ? "Poster Images"
-                  : "Reel Video"}
+                {postType === "poster" ? "Poster Images" : "Reel Video"}
               </label>
 
               <label className="flex min-h-[150px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center transition hover:border-violet-500/40 hover:bg-violet-500/[0.04]">
-                <span className="text-3xl text-white/25">
-                  ↑
-                </span>
+                <span className="text-3xl text-white/25">↑</span>
 
                 <span className="mt-3 text-sm font-medium text-white/60">
                   {postType === "poster"
@@ -569,14 +426,8 @@ const AddWorkModal = ({
 
                 <input
                   type="file"
-                  accept={
-                    postType === "poster"
-                      ? "image/*"
-                      : "video/*"
-                  }
-                  multiple={
-                    postType === "poster"
-                  }
+                  accept={postType === "poster" ? "image/*" : "video/*"}
+                  multiple={postType === "poster"}
                   disabled={busy}
                   onChange={handleFiles}
                   className="hidden"
@@ -587,40 +438,31 @@ const AddWorkModal = ({
             {/* Selected Files */}
             {files.length > 0 && (
               <div className="sm:col-span-2 space-y-2">
-                {files.map(
-                  (file, index) => (
-                    <div
-                      key={`${file.name}-${index}`}
-                      className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3"
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate text-xs font-medium text-white/70">
-                          {file.name}
-                        </p>
+                {files.map((file, index) => (
+                  <div
+                    key={`${file.name}-${index}`}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-medium text-white/70">
+                        {file.name}
+                      </p>
 
-                        <p className="mt-1 text-[10px] text-white/30">
-                          {(
-                            file.size /
-                            1024 /
-                            1024
-                          ).toFixed(2)}{" "}
-                          MB
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removeFile(index)
-                        }
-                        disabled={busy}
-                        className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-[10px] font-bold uppercase text-rose-400"
-                      >
-                        Remove
-                      </button>
+                      <p className="mt-1 text-[10px] text-white/30">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
                     </div>
-                  )
-                )}
+
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      disabled={busy}
+                      className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-[10px] font-bold uppercase text-rose-400"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -640,7 +482,7 @@ const AddWorkModal = ({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={busy}
               className="rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white/60 transition hover:text-white disabled:opacity-50"
             >

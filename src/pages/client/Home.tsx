@@ -1,25 +1,12 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import {
-  onAuthStateChanged,
-} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
-import {
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-import {
-  auth,
-  db,
-} from "../../config/firebase/firebase";
+import { auth, db } from "../../config/firebase/firebase";
 // Change path if needed
 
 import ClientWorkService, {
@@ -50,145 +37,86 @@ const defaultStats: ClientWorkStats = {
 const Home = () => {
   const navigate = useNavigate();
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [clientName, setClientName] =
-    useState("there");
+  const [clientName, setClientName] = useState("there");
 
-  const [stats, setStats] =
-    useState<ClientWorkStats>(
-      defaultStats
-    );
+  const [stats, setStats] = useState<ClientWorkStats>(defaultStats);
 
-  const [recentWork, setRecentWork] =
-    useState<ClientWork[]>([]);
+  const [recentWork, setRecentWork] = useState<ClientWork[]>([]);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   // =======================================
   // Fetch Dashboard
   // =======================================
 
   useEffect(() => {
-    const unsubscribe =
-      onAuthStateChanged(
-        auth,
-        async (user) => {
-          if (!user) {
-            setLoading(false);
-            return;
-          }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
-          try {
-            setLoading(true);
-            setError("");
+      try {
+        setLoading(true);
+        setError("");
 
-            // Fetch client profile
-            const clientRef = doc(
-              db,
-              "clients",
-              user.uid
-            );
+        // Fetch client profile
+        const clientRef = doc(db, "clients", user.uid);
 
-            const clientSnapshot =
-              await getDoc(clientRef);
+        const clientSnapshot = await getDoc(clientRef);
 
-            if (
-              clientSnapshot.exists()
-            ) {
-              const clientData =
-                clientSnapshot.data();
+        if (clientSnapshot.exists()) {
+          const clientData = clientSnapshot.data();
 
-              setClientName(
-                clientData.companyName ||
-                  clientData.name ||
-                  clientData.clientName ||
-                  "there"
-              );
-            }
-
-            // Fetch all works once
-            const works =
-              await ClientWorkService.getWorks();
-
-            // Calculate stats locally
-            const calculatedStats: ClientWorkStats =
-              {
-                totalWorks:
-                  works.length,
-
-                activeWorks:
-                  works.filter(
-                    (work) =>
-                      work.active === true
-                  ).length,
-
-                approvedWorks:
-                  works.filter(
-                    (work) =>
-                      work.status ===
-                      "approved"
-                  ).length,
-
-                pendingApproval:
-                  works.filter(
-                    (work) =>
-                      work.status ===
-                      "sent_to_client"
-                  ).length,
-
-                editRequested:
-                  works.filter(
-                    (work) =>
-                      work.status ===
-                      "requested_to_edit"
-                  ).length,
-
-                rejectedWorks:
-                  works.filter(
-                    (work) =>
-                      work.status ===
-                      "rejected"
-                  ).length,
-
-                posters:
-                  works.filter(
-                    (work) =>
-                      work.postType ===
-                      "poster"
-                  ).length,
-
-                reels:
-                  works.filter(
-                    (work) =>
-                      work.postType ===
-                      "reel"
-                  ).length,
-              };
-
-            setStats(
-              calculatedStats
-            );
-
-            setRecentWork(
-              works.slice(0, 5)
-            );
-          } catch (error) {
-            console.error(
-              "Dashboard fetch error:",
-              error
-            );
-
-            setError(
-              "Failed to load dashboard data."
-            );
-          } finally {
-            setLoading(false);
-          }
+          setClientName(
+            clientData.companyName ||
+              clientData.name ||
+              clientData.clientName ||
+              "there",
+          );
         }
-      );
+
+        // Fetch all works once
+        const works = await ClientWorkService.getWorks();
+
+        // Calculate stats locally
+        const calculatedStats: ClientWorkStats = {
+          totalWorks: works.length,
+
+          activeWorks: works.filter((work) => work.active === true).length,
+
+          approvedWorks: works.filter((work) => work.status === "approved")
+            .length,
+
+          pendingApproval: works.filter(
+            (work) => work.status === "sent_to_client",
+          ).length,
+
+          editRequested: works.filter(
+            (work) => work.status === "requested_to_edit",
+          ).length,
+
+          rejectedWorks: works.filter((work) => work.status === "rejected")
+            .length,
+
+          posters: works.filter((work) => work.postType === "poster").length,
+
+          reels: works.filter((work) => work.postType === "reel").length,
+        };
+
+        setStats(calculatedStats);
+
+        setRecentWork(works.slice(0, 5));
+      } catch (error) {
+        console.error("Dashboard fetch error:", error);
+
+        setError("Failed to load dashboard data.");
+      } finally {
+        setLoading(false);
+      }
+    });
 
     return () => unsubscribe();
   }, []);
@@ -197,28 +125,19 @@ const Home = () => {
   // Date Formatter
   // =======================================
 
-  const formatDate = (
-    work: ClientWork
-  ) => {
-    const timestamp =
-      work.updatedAt ||
-      work.createdAt;
+  const formatDate = (work: ClientWork) => {
+    const timestamp = work.updatedAt || work.createdAt;
 
     if (!timestamp) {
       return "Recently";
     }
 
     try {
-      return timestamp
-        .toDate()
-        .toLocaleDateString(
-          "en-IN",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }
-        );
+      return timestamp.toDate().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
     } catch {
       return "Recently";
     }
@@ -231,23 +150,17 @@ const Home = () => {
   const statCards = [
     {
       label: "Total Works",
-      value: loading
-        ? "..."
-        : stats.totalWorks.toString(),
+      value: loading ? "..." : stats.totalWorks.toString(),
       note: "All assigned works",
     },
     {
       label: "Approved",
-      value: loading
-        ? "..."
-        : stats.approvedWorks.toString(),
+      value: loading ? "..." : stats.approvedWorks.toString(),
       note: "Approved by you",
     },
     {
       label: "Pending Approval",
-      value: loading
-        ? "..."
-        : stats.pendingApproval.toString(),
+      value: loading ? "..." : stats.pendingApproval.toString(),
       note: "Awaiting your response",
     },
   ];
@@ -256,38 +169,24 @@ const Home = () => {
   // Status Styles
   // =======================================
 
-  const statusStyles: Record<
-    WorkStatus,
-    string
-  > = {
-    sent_to_client:
-      "border-amber-500/20 bg-amber-500/10 text-amber-400",
+  const statusStyles: Record<WorkStatus, string> = {
+    sent_to_client: "border-amber-500/20 bg-amber-500/10 text-amber-400",
 
-    requested_to_edit:
-      "border-blue-500/20 bg-blue-500/10 text-blue-400",
+    requested_to_edit: "border-blue-500/20 bg-blue-500/10 text-blue-400",
 
-    approved:
-      "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+    approved: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
 
-    rejected:
-      "border-red-500/20 bg-red-500/10 text-red-400",
+    rejected: "border-red-500/20 bg-red-500/10 text-red-400",
   };
 
-  const statusLabel: Record<
-    WorkStatus,
-    string
-  > = {
-    sent_to_client:
-      "Pending Approval",
+  const statusLabel: Record<WorkStatus, string> = {
+    sent_to_client: "Pending Approval",
 
-    requested_to_edit:
-      "Edit Requested",
+    requested_to_edit: "Edit Requested",
 
-    approved:
-      "Approved",
+    approved: "Approved",
 
-    rejected:
-      "Rejected",
+    rejected: "Rejected",
   };
 
   return (
@@ -306,15 +205,11 @@ const Home = () => {
         </p>
 
         <h1 className="mt-2 text-2xl font-black tracking-[-0.02em] sm:text-3xl">
-          Welcome back,{" "}
-          {loading
-            ? "..."
-            : clientName}
+          Welcome back, {loading ? "..." : clientName}
         </h1>
 
         <p className="mt-2 max-w-lg text-sm text-white/40">
-          Review your posters and reels,
-          approve completed work, or request
+          Review your posters and reels, approve completed work, or request
           changes from our team.
         </p>
       </div>
@@ -325,9 +220,7 @@ const Home = () => {
 
       {error && (
         <div className="border border-red-500/20 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">
-            {error}
-          </p>
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
@@ -353,9 +246,7 @@ const Home = () => {
               {stat.value}
             </p>
 
-            <p className="mt-1 text-[11px] text-white/30">
-              {stat.note}
-            </p>
+            <p className="mt-1 text-[11px] text-white/30">{stat.note}</p>
           </div>
         ))}
       </div>
@@ -371,11 +262,7 @@ const Home = () => {
           </p>
 
           <button
-            onClick={() =>
-              navigate(
-                "/client/works"
-              )
-            }
+            onClick={() => navigate("/client/works")}
             className="text-[11px] font-medium text-[#8B5CF6] hover:text-[#a78bfa]"
           >
             View all
@@ -384,66 +271,45 @@ const Home = () => {
 
         {loading ? (
           <div className="py-10 text-center">
-            <p className="text-sm text-white/30">
-              Loading works...
-            </p>
+            <p className="text-sm text-white/30">Loading works...</p>
           </div>
         ) : recentWork.length === 0 ? (
           <div className="py-10 text-center">
-            <p className="text-sm text-white/30">
-              No works available yet.
-            </p>
+            <p className="text-sm text-white/30">No works available yet.</p>
           </div>
         ) : (
           <div className="flex flex-col divide-y divide-white/[0.05]">
-            {recentWork.map(
-              (item) => (
-                <button
-                  key={item.id}
-                  onClick={() =>
-                    navigate(
-                      "/client/works"
-                    )
-                  }
-                  className="flex w-full items-center justify-between gap-3 py-3 text-left first:pt-0 last:pb-0"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="truncate text-[13px] font-medium text-white/80">
-                        {
-                          item.postName
-                        }
-                      </p>
-
-                      <span className="text-[9px] uppercase text-white/25">
-                        {
-                          item.postType
-                        }
-                      </span>
-                    </div>
-
-                    <p className="mt-0.5 text-[11px] text-white/30">
-                      Updated{" "}
-                      {formatDate(item)}
+            {recentWork.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => navigate("/client/works")}
+                className="flex w-full items-center justify-between gap-3 py-3 text-left first:pt-0 last:pb-0"
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate text-[13px] font-medium text-white/80">
+                      {item.postName}
                     </p>
+
+                    <span className="text-[9px] uppercase text-white/25">
+                      {item.postType}
+                    </span>
                   </div>
 
-                  <span
-                    className={`shrink-0 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] ${
-                      statusStyles[
-                        item.status
-                      ]
-                    }`}
-                  >
-                    {
-                      statusLabel[
-                        item.status
-                      ]
-                    }
-                  </span>
-                </button>
-              )
-            )}
+                  <p className="mt-0.5 text-[11px] text-white/30">
+                    Updated {formatDate(item)}
+                  </p>
+                </div>
+
+                <span
+                  className={`shrink-0 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] ${
+                    statusStyles[item.status]
+                  }`}
+                >
+                  {statusLabel[item.status]}
+                </span>
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -459,9 +325,7 @@ const Home = () => {
           </p>
 
           <p className="mt-2 text-xl font-black">
-            {loading
-              ? "..."
-              : stats.activeWorks}
+            {loading ? "..." : stats.activeWorks}
           </p>
         </div>
 
@@ -471,9 +335,7 @@ const Home = () => {
           </p>
 
           <p className="mt-2 text-xl font-black">
-            {loading
-              ? "..."
-              : stats.editRequested}
+            {loading ? "..." : stats.editRequested}
           </p>
         </div>
 
@@ -483,9 +345,7 @@ const Home = () => {
           </p>
 
           <p className="mt-2 text-xl font-black">
-            {loading
-              ? "..."
-              : stats.posters}
+            {loading ? "..." : stats.posters}
           </p>
         </div>
 
@@ -495,9 +355,7 @@ const Home = () => {
           </p>
 
           <p className="mt-2 text-xl font-black">
-            {loading
-              ? "..."
-              : stats.reels}
+            {loading ? "..." : stats.reels}
           </p>
         </div>
       </div>

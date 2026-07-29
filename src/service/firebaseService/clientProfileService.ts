@@ -31,7 +31,7 @@ export interface ClientProfile {
   address?: string;
   website?: string;
 
-  profileImage?: string;
+  logo?: string;
   profileImageKey?: string;
 
   createdAt?: unknown;
@@ -121,9 +121,9 @@ class ClientProfileService {
       website:
         data.website || "",
 
-      profileImage:
-        data.profileImage ||
-        data.profileImageUrl ||
+      logo:
+        data.logo ||
+        data.logo ||
         "",
 
       profileImageKey:
@@ -219,7 +219,8 @@ class ClientProfileService {
     const uploaded =
       await S3Service.uploadFile(
         file,
-        folder
+        folder,
+        "poster"
       );
 
     /*
@@ -238,7 +239,7 @@ class ClientProfileService {
     );
 
     await updateDoc(clientRef, {
-      profileImage:
+      logo:
         uploaded.url,
 
       profileImageKey:

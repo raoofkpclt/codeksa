@@ -5,8 +5,7 @@ import ReusableModal from "../../components/ReusableModal";
 import EditClientModal from "../../components/EditClinetModal";
 import AddClientModal from "../../components/AddClinetModal";
 import DeleteModal from "../../components/DeleteModal";
-
-
+import { FirebaseError } from "firebase/app";
 const DEFAULT_CLIENT_LOGO =
   "https://codeksa-web.s3.ap-south-1.amazonaws.com/clients/logos/Preto.jpeg";
 
@@ -75,53 +74,49 @@ const ClientManagement = () => {
   // };
 
   const sortClientsNewestFirst = (data: Client[]) => {
-  return [...data].sort((a, b) => {
-    const aTime = a.createdAt?.toMillis?.() ?? 0;
-    const bTime = b.createdAt?.toMillis?.() ?? 0;
+    return [...data].sort((a, b) => {
+      const aTime = a.createdAt?.toMillis?.() ?? 0;
+      const bTime = b.createdAt?.toMillis?.() ?? 0;
 
-    return bTime - aTime;
-  });
-};
+      return bTime - aTime;
+    });
+  };
 
-useEffect(() => {
-  let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-  const fetchClients = async () => {
+    const fetchClients = async () => {
+      try {
+        const data = await ClientService.getAllClients();
+
+        if (!cancelled) {
+          setClients(sortClientsNewestFirst(data as Client[]));
+        }
+      } catch (error) {
+        console.error("Failed to load clients:", error);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchClients();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const refreshClients = async () => {
     try {
       const data = await ClientService.getAllClients();
 
-      if (!cancelled) {
-        setClients(
-          sortClientsNewestFirst(data as Client[])
-        );
-      }
+      setClients(sortClientsNewestFirst(data as Client[]));
     } catch (error) {
-      console.error("Failed to load clients:", error);
-    } finally {
-      if (!cancelled) {
-        setLoading(false);
-      }
+      console.error("Failed to refresh clients:", error);
     }
   };
-
-  void fetchClients();
-
-  return () => {
-    cancelled = true;
-  };
-}, []);
-
-const refreshClients = async () => {
-  try {
-    const data = await ClientService.getAllClients();
-
-    setClients(
-      sortClientsNewestFirst(data as Client[])
-    );
-  } catch (error) {
-    console.error("Failed to refresh clients:", error);
-  }
-};
 
   const openModal = (
     action: Exclude<ModalAction, null>,
@@ -159,8 +154,6 @@ const refreshClients = async () => {
       setModalLoading(true);
 
       switch (modal.action) {
-        
-
         case "block": {
           if (!modal.client?.id) return;
 
@@ -187,8 +180,6 @@ const refreshClients = async () => {
 
           break;
         }
-
-        
 
         case "edit": {
           console.log("Edit client", modal.client);
@@ -301,31 +292,23 @@ const refreshClients = async () => {
   //   }
   // };
 
-  const handleEditClient = async (
-  updatedData: Partial<Client>
-) => {
-  if (!modal.client?.id) return;
+  const handleEditClient = async (updatedData: Partial<Client>) => {
+    if (!modal.client?.id) return;
 
-  try {
-    setEditLoading(true);
+    try {
+      setEditLoading(true);
 
-    await ClientService.editClient(
-      modal.client.id,
-      updatedData
-    );
+      await ClientService.editClient(modal.client.id, updatedData);
 
-    await refreshClients();
+      await refreshClients();
 
-    resetModal();
-  } catch (error) {
-    console.error(
-      "Failed to update client:",
-      error
-    );
-  } finally {
-    setEditLoading(false);
-  }
-};
+      resetModal();
+    } catch (error) {
+      console.error("Failed to update client:", error);
+    } finally {
+      setEditLoading(false);
+    }
+  };
 
   // const handleAddClient = async (data: any) => {
   //   try {
@@ -351,59 +334,101 @@ const refreshClients = async () => {
   //   }
   // };
 
-
   const handleAddClient = async (data: {
-  name: string;
-  email: string;
-  password: string;
-  logo?: string;
-}) => {
-  try {
-    setAddLoading(true);
-
-    await ClientService.register(
-      data.name,
-      data.email,
-      data.password,
-      data.logo || ""
-    );
-
-    await refreshClients();
-
-    resetModal();
-  } catch (error) {
-    console.error(
-      "Failed to add client:",
-      error
-    );
-
-    throw error;
-  } finally {
-    setAddLoading(false);
-  }
-};
-
-  const handleDeleteClient = async (password: string) => {
-    const client = modal.client;
-
-    if (!client?.id || !client.email) {
-      setDeleteError("Client information is missing.");
-      return;
-    }
-
+    name: string;
+    email: string;
+    password: string;
+    logo?: string;
+  }) => {
     try {
-      setModalLoading(true);
-      setDeleteError(null);
+      setAddLoading(true);
 
-      await ClientService.deleteClient(client.id, client.email, password);
+      await ClientService.register(
+        data.name,
+        data.email,
+        data.password,
+        data.logo || "",
+      );
 
-      setClients((prev) => prev.filter((item) => item.id !== client.id));
+      await refreshClients();
 
       resetModal();
-    } catch (error: any) {
-      console.error("Failed to delete client:", error);
+    } catch (error) {
+      console.error("Failed to add client:", error);
 
-      switch (error?.code) {
+      throw error;
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
+  // const handleDeleteClient = async (password: string) => {
+  //   const client = modal.client;
+
+  //   if (!client?.id || !client.email) {
+  //     setDeleteError("Client information is missing.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setModalLoading(true);
+  //     setDeleteError(null);
+
+  //     await ClientService.deleteClient(client.id, client.email, password);
+
+  //     setClients((prev) => prev.filter((item) => item.id !== client.id));
+
+  //     resetModal();
+  //   } catch (error: any) {
+  //     console.error("Failed to delete client:", error);
+
+  //     switch (error?.code) {
+  //       case "auth/invalid-credential":
+  //         setDeleteError("Invalid client password.");
+  //         break;
+
+  //       case "auth/wrong-password":
+  //         setDeleteError("Incorrect client password.");
+  //         break;
+
+  //       case "auth/user-not-found":
+  //         setDeleteError("Firebase Auth account was not found.");
+  //         break;
+
+  //       case "auth/too-many-requests":
+  //         setDeleteError("Too many attempts. Please try again later.");
+  //         break;
+
+  //       default:
+  //         setDeleteError(error?.message || "Failed to delete client.");
+  //     }
+  //   } finally {
+  //     setModalLoading(false);
+  //   }
+  // };
+
+  const handleDeleteClient = async (password: string) => {
+  const client = modal.client;
+
+  if (!client?.id || !client.email) {
+    setDeleteError("Client information is missing.");
+    return;
+  }
+
+  try {
+    setModalLoading(true);
+    setDeleteError(null);
+
+    await ClientService.deleteClient(client.id, client.email, password);
+
+    setClients((prev) => prev.filter((item) => item.id !== client.id));
+
+    resetModal();
+  } catch (error: unknown) {
+    console.error("Failed to delete client:", error);
+
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
         case "auth/invalid-credential":
           setDeleteError("Invalid client password.");
           break;
@@ -421,26 +446,28 @@ const refreshClients = async () => {
           break;
 
         default:
-          setDeleteError(error?.message || "Failed to delete client.");
+          setDeleteError(error.message);
       }
-    } finally {
-      setModalLoading(false);
+    } else if (error instanceof Error) {
+      setDeleteError(error.message);
+    } else {
+      setDeleteError("Failed to delete client.");
     }
-  };
+  } finally {
+    setModalLoading(false);
+  }
+};
 
   return (
     <>
       <div className="min-h-screen bg-[#08080c] p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-           
-           
-          </div>
+          <div></div>
 
           <button
             onClick={() => openModal("add")}
-            className="group flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-violet-500"
+            className="group flex items-center justify-center gap-2  bg-violet-600 px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-violet-500"
           >
             <span className="text-lg leading-none">+</span>
             Add Client
@@ -494,21 +521,20 @@ const refreshClients = async () => {
                   <div className="flex items-start justify-between">
                     <div className="relative">
                       <div className="h-20 w-20 overflow-hidden rounded-2xl">
-  <img
-    src={
-      client.logo?.trim()
-        ? client.logo
-        : DEFAULT_CLIENT_LOGO
-    }
-    alt={client.name || "Client logo"}
-    className="h-full w-full object-cover"
-    onError={(e) => {
-      e.currentTarget.onerror = null;
-      e.currentTarget.src =
-        DEFAULT_CLIENT_LOGO;
-    }}
-  />
-</div>
+                        <img
+                          src={
+                            client.logo?.trim()
+                              ? client.logo
+                              : DEFAULT_CLIENT_LOGO
+                          }
+                          alt={client.name || "Client logo"}
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = DEFAULT_CLIENT_LOGO;
+                          }}
+                        />
+                      </div>
 
                       <span
                         className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-[3px] border-[#111116] ${
@@ -626,29 +652,33 @@ const refreshClients = async () => {
           </div>
         )}
       </div>
-      <AddClientModal
-        isOpen={modal.isOpen && modal.action === "add"}
-        loading={addLoading}
-        onClose={closeModal}
-        onSave={handleAddClient}
-      />
+      {modal.isOpen && (
+        <AddClientModal
+          isOpen={modal.isOpen && modal.action === "add"}
+          loading={addLoading}
+          onClose={closeModal}
+          onSave={handleAddClient}
+        />
+      )}
 
-      <EditClientModal
-        isOpen={modal.isOpen && modal.action === "edit"}
-        client={modal.client}
-        loading={editLoading}
-        onClose={closeModal}
-        onSave={handleEditClient}
-      />
+      {modal.isOpen && modal.action === "edit" && modal.client && (
+        <EditClientModal
+          client={modal.client}
+          loading={editLoading}
+          onClose={closeModal}
+          onSave={handleEditClient}
+        />
+      )}
 
-      <DeleteModal
-        isOpen={modal.isOpen && modal.action === "delete"}
-        client={modal.client}
-        loading={modalLoading}
-        error={deleteError}
-        onClose={closeModal}
-        onConfirm={handleDeleteClient}
-      />
+      {modal.isOpen && modal.action === "delete" && modal.client && (
+        <DeleteModal
+          client={modal.client}
+          loading={modalLoading}
+          error={deleteError}
+          onClose={closeModal}
+          onConfirm={handleDeleteClient}
+        />
+      )}
 
       <ReusableModal
         isOpen={

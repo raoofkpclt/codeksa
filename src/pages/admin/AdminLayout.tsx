@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,type ReactNode} from "react";
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import AuthService from "../../service/firebaseService/auth";
 
@@ -6,17 +6,36 @@ const navItems = [
   { label: "Home", path: "/admin/home", icon: "home" },
   { label: "Client Management", path: "/admin/clients", icon: "users" },
   { label: "Work Management", path: "/admin/work", icon: "briefcase" },
+  { label: "Client Uploads", path: "/admin/clientUploads", icon: "cloud" },
 ];
 
-const icons: Record<string, JSX.Element> = {
+const icons: Record<string, ReactNode> = {
   home: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
   ),
   users: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -24,11 +43,53 @@ const icons: Record<string, JSX.Element> = {
     </svg>
   ),
   briefcase: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
     </svg>
   ),
+  upload: (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </svg>
+),
+cloud: (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M16 16l-4-4-4 4" />
+    <path d="M12 12v9" />
+    <path d="M20.39 18.39A5.5 5.5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.3" />
+    <path d="M16 16h1a3 3 0 0 0 0-6" />
+  </svg>
+),
 };
 
 const AdminLayout = () => {
@@ -71,14 +132,23 @@ const AdminLayout = () => {
         }`}
       >
         {/* Brand */}
-        <div className="flex items-center gap-2.5 px-5 py-6 border-b border-white/[0.08]">
-          <div className="w-2 h-2 rounded-full bg-[#8B5CF6] flex-shrink-0" />
-          {!collapsed && (
-            <span className="text-sm font-black tracking-[-0.02em] uppercase">
-              CODE
-            </span>
-          )}
-        </div>
+        <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-5">
+  <img
+    src="/logo/backgroundless-2.png"
+    alt="CODE Logo"
+    className={`object-contain transition-all duration-300 ${
+      collapsed
+        ? "h-10 w-10"
+        : "h-12 w-auto max-w-[140px]"
+    }`}
+  />
+
+  {!collapsed && (
+    <span className="text-lg font-bold tracking-[0.08em] uppercase text-white">
+      CODE
+    </span>
+  )}
+</div>
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-5 flex flex-col gap-1">
@@ -115,12 +185,17 @@ const AdminLayout = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={{ transform: collapsed ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+            style={{
+              transform: collapsed ? "rotate(180deg)" : "none",
+              transition: "transform 0.2s",
+            }}
           >
             <polyline points="11 17 6 12 11 7" />
             <polyline points="18 17 13 12 18 7" />
           </svg>
-          {!collapsed && <span className="uppercase tracking-[0.1em]">Collapse</span>}
+          {!collapsed && (
+            <span className="uppercase tracking-[0.1em]">Collapse</span>
+          )}
         </button>
       </aside>
 
@@ -133,7 +208,8 @@ const AdminLayout = () => {
               Admin Portal
             </p>
             <h2 className="text-base font-bold tracking-[-0.01em]">
-              {navItems.find((n) => n.path === location.pathname)?.label || "Home"}
+              {navItems.find((n) => n.path === location.pathname)?.label ||
+                "Home"}
             </h2>
           </div>
 
@@ -144,7 +220,16 @@ const AdminLayout = () => {
                 onClick={() => setNotifOpen((v) => !v)}
                 className="relative w-9 h-9 flex items-center justify-center border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
                   <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
@@ -167,7 +252,9 @@ const AdminLayout = () => {
                         className="px-4 py-3 border-b border-white/[0.05] hover:bg-white/[0.03] transition-colors"
                       >
                         <p className="text-[13px] text-white/80">{n.text}</p>
-                        <p className="text-[10px] text-white/30 mt-1">{n.time}</p>
+                        <p className="text-[10px] text-white/30 mt-1">
+                          {n.time}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -180,7 +267,16 @@ const AdminLayout = () => {
               onClick={handleLogout}
               className="flex items-center gap-2 px-3.5 py-2 text-[11px] font-bold tracking-[0.1em] uppercase text-white/70 hover:text-white border border-white/10 bg-white/[0.03] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />

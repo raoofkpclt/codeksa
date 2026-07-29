@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-
+import type { UploadedMedia } from "../service/s3Service/workMediaService";
 
 export type Client = {
   id?: string;
@@ -9,7 +9,7 @@ export type Client = {
   name: string;
 
   email: string;
-
+sector?: string;
   logo?: string;
 
   active: boolean;
@@ -52,25 +52,78 @@ export interface WorkMedia {
 }
 
 export interface Work {
-  id?: string;
-
+  id: string;
   clientId: string;
   clientName: string;
-
-  postType: WorkType;
+  clientLogo?: string;
 
   postName: string;
-  description: string;
+  postType: "poster" | "reel" | "video" | "link" | "pdf";
 
+  description: string;
   postingDate: string;
 
   media: WorkMedia[];
 
-  status: WorkStatus;
+  active: boolean;
+  isDisplay: boolean;
+  editRequestNote?:string;
+
+  status:
+    | "sent_to_client"
+    | "approved"
+    | "rejected"
+    | "requested_to_edit";
+
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface WorkData {
+ 
+  clientId: string;
+  clientName: string;
+  clientLogo?: string;
+
+  postName: string;
+  postType: "poster" | "reel" | "video" | "link" | "pdf";
+
+  description: string;
+  postingDate: string;
+
+  media: WorkMedia[];
 
   active: boolean;
-  editRequestNote?: string;
+  isDisplay: boolean;
+  editRequestNote?:string;
 
-  createdAt?: any;
-  updatedAt?: any;
+  status:
+    | "sent_to_client"
+    | "approved"
+    | "rejected"
+    | "requested_to_edit";
+
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
+ // adjust path to your S3 service file
+
+export type UploadStatus =
+  | "pending"
+  | "review"
+  | "approved"
+  | "completed"
+  | "rejected";
+
+export type ClientUpload = {
+  id?: string;
+  clientId: string;
+  postType: "poster" | "reel" | "pdf" | "link";
+  media?: UploadedMedia[];
+  status: UploadStatus;
+  link?:string;
+  note?: string;
+  caption?: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+};

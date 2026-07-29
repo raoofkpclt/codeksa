@@ -29,11 +29,18 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
     const timer = setTimeout(() => {
-      nameRef.current?.focus();
+      emailRef.current?.focus();
     }, 650);
-    return () => clearTimeout(timer);
+
+    return () => {
+      cancelAnimationFrame(id);
+      clearTimeout(timer);
+    };
   }, []);
 
   const validatePassword = (pwd: string) => {
@@ -80,13 +87,16 @@ const Register = () => {
         trimmedEmail,
         trimmedPassword,
       );
-      console.log("saved")
+      console.log("saved");
 
       navigate("/client/onboarding");
-    } catch (err: any) {
-      setError(err.message || "Could not create account. Try again.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Could not create account. Try again.");
+      }
       setPassword("");
       setConfirmPassword("");
+
       passRef.current?.focus();
     } finally {
       setLoading(false);

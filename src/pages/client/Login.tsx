@@ -20,11 +20,18 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
     const timer = setTimeout(() => {
       emailRef.current?.focus();
     }, 650);
-    return () => clearTimeout(timer);
+
+    return () => {
+      cancelAnimationFrame(id);
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleLogin = async () => {
@@ -54,8 +61,11 @@ const Login = () => {
       }
 
       navigate("/client/home");
-    } catch (err: any) {
-      setError(err.message || "Invalid credentials. Try again.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Invalid credentials. Try again.");
+      }
+
       setPassword("");
       passRef.current?.focus();
     } finally {
