@@ -17,8 +17,8 @@ const SERVICES = [
   {
     index: "01",
     category: "Strategy",
-    headlinePlain: "Direction before ",
-    headlineBold: "activity.",
+    
+    headlineBold: "Strategy",
     body: "Strategic direction for businesses that need clearer growth priorities, market understanding and a practical route forward.",
     left: ["Marketing Strategy", "Market & Competitive Research", "Campaign Strategy"],
     right: ["Business Growth Strategy", "Go-to-Market Planning"],
@@ -26,8 +26,8 @@ const SERVICES = [
   {
     index: "02",
     category: "Brand",
-    headlinePlain: "Meaning before ",
-    headlineBold: "visibility.",
+    // headlinePlain: "Meaning before ",
+    headlineBold: "Brand",
     body: "Brand systems that help businesses become easier to understand, recognise, trust and remember.",
     left: ["Brand Strategy", "Brand Identity", "Brand Guidelines"],
     right: ["Brand Positioning", "Verbal Identity", "Campaign Creative"],
@@ -35,8 +35,8 @@ const SERVICES = [
   {
     index: "03",
     category: "Digital",
-    headlinePlain: "Presence with ",
-    headlineBold: "purpose.",
+    // headlinePlain: "Presence with ",
+    headlineBold: "Digital.",
     body: "Digital presence built around customer journeys, visibility, measurement and business outcomes.",
     left: ["Website Strategy", "Search Engine Optimisation", "Google Business Profile", "Landing Pages"],
     right: ["Website Design & Development", "Local Search", "Paid Media", "Analytics"],
@@ -44,8 +44,8 @@ const SERVICES = [
   {
     index: "04",
     category: "Marketing Operations",
-    headlinePlain: "Structure before ",
-    headlineBold: "scale.",
+    // headlinePlain: "Structure before ",
+    headlineBold: "Marketing Operations",
     body: "The structure required to plan, coordinate, publish, measure and improve marketing activity.",
     left: ["Social Media Management", "Campaign Planning", "CRM & Customer Journey Integration"],
     right: ["Content Planning", "Marketing Automation", "Performance Review & Optimisation"],
@@ -53,8 +53,8 @@ const SERVICES = [
   {
     index: "05",
     category: "Content & Production",
-    headlinePlain: "Craft with ",
-    headlineBold: "intent.",
+    // headlinePlain: "Craft with ",
+    headlineBold: "Content & Production",
     body: "Purposeful creative and production assets developed to support brand communication, campaigns and platform-specific execution.",
     left: ["Content Creative", "Videography", "Short-form Video"],
     right: ["Photography", "Motion Graphics", "Campaign Assets"],
@@ -62,8 +62,8 @@ const SERVICES = [
   {
     index: "06",
     category: "CODE Hub™",
-    headlinePlain: "Optional, when the ",
-    headlineBold: "system calls for it.",
+    // headlinePlain: "Optional, when the ",
+    headlineBold: "CODE Hub",
     body: "An add-on for selected engagements. Speak to a CODE representative to learn more.",
     left: [],
     right: [],
@@ -88,61 +88,62 @@ const ServiceSection = ({
   active: boolean;
 }) => (
   <div
-    className={`border-t border-[var(--steel)] py-16 transition-opacity duration-500 md:py-24 ${
-      active ? "opacity-100" : "opacity-45"
-    }`}
-  >
-    <div className="flex items-baseline gap-4">
-      <span className="font-['Space_Grotesk',sans-serif] text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
+  className={`border-t border-[var(--steel)] py-20 md:py-28 transition-opacity duration-500 ${
+    active ? "opacity-100" : "opacity-45"
+  }`}
+>
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-16 lg:gap-28">
+    {/* LEFT */}
+    <div className="flex flex-col">
+      <span className="font-['Space_Grotesk',sans-serif] text-[13px] uppercase tracking-[0.25em] text-[var(--slate-muted)]">
         {item.index}
       </span>
-      <span
-        className={`font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.30em] transition-colors duration-500 ${
-          active ? "text-[var(--code-purple)]" : "text-[var(--slate-muted)]"
+
+      <h2
+        className={`mt-8 font-['Space_Grotesk',sans-serif] text-[clamp(42px,3vw,64px)] font-light leading-[0.95] tracking-[-0.05em] transition-colors duration-500 ${
+          active
+            ? "text-[var(--code-white)]"
+            : "text-[var(--slate-muted)]"
         }`}
       >
         {item.category}
-      </span>
+      </h2>
     </div>
 
-    <h2
-      className={`mt-8 font-['Space_Grotesk',sans-serif] text-[clamp(36px,6vw,72px)] leading-[1.08] transition-colors duration-500 ${
-        active ? "text-[var(--code-white)]" : "text-[var(--slate-muted)]"
-      }`}
-    >
-      <span className="font-light">{item.headlinePlain}</span>
-      <span className="font-bold">{item.headlineBold}</span>
-    </h2>
+    {/* RIGHT */}
+    <div className="max-w-[820px]">
+      <p className="font-['Space_Grotesk',sans-serif] text-[20px] leading-[1.75] text-[var(--mist)]">
+        {item.body}
+      </p>
 
-    <p className="mt-8 max-w-[640px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-      {item.body}
-    </p>
+      {(item.left.length > 0 || item.right.length > 0) && (
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-5">
+          <ul className="space-y-4">
+            {item.left.map((i) => (
+              <li
+                key={i}
+                className="font-['Space_Grotesk',sans-serif] text-[17px] text-[var(--code-white)]"
+              >
+                {i}
+              </li>
+            ))}
+          </ul>
 
-    {(item.left.length > 0 || item.right.length > 0) && (
-      <div className="mt-10 grid max-w-[680px] grid-cols-1 gap-x-16 gap-y-3 md:grid-cols-2">
-        <ul className="flex flex-col gap-3">
-          {item.left.map((i) => (
-            <li
-              key={i}
-              className="font-['Space_Grotesk',sans-serif] text-[15px] text-[var(--code-white)]"
-            >
-              {i}
-            </li>
-          ))}
-        </ul>
-        <ul className="flex flex-col gap-3">
-          {item.right.map((i) => (
-            <li
-              key={i}
-              className="font-['Space_Grotesk',sans-serif] text-[15px] text-[var(--code-white)]"
-            >
-              {i}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+          <ul className="space-y-4">
+            {item.right.map((i) => (
+              <li
+                key={i}
+                className="font-['Space_Grotesk',sans-serif] text-[17px] text-[var(--code-white)]"
+              >
+                {i}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   </div>
+</div>
 );
 
 const Service :React.FC = () => {
@@ -215,13 +216,15 @@ const Service :React.FC = () => {
           Services
         </span>
 
-        <h1 className="font-['Space_Grotesk',sans-serif] text-[clamp(48px,8vw,104px)] leading-[1.05]">
-          <span className="font-light text-[var(--code-white)]">
-            Capabilities connected by
-          </span>
-          <br />
-          <span className="glow-text font-bold">one system.</span>
-        </h1>
+        <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Capabilities connected by {" "}
+  </span>
+
+  <span className="font-bold">
+    one system.
+  </span>
+</h1>
 
         <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE services are not isolated outputs. They are capabilities
@@ -244,10 +247,15 @@ const Service :React.FC = () => {
 
         {/* Page-specific closing statement */}
         <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[820px] font-['Space_Grotesk',sans-serif] text-[clamp(28px,4.2vw,48px)] font-light leading-[1.2] text-[var(--code-white)]">
-            Start with the business{" "}
-            <span className="glow-text font-bold">requirement.</span>
-          </h2>
+          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Start with the business{" "}
+  </span>
+
+  <span className="font-bold ">
+    requirement.
+  </span>
+</h2>
           <p className="mt-6 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
             The right service depends on the challenge, the required outcome
             and the structure already in place.

@@ -3,25 +3,7 @@ import NavbarNew from "../../components/user/NavbarNew";
 import Footer from "../../components/user/Footer";
 import Conversation from "../../components/user/Conversation";
 
-/* ------------------------------------------------------------------
-   CODE — What We Solve  (/what-we-solve)
 
-   Structure (per "Website Reference v3" + live preview):
-     PageHero    — breadcrumb, eyebrow, "Four pathways. One system.",
-                   supporting sentence.
-     4x SectionBlock — 01–04, category eyebrow, Light+Bold headline,
-                   description, "Explore …" link. Scroll-spy dims
-                   sections you've scrolled past and lights up the
-                   one in view (label -> CODE Purple + headline -> white).
-     Closing statement — "Start with the pathway closest to your
-                   current business requirement." + supporting line +
-                   text CTA.
-     CTASection  — shared closing block: eyebrow, Light+Bold
-                   statement with a large trailing word, supporting
-                   sentence, one purple primary CTA.
-
-   Single type family (Space Grotesk) throughout, per the v3 doc.
-------------------------------------------------------------------- */
 
 const PATHWAYS = [
   {
@@ -116,7 +98,7 @@ const PathwaySection = ({
   </div>
 );
 
-const WhatWeSolve :React.FC = () => {
+const WhatWeSolve: React.FC = () => {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -174,11 +156,16 @@ const WhatWeSolve :React.FC = () => {
       <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
         {/* Breadcrumb */}
         <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
-          <a href="/" className="hover-glow uppercase transition-colors duration-200">
+          <a
+            href="/"
+            className="hover-glow uppercase transition-colors duration-200"
+          >
             Home
           </a>
           <span>/</span>
-          <span className="uppercase text-[var(--code-white)]">What We Solve</span>
+          <span className="uppercase text-[var(--code-white)]">
+            What We Solve
+          </span>
         </div>
 
         {/* PageHero */}
@@ -186,14 +173,11 @@ const WhatWeSolve :React.FC = () => {
           What We Solve
         </span>
 
-        <h1 className="font-['Space_Grotesk',sans-serif] text-[clamp(48px,8vw,104px)] leading-[1.05]">
-          <span className="font-light text-[var(--code-white)]">
-            Four pathways.
-          </span>
+        <h1 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.88] tracking-[-0.08em]">
+          <span className="text-[var(--code-white)]">Four pathways.</span>
           <br />
-          <span className="glow-text font-bold">One system.</span>
+          <span className="font-bold">One system.</span>
         </h1>
-
         <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE connects the disciplines required to help a business move with
           more clarity, consistency and measurable direction.
@@ -206,8 +190,8 @@ const WhatWeSolve :React.FC = () => {
               key={item.index}
               data-index={i}
               ref={(el) => {
-  sectionRefs.current[i] = el;
-}}
+                sectionRefs.current[i] = el;
+              }}
             >
               <PathwaySection item={item} active={activeIndex === i} />
             </div>
@@ -216,13 +200,13 @@ const WhatWeSolve :React.FC = () => {
 
         {/* Page-specific closing statement */}
         <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[820px] font-['Space_Grotesk',sans-serif] text-[clamp(28px,4.2vw,48px)] font-light leading-[1.2] text-[var(--code-white)]">
-            Start with the pathway closest to your current business{" "}
-            <span className="glow-text font-bold">requirement.</span>
-          </h2>
+          <h2 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.08em] text-[var(--code-white)]">
+  Start with the pathway closest to your current business{" "}
+  <span className="font-bold">requirement.</span>
+</h2>
           <p className="mt-6 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            Each pathway can begin as a focused engagement or as part of a
-            wider system, depending on what the business needs first.
+            Each pathway can begin as a focused engagement or as part of a wider
+            system, depending on what the business needs first.
           </p>
           <div className="mt-10">
             <ExploreLink
@@ -234,36 +218,9 @@ const WhatWeSolve :React.FC = () => {
       </main>
 
       {/* CTASection */}
-      {/* <section className="border-t border-[var(--steel)]">
-        <div className="mx-auto max-w-[1440px] px-6 py-24 md:px-16 md:py-32">
-          <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
-            Start a Conversation
-          </span>
+      
 
-          <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-end">
-            <h2 className="max-w-[640px] font-['Space_Grotesk',sans-serif] text-[clamp(34px,5vw,56px)] font-light leading-[1.15] text-[var(--code-white)]">
-              Let&rsquo;s clarify what your business needs
-            </h2>
-            <span className="font-['Space_Grotesk',sans-serif] text-[clamp(56px,9vw,120px)] font-bold leading-none text-[var(--code-white)]">
-              next.
-            </span>
-          </div>
-
-          <p className="mt-10 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            Start with a conversation about the challenge, the required
-            outcome and the right place to begin.
-          </p>
-
-          <a
-            href="/start-a-conversation"
-            className="mt-12 inline-flex items-center gap-2 rounded-[4px] border border-[var(--code-purple)] bg-[var(--charcoal)] px-6 py-4 font-['Space_Grotesk',sans-serif] text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--code-white)] transition-all duration-200 hover:border-[var(--violet-glow)] hover:shadow-[0_0_0_3px_rgba(139,92,246,0.25)]"
-          >
-            Start a Conversation
-          </a>
-        </div>
-      </section> */}
-
-      <Conversation/>
+      <Conversation />
 
       <Footer />
     </div>

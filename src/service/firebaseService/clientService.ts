@@ -22,9 +22,8 @@ import {
   initializeApp,
 } from "firebase/app";
 
-import { db,firebaseConfig } from "../../config/firebase/firebase";
+import { auth,db,firebaseConfig } from "../../config/firebase/firebase";
 import type { Client } from "../../utils/types";
-import { auth } from "../../config/firebase/firebase";
 
 class ClientService {
   private collectionName = "clients";

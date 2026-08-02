@@ -9,7 +9,7 @@ import {
 
 
 
-import { db } from "../../config/firebase/firebase";
+import { db } from "../../config/firebase/firebasee";
 import type { Client } from "../../utils/types";
 
 const COLLECTION = "clients";

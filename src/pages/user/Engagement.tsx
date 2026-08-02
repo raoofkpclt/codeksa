@@ -1,6 +1,7 @@
 import React from 'react'
 import NavbarNew from '../../components/user/NavbarNew'
 import Footer from '../../components/user/Footer'
+import Conversation from '../../components/user/Conversation'
 
 interface EngagementTier {
   number: string
@@ -109,6 +110,37 @@ const tiers: EngagementTier[] = [
 const Engagement :React.FC= () => {
   return (
     <div className="bg-black text-white">
+       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+  
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
       <NavbarNew />
 
      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
@@ -130,10 +162,15 @@ const Engagement :React.FC= () => {
         <p className="text-xs tracking-[0.3em] text-white/50 mb-10">
           ENGAGEMENT
         </p>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[1.05] font-light tracking-tight max-w-5xl">
-          Different levels of engagement.{' '}
-          <span className="font-semibold">One standard.</span>
-        </h1>
+        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Different levels of engagement.
+  </span>
+  <br />
+  <span className="font-bold">
+    One standard.
+  </span>
+</h1>
         <p className="mt-10 text-lg md:text-xl text-white/60 max-w-2xl">
           Every business requires a different level of strategic support.
           CODE engagements are scoped around business requirements, not
@@ -197,10 +234,19 @@ const Engagement :React.FC= () => {
 
       {/* Identify the level statement */}
       <section className="px-6 md:px-16 py-32 border-b border-white/10">
-        <h2 className="text-5xl md:text-7xl lg:text-8xl leading-[1.05] font-light tracking-tight max-w-5xl">
-          Identify the level of engagement most useful to the{' '}
-          <span className="font-semibold">business.</span>
-        </h2>
+        <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Identify the level of{" "}
+  </span>
+
+  <span className="font-light">
+    engagement most useful {" "}
+  </span>
+
+  <span className="font-light">
+    to the <span className="font-bold"> business.</span>
+  </span>
+</h2>
         <p className="mt-10 text-lg md:text-xl text-white/60 max-w-2xl">
           Each model is scoped around the business requirement, not a fixed
           package.
@@ -208,21 +254,7 @@ const Engagement :React.FC= () => {
       </section>
 
       {/* CTA */}
-      <section className="px-6 md:px-16 py-32">
-        <p className="text-xs tracking-[0.3em] text-white/50 mb-16">
-          START A CONVERSATION
-        </p>
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-          <h2 className="text-5xl md:text-7xl font-light leading-[1.05] max-w-2xl">
-            Let's clarify what your business needs
-          </h2>
-          <span className="text-5xl md:text-7xl font-semibold">next.</span>
-        </div>
-        <p className="mt-10 text-lg text-white/60 max-w-xl">
-          Start with a conversation about the challenge, the required outcome
-          and the right place to begin.
-        </p>
-      </section>
+      <Conversation/>
 
       <Footer />
     </div>

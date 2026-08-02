@@ -9,7 +9,7 @@ import Client from "./pages/user/Client";
 import Contact from "./pages/user/Contact";
 import PublicClientWorks from "./pages/user/ClientWorks";
 import Industries from "./pages/user/Industries";
-
+import StrategyGrowth from "./pages/user/StrategyGrowth";
 
 // =========================================
 // Admin
@@ -39,7 +39,14 @@ import ClientWorks from "./pages/client/Works";
 import ClientUploads from "./pages/client/ClientUploads";
 import HowWeWork from "./pages/user/HowWeWork";
 import Engagement from "./pages/user/Engagement";
+import BrandCreative from "./pages/user/BrandCreative";
+import DigitalPerformance from "./pages/user/DigitalPerformance";
+import MarketingOperationsSystems from "./pages/user/MarketingOperationsSystems";
+import Automotive from "./pages/user/Automotive";
+import Hospitality from "./pages/user/Hospitality";
 
+
+import ScrollToTop from "./routes/ScrollTop";
 
 // =========================================
 // App
@@ -48,6 +55,7 @@ import Engagement from "./pages/user/Engagement";
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop/>
       <Routes>
         {/* =================================
             Public
@@ -55,9 +63,15 @@ function App() {
 
         <Route path="/" element={<PublicHome />} />
         <Route path="/what-we-solve" element={<WhatWeSolve />} />
+        <Route path="/strategy-growth" element={<StrategyGrowth />} />
+        <Route path="/brand-creative" element={<BrandCreative />} />
+        <Route path="/digital-performance" element={<DigitalPerformance />} />
+        <Route path="/marketing-operations-systems" element={<MarketingOperationsSystems />} />
         <Route path="/how-we-work" element={<HowWeWork />} />
         <Route path="/engagements" element={<Engagement/>} />
         <Route path="/industries" element={<Industries/>} />
+        <Route path="/automotive" element={<Automotive/>} />
+        <Route path="/hospitality" element={<Hospitality/>} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Service />} />
         <Route path="/works" element={<Works />} />
@@ -144,6 +158,7 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      
     </BrowserRouter>
   );
 }

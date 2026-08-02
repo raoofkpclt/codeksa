@@ -1,0 +1,387 @@
+import React, { type ReactNode,useState } from 'react';
+import Footer from '../../components/user/Footer';
+import NavbarNew from '../../components/user/NavbarNew';
+import Conversation from '../../components/user/Conversation';
+
+
+const capabilities = [
+  {
+    num: '01',
+    title: 'Brand Strategy',
+    text: 'Define the role, direction and long-term meaning of the brand. Establish the foundation every creative decision can be anchored to.',
+  },
+  {
+    num: '02',
+    title: 'Brand Positioning',
+    text: 'Clarify what the brand stands for, who it serves and why it should be chosen. Give the business a distinct place in the mind of its customers.',
+  },
+  {
+    num: '03',
+    title: 'Brand Identity',
+    text: 'Develop or refine the visual system representing the business consistently and distinctively. Design an identity that scales across formats, teams and time.',
+  },
+  {
+    num: '04',
+    title: 'Verbal Identity & Messaging',
+    text: 'Create a clear language system for how the brand communicates across audiences and channels. Turn tone and message into a repeatable craft.',
+  },
+  {
+    num: '05',
+    title: 'Brand Guidelines',
+    text: 'Build practical standards supporting consistency across internal teams, agencies and future applications. Protect the brand as it grows.',
+  },
+  {
+    num: '06',
+    title: 'Campaign Creative',
+    text: 'Translate strategic campaign ideas into distinctive visual and communication systems. Move from concept to a campaign that behaves as one.',
+  },
+  {
+    num: '07',
+    title: 'Content Creative',
+    text: 'Develop intentional creative assets designed around the platform, audience and communication objective. Every asset earns its place.',
+  },
+  {
+    num: '08',
+    title: 'Photography & Videography',
+    text: "Create purposeful visual content aligned with the brand's identity, market and customer experience. Original imagery, produced to a considered standard.",
+  },
+  {
+    num: '09',
+    title: 'Motion & Visual Storytelling',
+    text: 'Use motion design and visual narratives to explain ideas and strengthen communication. Bring depth and rhythm to how the brand moves.',
+  },
+];
+
+const outcomes = [
+  { num: '01', text: 'Clearer brand meaning' },
+  { num: '02', text: 'Stronger recognition' },
+  { num: '03', text: 'Greater communication consistency' },
+  { num: '04', text: 'More coherent customer experiences' },
+];
+
+const industries = [
+  'Hospitality',
+  'Retail',
+  'Real Estate',
+  'Automotive',
+  'Healthcare',
+  'Professional Services',
+];
+
+const otherPathways = [
+  { num: '01', title: 'Strategy & Growth' },
+  { num: '03', title: 'Digital & Performance' },
+  { num: '04', title: 'Marketing Operations & Systems' },
+];
+interface EyebrowProps {
+  children: ReactNode;
+}
+
+function Eyebrow({ children }:EyebrowProps) {
+  return (
+    <p className="text-[11px] tracking-[0.25em] text-neutral-500 uppercase mb-6">
+      {children}
+    </p>
+  );
+}
+interface Capability {
+  num: string;
+  title: string;
+  text: string;
+}
+
+interface AccordionRowProps {
+  item: Capability;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+function AccordionRow({ item, isOpen, onToggle }:AccordionRowProps) {
+  return (
+    <div className="border-t border-neutral-800 last:border-b">
+      <button
+        onClick={onToggle}
+        className="w-full flex items-start justify-between gap-8 py-10 text-left group"
+      >
+        <div className="flex items-baseline gap-6 sm:gap-10">
+          <span className="text-xs sm:text-sm text-neutral-500 tabular-nums pt-2 shrink-0">
+            {item.num}
+          </span>
+          <span className="text-3xl sm:text-5xl font-light text-neutral-200 group-hover:text-white transition-colors leading-none">
+            {item.title}
+          </span>
+        </div>
+        <span className="text-2xl text-neutral-400 shrink-0 pt-1 w-6 text-center">
+          {isOpen ? '\u00D7' : '+'}
+        </span>
+      </button>
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{ maxHeight: isOpen ? '200px' : '0px' }}
+      >
+        <p className="pl-[3.25rem] sm:pl-[5.75rem] pr-10 pb-10 text-neutral-400 text-lg leading-relaxed max-w-2xl">
+          {item.text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+const BrandCreative:React.FC = () => {
+  const [openIndex, setOpenIndex] = useState(2);
+
+  return (
+    <>
+    
+    <NavbarNew/>
+   
+    <div className="min-h-screen bg-[#0a0a0b] text-white font-inter selection:bg-violet-300 selection:text-black">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
+      
+     
+
+      <main className="mx-auto max-w-[1440px] px-8 lg:px-16">
+        {/* ---------------- BREADCRUMB ---------------- */}
+        <div className="flex items-center gap-2 pt-32 sm:pt-36 md:pt-40 text-[11px] tracking-[0.2em] text-neutral-500">
+          
+          <a href="/" className="hover-glow uppercase transition-colors duration-200"><span>HOME</span></a>
+          <span>/</span>
+          <a href="/what-we-solve" className="hover-glow uppercase transition-colors duration-200">
+          <span>WHAT WE SOLVE</span>
+          </a>
+          
+          <span>/</span>
+          <span className="font-semibold text-white">BRAND &amp; CREATIVE</span>
+        </div>
+
+        {/* Hero */}
+        <section className="pb-28 sm:pb-40 pt-16 sm:pt-24">
+          <div className="flex items-center gap-3 mb-10">
+            <span className="text-sm text-neutral-500 tabular-nums">02</span>
+            <span className="text-sm tracking-[0.2em] text-indigo-300 uppercase">
+              Brand & Creative
+            </span>
+          </div>
+          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Meaning before {" "}
+  </span>
+
+  <span className="font-bold">
+    visibility.
+  </span>
+</h1>
+          <p className="text-xl sm:text-2xl text-neutral-400 max-w-2xl leading-relaxed">
+            We build brands people can understand, trust and remember — then
+            translate them into consistent experiences.
+          </p>
+        </section>
+
+        {/* Business challenge */}
+        <section className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 pb-28 sm:pb-40 border-t border-neutral-800 pt-16">
+          <Eyebrow>The business challenge</Eyebrow>
+          <div>
+            <p className="text-2xl sm:text-3xl text-neutral-200 leading-snug mb-8 max-w-3xl">
+              Visibility creates attention, but attention alone does not build
+              preference. When positioning, identity and communication are
+              disconnected, customers may see a business without understanding
+              why it matters.
+            </p>
+            <p className="text-neutral-500 text-lg max-w-2xl">
+              CODE connects strategy, identity, messaging and creative
+              execution into one coherent brand system.
+            </p>
+          </div>
+        </section>
+
+        {/* How CODE helps */}
+        <section className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 pb-28 sm:pb-40 border-t border-neutral-800 pt-16">
+          <Eyebrow>How CODE helps</Eyebrow>
+          <p className="text-2xl sm:text-3xl text-neutral-200 leading-snug max-w-3xl">
+            We shape the meaning of the brand first, then design the visual,
+            verbal and experiential system that carries that meaning
+            consistently across every customer moment.
+          </p>
+        </section>
+
+        {/* Capabilities */}
+        <section className="pb-28 sm:pb-40 border-t border-neutral-800 pt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 mb-4">
+            <Eyebrow>Capabilities</Eyebrow>
+            <h2 className="text-4xl sm:text-5xl font-light leading-tight max-w-3xl">
+              The disciplines <span className="font-medium">this pathway</span>{' '}
+              connects.
+            </h2>
+          </div>
+          <div>
+            {capabilities.map((item, i) => (
+              <AccordionRow
+                key={item.num}
+                item={item}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? -1 : i)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Connected outcomes */}
+        <section className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 pb-28 sm:pb-40 border-neutral-800 pt-16">
+          <div>
+            <Eyebrow>Connected outcomes</Eyebrow>
+            <h2 className="mt-6 font-serif-display text-[34px] leading-tight sm:text-[42px]">
+              What clients tend
+              <br />
+              to <span className="font-semibold">gain.</span>
+            </h2>
+          </div>
+          <div>
+            {outcomes.map((o) => (
+              <div
+                key={o.num}
+                className="flex items-baseline gap-8 py-10 border-t border-neutral-800 last:border-b"
+              >
+                <span className="text-sm text-neutral-500 tabular-nums shrink-0">
+                  {o.num}
+                </span>
+                <span className="text-2xl sm:text-3xl text-neutral-200 font-light">
+                  {o.text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Related industries */}
+        
+        <section className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 pb-28 sm:pb-40 border-t border-neutral-800 pt-16">
+          <div>
+            <Eyebrow>Related industries</Eyebrow>
+            <h2 className="text-4xl sm:text-5xl font-light leading-tight">
+              Where this
+              <br />
+              pathway <span className="font-medium">applies.</span>
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-x-10 gap-y-6 content-start">
+            {industries.map((ind) => (
+              <span
+                key={ind}
+                className="text-xl sm:text-2xl text-neutral-300 font-light"
+              >
+                {ind}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* Other pathways */}
+        <section className="pb-28 sm:pb-40  border-neutral-800 pt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 mb-4">
+            <Eyebrow>Continue through the system</Eyebrow>
+            <h2 className="text-4xl sm:text-5xl font-light leading-tight">
+              Other pathways. <span className="font-medium">Same system.</span>
+            </h2>
+          </div>
+          <div>
+            {otherPathways.map((p) => (
+              <a
+                key={p.num}
+                href="#"
+                className="flex items-center justify-between py-10 border-t border-neutral-800 last:border-b group"
+              >
+                <div className="flex items-baseline gap-10">
+                  <span className="text-sm text-neutral-500 tabular-nums">
+                    {p.num}
+                  </span>
+                  <span className="text-3xl sm:text-5xl font-light text-neutral-300 group-hover:text-white transition-colors">
+                    {p.title}
+                  </span>
+                </div>
+                <span className="text-2xl text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all">
+                  &#8594;
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="pb-32 border-t border-neutral-800 pt-16">
+          <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,12vw,130px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Clarify what the{" "}
+  </span>
+ 
+  <span className="font-light">
+    brand should mean{" "}
+  </span>
+  
+  <span className="font-light">
+    before increasing{" "}
+    <span className="font-bold">visibility.</span>
+  </span>
+</h2>
+          <p className="mt-12 max-w-[760px] font-['Space_Grotesk',sans-serif] text-[24px] font-light leading-[1.8] tracking-[-0.02em] text-white/55">
+  Positioning, identity, messaging and creative execution
+  shaped into one coherent brand system.
+</p>
+          <div className="mt-16 flex flex-wrap items-center gap-10 md:gap-16">
+  <a
+    href="/start-a-conversation"
+    className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[13px] font-medium uppercase tracking-[0.3em] text-white transition-colors"
+  >
+    <span>Discuss your brand</span>
+
+    <span className="h-px w-10 bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all duration-300 group-hover:w-16" />
+  </a>
+
+  <a
+    href="/engagements"
+    className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[13px] font-medium uppercase tracking-[0.3em] text-white/50 transition-colors hover:text-white"
+  >
+    <span>Explore our engagements</span>
+
+    <span className="h-px w-10 bg-white/30 transition-all duration-300 group-hover:w-16 group-hover:bg-gradient-to-r group-hover:from-fuchsia-400 group-hover:to-violet-500" />
+  </a>
+</div>
+        </section>
+        <Conversation/>
+      </main>
+      <Footer/>
+    </div>
+    </>
+    
+  );
+};
+
+export default BrandCreative;

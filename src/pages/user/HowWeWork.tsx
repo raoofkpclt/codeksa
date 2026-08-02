@@ -138,11 +138,15 @@ const HowWeWork = () => {
           How We Work
         </span>
 
-        <h1 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(48px,8vw,96px)] leading-[1.05] text-[var(--code-white)]">
-          <span className="font-light">Clarity before</span>
-          <br />
-          <span className="font-bold">execution.</span>
-        </h1>
+        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] leading-[0.9] tracking-[-0.06em]">
+  <span className="font-light text-[var(--code-white)]">
+    Clarity before
+  </span>
+  <br />
+  <span className="font-bold text-[var(--code-white)]">
+    execution.
+  </span>
+</h1>
 
         <p className="mt-10 max-w-[680px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE begins with the business requirement before recommending
@@ -156,24 +160,31 @@ const HowWeWork = () => {
           {STEPS.map((step, i) => (
             <React.Fragment key={step.index}>
               {i > 0 && <DiagonalDivider />}
-              <div className="py-16 md:py-20">
-                <div className="flex items-baseline gap-4">
-                  <span className="font-['Space_Grotesk',sans-serif] text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
-                    {step.index}
-                  </span>
-                  <span className="font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.30em] text-[var(--code-purple)]">
-                    Step
-                  </span>
-                </div>
+              <div className="py-16 md:py-20 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-8 md:gap-16">
+  {/* Left Side */}
+  <div>
+    <div className="flex items-baseline gap-4">
+      <span className="font-['Space_Grotesk',sans-serif] text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
+        {step.index}
+      </span>
 
-                <h2 className="mt-6 font-['Space_Grotesk',sans-serif] text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.05] text-[var(--code-white)]">
-                  {step.title}
-                </h2>
+      <span className="font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.30em] text-[var(--code-purple)]">
+        Step
+      </span>
+    </div>
+  </div>
 
-                <p className="mt-8 max-w-[720px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-                  {step.body}
-                </p>
-              </div>
+  {/* Right Side */}
+  <div>
+    <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(64px,8vw,120px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+      {step.title}
+    </h2>
+
+    <p className="mt-8 max-w-[720px] font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.7] text-[var(--mist)]">
+      {step.body}
+    </p>
+  </div>
+</div>
             </React.Fragment>
           ))}
         </div>
@@ -184,46 +195,46 @@ const HowWeWork = () => {
             What Every Engagement Includes
           </span>
 
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(30px,4.5vw,52px)] leading-[1.2] text-[var(--code-white)]">
-            <span className="font-light">Common ground across every </span>
-            <span className="font-bold">CODE</span>
-            <br />
-            <span className="font-bold">engagement.</span>
-          </h2>
+          <div className="flex justify-end items-end ">
+  <h2 className="max-w-[900px]  font-['Space_Grotesk',sans-serif] text-[clamp(30px,4.5vw,52px)] font-light leading-[1.2] tracking-[-0.04em] text-[var(--code-white)]">
+    <span className="font-light">
+      Common ground across every
+    </span>{" "}
+    <span className="font-bold">CODE</span>
+    <br />
+    <span className="font-bold">engagement.</span>
+  </h2>
+</div>
 
-          <div className="mt-20 grid grid-cols-1 gap-x-16 gap-y-14 border-t border-[var(--steel)] pt-16 md:grid-cols-2">
-            <div className="flex flex-col gap-14">
-              {INCLUDES_LEFT.map((item) => (
-                <span
-                  key={item}
-                  className="font-['Space_Grotesk',sans-serif] text-[22px] font-normal leading-[1.3] text-[var(--mist)]"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-            <div className="flex flex-col gap-14">
-              {INCLUDES_RIGHT.map((item) => (
-                <span
-                  key={item}
-                  className="font-['Space_Grotesk',sans-serif] text-[22px] font-normal leading-[1.3] text-[var(--mist)]"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
+          <div className="mt-20 grid grid-cols-1 gap-2 border-t border-[var(--steel)]  md:grid-cols-2">
+  {[INCLUDES_LEFT, INCLUDES_RIGHT].map((list, index) => (
+    <div key={index} className="flex flex-col gap-2">
+      {list.map((item) => (
+        <div
+          key={item}
+          className="group  border border-[var(--steel)] bg-[var(--graphite)] px-8 py-7 transition-all duration-300"
+        >
+          <span className="font-['Space_Grotesk',sans-serif] text-[22px] font-normal leading-[1.3] text-[var(--mist)] transition-colors group-hover:text-white">
+            {item}
+          </span>
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
         </div>
 
         {/* Closing statement */}
         <div className="mt-24 border-t border-[var(--steel)] pt-16 md:mt-32 md:pt-24">
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(34px,5.5vw,64px)] leading-[1.15] text-[var(--code-white)]">
-            <span className="font-light">
-              Define the right structure before execution{" "}
-            </span>
-            <span className="font-bold">begins.</span>
-          </h2>
+          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Define the right structure{" "}
+  </span>
 
+  <span className="font-light">
+    before execution <span className="font-bold">begins.</span>
+  </span>
+</h2>
           <p className="mt-8 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
             Every CODE engagement opens with a short conversation to clarify
             the requirement, the outcome and the right structure to support

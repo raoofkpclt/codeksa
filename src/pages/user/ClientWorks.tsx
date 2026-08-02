@@ -4,6 +4,7 @@ import UserWorkService from '../../service/firebaseService/userWorkService'
 import type { Work } from '../../utils/types'
 import NavbarNew from '../../components/user/NavbarNew'
 import Footer from '../../components/user/Footer'
+import Conversation from '../../components/user/Conversation'
 
 /* ---------------------------------------------------------
    Reveal — subtle fade-up on scroll entry
@@ -55,8 +56,6 @@ const Reveal = ({
   )
 }
 
-const accentLine =
-  'w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block'
 
 /* ---------------------------------------------------------
    Helpers
@@ -210,17 +209,48 @@ const ClientWorks: React.FC = () => {
 
   return (
     <div className="bg-black text-white">
+       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+  
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
       <NavbarNew />
 
       {/* Hero */}
       <section className="px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="max-w-[1600px] mx-auto">
           <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 mb-16 md:mb-24">
-            <Link to="/clients" className="hover:text-white/70 transition-colors">
+            <Link to="/" className="hover-glow uppercase transition-colors duration-200">
               HOME
             </Link>
             <span>/</span>
-            <Link to="/clients" className="hover:text-white/70 transition-colors">
+            <Link to="/clients" className="hover-glow uppercase transition-colors duration-200">
               CLIENTS
             </Link>
             <span>/</span>
@@ -246,15 +276,17 @@ const ClientWorks: React.FC = () => {
             </p>
           </div>
 
-          <h1 className="font-light text-[13vw] leading-[0.95] md:text-[6.5vw] md:leading-[0.95] tracking-tight max-w-6xl">
-            {loading ? (
-              'Loading engagement.'
-            ) : (
-              <>
-                {clientName}, <span className="font-semibold">in system.</span>
-              </>
-            )}
-          </h1>
+          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  {loading ? (
+    "Loading engagement."
+  ) : (
+    <>
+      <span className="font-light">{clientName},</span>
+   
+      <span className="font-bold">in system.</span>
+    </>
+  )}
+</h1>
 
           <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
             Every piece of work delivered for this engagement: the format,
@@ -327,42 +359,7 @@ const ClientWorks: React.FC = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-24 md:py-36">
-        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-start md:justify-between gap-12">
-          <div>
-            <p className="text-xs tracking-[0.2em] text-white/40 mb-10">
-              START A CONVERSATION
-            </p>
-
-            <h2 className="font-light text-[11vw] leading-[0.95] md:text-[4.8vw] md:leading-[0.95] tracking-tight max-w-xl">
-              Let&rsquo;s clarify
-              <br />
-              what your
-              <br />
-              business needs
-            </h2>
-
-            <p className="mt-10 max-w-md text-white/50 text-lg leading-relaxed">
-              One conversation to establish whether CODE is the right
-              structure for your growth. No obligation. No hard pitch.
-            </p>
-
-            <Link
-              to="/start-a-conversation"
-              className="mt-14 flex items-center gap-3 text-xs tracking-[0.2em] text-white/70 hover:text-white transition-colors group w-fit"
-            >
-              START A CONVERSATION
-              <span className={`${accentLine} group-hover:w-10 transition-all`} />
-            </Link>
-          </div>
-
-          <div className="md:pt-2">
-            <span className="font-bold text-[13vw] md:text-[5vw] leading-none">
-              next.
-            </span>
-          </div>
-        </div>
-      </section>
+      <Conversation/>
 
       <Footer />
     </div>

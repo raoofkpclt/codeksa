@@ -41,7 +41,7 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
 const About = () => {
   return (
     <div className="min-h-screen bg-black text-[var(--mist)]">
-      <style>{`
+       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
         :root {
@@ -56,6 +56,10 @@ const About = () => {
           --violet-glow: #9B83FF;
         }
 
+        body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+  
         * { font-synthesis: none; }
 
         .hover-glow:hover {
@@ -83,13 +87,15 @@ const About = () => {
 
         {/* Hero */}
         <Eyebrow>About Code</Eyebrow>
-        <h1 className="font-['Space_Grotesk',sans-serif] text-[clamp(48px,8vw,104px)] leading-[1.05]">
-          <span className="font-light text-[var(--code-white)]">
-            Built for structured
-          </span>
-          <br />
-          <span className="glow-text font-bold">growth.</span>
-        </h1>
+       <h1 className="max-w-[2000px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,180px)] font-light leading-[0.88] tracking-[-0.08em] text-[var(--code-white)]">
+  <span className="font-light">
+    Built for structured
+  </span>
+<br />
+  <span className="font-bold">
+    growth.
+  </span>
+</h1>
         <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE is a Business Growth &amp; Marketing Operations company
           headquartered in Jeddah, Saudi Arabia. We help businesses move
@@ -99,81 +105,135 @@ const About = () => {
         </p>
 
         {/* Why CODE exists */}
-        <div className="mt-20 border-t border-[var(--steel)] py-16 md:py-24">
-          <Eyebrow>Why Code Exists</Eyebrow>
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,5vw,64px)] leading-[1.15]">
-            <span className="font-light text-[var(--code-white)]">
-              Most businesses do not lack activity.{" "}
-            </span>
-            <span className="font-bold text-[var(--code-white)]">
-              They lack connection.
-            </span>
-          </h2>
-          <div className="mt-12 max-w-[640px] space-y-6 font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            <p>A campaign may be active without being aligned.</p>
-            <p>A brand may be visible without being understood.</p>
-            <p>
-              A website may exist without supporting the customer journey.
-            </p>
-            <p>
-              A marketing team may work hard without operating from a clear
-              system.
-            </p>
-            <p className="text-[var(--code-white)]">
-              CODE exists to bring these parts together.
-            </p>
-          </div>
-        </div>
+       <div className="mt-20 border-t border-[var(--steel)] py-16 md:py-24">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+    {/* Left (Empty) */}
+    <div className="flex">
+      <Eyebrow>Why Code Exists</Eyebrow>
+    </div>
+
+    {/* Right */}
+    <div className="max-w-[900px]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <span className="font-light">
+          Most businesses do{" "}
+        </span>
+ 
+        <span className="font-light">
+          not lack activity.{" "}
+        </span>
+
+        <span className="font-bold">
+          They lack connection.
+        </span>
+      </h2>
+
+      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+        <p>A campaign may be active without being aligned.</p>
+
+        <p>A brand may be visible without being understood.</p>
+
+        <p>
+          A website may exist without supporting the customer journey.
+        </p>
+
+        <p>
+          A marketing team may work hard without operating from a clear
+          system.
+        </p>
+
+        <p className="text-[var(--code-white)] font-medium">
+          CODE exists to bring these parts together.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* What CODE is */}
-        <div className="border-t border-[var(--steel)] py-16 md:py-24">
-          <Eyebrow>What Code Is</Eyebrow>
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,5vw,64px)] leading-[1.15]">
-            <span className="font-light text-[var(--code-white)]">
-              A strategic business partner, not a service{" "}
-            </span>
-            <span className="font-bold text-[var(--code-white)]">list.</span>
-          </h2>
-          <div className="mt-12 max-w-[640px] space-y-6 font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            <p>
-              CODE is not positioned as a social media agency, design studio,
-              production house, branding agency, website company or
-              media-buying agency.
-            </p>
-            <p>Those are capabilities.</p>
-            <p>They are not the identity of CODE.</p>
-            <p>
-              CODE works at the intersection of business understanding,
-              marketing systems, creative execution and measurable
-              performance.
-            </p>
-          </div>
-        </div>
+       <div className="border-t border-[var(--steel)] py-16 md:py-24">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+    {/* Left */}
+    <div className="flex">
+      <Eyebrow>What Code Is</Eyebrow>
+    </div>
+
+    {/* Right */}
+    <div className="max-w-[900px]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+        <span className="font-light">
+          A strategic business
+        </span>
+       
+        <span className="font-light">
+          partner, not a service
+        </span>
+   
+        <span className="font-bold">
+          list.
+        </span>
+      </h2>
+
+      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+        <p>
+          CODE is not positioned as a social media agency, design studio,
+          production house, branding agency, website company or media-buying
+          agency.
+        </p>
+
+        <p>Those are capabilities.</p>
+
+        <p>They are not the identity of CODE.</p>
+
+        <p>
+          CODE works at the intersection of business understanding,
+          marketing systems, creative execution and measurable
+          performance.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* How CODE works */}
         <div className="border-t border-[var(--steel)] py-16 md:py-24">
-          <Eyebrow>How Code Works</Eyebrow>
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,5vw,64px)] leading-[1.15]">
-            <span className="font-light text-[var(--code-white)]">
-              Founder-led. Specialist-enabled.{" "}
-            </span>
-            <span className="font-bold text-[var(--code-white)]">
-              System-driven.
-            </span>
-          </h2>
-          <div className="mt-12 max-w-[640px] space-y-6 font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            <p>
-              CODE combines strategic direction, structured delivery and
-              selected specialist capability according to each engagement.
-            </p>
-            <p>
-              The model allows CODE to remain focused, flexible and
-              quality-controlled while building the right structure around
-              each business requirement.
-            </p>
-          </div>
-        </div>
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+    {/* Left */}
+    <div className="flex">
+      <Eyebrow>How Code Works</Eyebrow>
+    </div>
 
+    {/* Right */}
+    <div className="max-w-[900px]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <span className="font-light">
+          Founder-led.
+        </span>
+       
+        <span className="font-light">
+          Specialist-enabled.
+        </span>
+        
+        <span className="font-bold">
+          System-driven.
+        </span>
+      </h2>
+
+      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+        <p>
+          CODE combines strategic direction, structured delivery and selected
+          specialist capability according to each engagement.
+        </p>
+
+        <p>
+          The model allows CODE to remain focused, flexible and
+          quality-controlled while building the right structure around each
+          business requirement.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
         {/* Principles */}
         <div className="border-t border-[var(--steel)] py-16 md:py-24">
           <Eyebrow>Principles</Eyebrow>
@@ -195,18 +255,25 @@ const About = () => {
         </div>
 
         {/* Explore what we solve — divider link */}
-        <div className="border-t border-[var(--steel)] py-16 md:py-20">
+        <div className=" border-[var(--steel)] py-16 md:py-20">
           <ExploreLink label="Explore What We Solve" href="/what-we-solve" />
         </div>
 
         {/* Explore the structure */}
-        <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(36px,5.5vw,72px)] leading-[1.1]">
-            <span className="font-light text-[var(--code-white)]">
-              Explore the structure behind CODE&rsquo;s{" "}
-            </span>
-            <span className="glow-text font-bold">work.</span>
-          </h2>
+        <div className="border-[var(--steel)] pt-16 md:pt-24">
+          <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,120px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Explore the
+  </span>
+  
+  <span className="font-light">
+    structure behind
+  </span>
+ 
+  <span className="font-light">
+    CODE&rsquo;s <span className="font-bold ">work.</span>
+  </span>
+</h2>
           <p className="mt-8 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
             Every engagement begins with clarifying the business requirement,
             the required outcome and the right place to begin.

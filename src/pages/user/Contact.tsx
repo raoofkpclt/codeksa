@@ -16,9 +16,9 @@ const industryOptions = [
   'Other',
 ]
 
-const pathwayOptions = ['Strategy & Growth', 'Brand & Creative', 'Digital & Performance', 'Marketing Operations & Systems']
+const pathwayOptions = ['Not sure yet' ,'Strategy & Growth', 'Brand & Creative', 'Digital & Performance', 'Marketing Operations & Systems']
 
-const engagementOptions = ['Project-based', 'Retained partnership', 'One-off consultation', 'Not sure yet']
+const engagementOptions = ['Not sure yet' ,'CODE Essentials', 'Foundation', 'Growth', 'Partnership']
 
 const contactMethodOptions = ['Email', 'WhatsApp', 'Phone call']
 
@@ -74,6 +74,37 @@ const StartAConversation: React.FC = () => {
 
   return (
     <div className="bg-black text-white">
+       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+  
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
       <NavbarNew />
 
       {/* Hero */}
@@ -89,12 +120,17 @@ const StartAConversation: React.FC = () => {
             START A CONVERSATION
           </p>
 
-          <h1 className="font-light text-[13vw] leading-[0.95] md:text-[5.5vw] md:leading-[0.95] tracking-tight max-w-6xl">
-            Let&rsquo;s clarify what your business needs{' '}
-            <span className="font-semibold">next.</span>
-          </h1>
+          <h1 className="max-w-[1050px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Let&rsquo;s clarify what your
+  </span>
+ 
+  <span className="font-light">
+    business needs <span className="font-bold">next.</span>
+  </span>
+</h1>
 
-          <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+          <p className="mt-10 max-w-[700px] text-white/50 text-lg leading-relaxed">
             Start with a conversation about the challenge, the required outcome
             and the right place to begin.
           </p>

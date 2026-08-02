@@ -127,10 +127,10 @@ const AdminLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`relative z-20 flex flex-col bg-white/[0.03] border-r border-white/[0.08] transition-all duration-300 ${
-          collapsed ? "w-[72px]" : "w-[240px]"
-        }`}
-      >
+  className={`relative z-10 flex flex-col bg-white/[0.03] border-r border-white/[0.08] transition-all duration-300 ${
+    collapsed ? "w-[72px]" : "w-[240px]"
+  }`}
+>
         {/* Brand */}
         <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-5">
   <img

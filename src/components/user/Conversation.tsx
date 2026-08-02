@@ -1,39 +1,55 @@
-import React from 'react'
+import React from "react";
+// import { Link } from 'react-router-dom'
 
-const Conversation :React.FC= () => {
+// const accentLine =
+//   "w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block";
+
+const Conversation: React.FC = () => {
   return (
     <div>
       {/* CTASection */}
-      <section className="border-t border-[var(--steel)]">
-        <div className="mx-auto max-w-[1440px] px-6 py-24 md:px-16 md:py-32">
-          <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
-            Start a Conversation
-          </span>
+      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-16 sm:py-24 md:py-36">
+        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-start md:justify-between gap-10 md:gap-12">
+          <div>
+            <p className="text-xs tracking-[0.2em] text-white/40 mb-8 sm:mb-10">
+              START A CONVERSATION
+            </p>
 
-          <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-end">
-            <h2 className="max-w-[640px] font-['Space_Grotesk',sans-serif] text-[clamp(34px,5vw,56px)] font-light leading-[1.15] text-[var(--code-white)]">
-              Let&rsquo;s clarify what your business needs
-            </h2>
-            <span className="font-['Space_Grotesk',sans-serif] text-[clamp(56px,9vw,120px)] font-bold leading-none text-[var(--code-white)]">
+            <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+  <span className="font-light">
+    Let&apos;s clarify
+  </span>
+  <br />
+  <span className="font-light">
+    what your business needs
+  </span>
+</h2>
+
+            <p className="mt-8 sm:mt-10 max-w-md text-white/50 text-base sm:text-lg leading-relaxed">
+              Start with a conversation about the challenge, the required
+              outcome and the right place to begin.
+            </p>
+
+            {/* <Link
+              to="/start-a-conversation"
+              className="mt-10 sm:mt-14 flex items-center gap-3 text-xs tracking-[0.2em] text-white/70 hover:text-white transition-colors group w-fit"
+            >
+              START A CONVERSATION
+              <span
+                className={`${accentLine} group-hover:w-10 transition-all`}
+              />
+            </Link> */}
+          </div>
+
+          <div className="md:pt-2">
+            <span className="font-bold text-[clamp(3.5rem,13vw,6rem)] leading-none">
               next.
             </span>
           </div>
-
-          <p className="mt-10 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
-            Start with a conversation about the challenge, the required
-            outcome and the right place to begin.
-          </p>
-
-          <a
-            href="/start-a-conversation"
-            className="mt-12 inline-flex items-center gap-2 rounded-[4px] border border-[var(--code-purple)] bg-[var(--charcoal)] px-6 py-4 font-['Space_Grotesk',sans-serif] text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--code-white)] transition-all duration-200 hover:border-[var(--violet-glow)] hover:shadow-[0_0_0_3px_rgba(139,92,246,0.25)]"
-          >
-            Start a Conversation
-          </a>
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Conversation
+export default Conversation;

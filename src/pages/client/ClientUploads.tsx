@@ -19,6 +19,10 @@ const ClientUploads: React.FC = () => {
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [clientId, setClientId] = useState<string>("");
+  const [selectedMedia, setSelectedMedia] = useState<{
+    url: string;
+    type: string;
+  } | null>(null);
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) return;
@@ -422,7 +426,7 @@ const ClientUploads: React.FC = () => {
                     {/* Preview */}
 
                     {firstMedia && (
-                      <div className="relative bg-black">
+                      <div className="relative group bg-black">
                         {isImage ? (
                           <img
                             src={firstMedia.url}
@@ -430,21 +434,31 @@ const ClientUploads: React.FC = () => {
                             className="h-72 w-full object-cover transition duration-500 group-hover:scale-105"
                           />
                         ) : isVideo ? (
-                          <video
-                            controls
-                            preload="metadata"
-                            className="h-72 w-full object-cover"
-                          >
+                          <video className="h-72 w-full object-cover" muted>
                             <source
                               src={firstMedia.url}
                               type={firstMedia.fileType}
                             />
                           </video>
-                        ) : (
+                        ) : firstMedia.fileType === "application/pdf" ? (
                           <div className="flex h-72 items-center justify-center bg-[#1B1B22]">
-                            <span className="text-6xl">📄</span>
+                            <span className="text-7xl">📄</span>
                           </div>
-                        )}
+                        ) : null}
+
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition group-hover:opacity-100">
+  <button
+    onClick={() =>
+      setSelectedMedia({
+        url: firstMedia.url,
+        type: firstMedia.fileType,
+      })
+    }
+    className="rounded-lg bg-violet-600 px-5 py-2 text-sm font-semibold text-white"
+  >
+    View
+  </button>
+</div>
 
                         {/* Status */}
                       </div>
@@ -503,6 +517,38 @@ const ClientUploads: React.FC = () => {
           )}
         </div>
       </section>
+      {selectedMedia && (
+  <div className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center">
+
+    <button
+      onClick={() => setSelectedMedia(null)}
+      className="absolute top-5 right-5 text-white text-4xl"
+    >
+      ×
+    </button>
+
+    {selectedMedia.type.startsWith("image/") ? (
+      <img
+        src={selectedMedia.url}
+        className="max-h-[95vh] max-w-[95vw] object-contain"
+      />
+    ) : selectedMedia.type.startsWith("video/") ? (
+      <video
+        src={selectedMedia.url}
+        controls
+        autoPlay
+        className="max-h-[95vh] max-w-[95vw]"
+      />
+    ) : selectedMedia.type === "application/pdf" ? (
+      <iframe
+        src={selectedMedia.url}
+        title="PDF"
+        className="h-[95vh] w-[95vw] rounded-lg bg-white"
+      />
+    ) : null}
+
+  </div>
+)}
     </div>
   );
 };
