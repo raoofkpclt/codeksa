@@ -94,7 +94,14 @@ const Automotive: React.FC = () => {
         <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">Automotive,</span>
           <br />
-          <span className="font-bold">structured.</span>
+          <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">structured.</span>
         </h1>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
           Automotive businesses are often judged before the customer calls,
@@ -156,7 +163,14 @@ const Automotive: React.FC = () => {
             <h2 className="text-4xl md:text-6xl font-light">
               {" "}
               The parts that make{" "}
-              <span className="font-semibold">the system.</span>{" "}
+              <span className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">the system.</span>{" "}
             </h2>
           </div>
         </div>
@@ -179,7 +193,14 @@ const Automotive: React.FC = () => {
         <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">
             Strengthen the system behind visibility, trust and{" "}
-            <span className="font-bold">customer action.</span>
+            <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">customer action.</span>
           </span>
         </h2>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">

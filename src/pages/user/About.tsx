@@ -92,7 +92,14 @@ const About = () => {
     Built for structured
   </span>
 <br />
-  <span className="font-bold">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     growth.
   </span>
 </h1>
@@ -123,7 +130,14 @@ const About = () => {
           not lack activity.{" "}
         </span>
 
-        <span className="font-bold">
+        <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
           They lack connection.
         </span>
       </h2>
@@ -169,7 +183,14 @@ const About = () => {
           partner, not a service
         </span>
    
-        <span className="font-bold">
+        <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
           list.
         </span>
       </h2>
@@ -214,7 +235,14 @@ const About = () => {
           Specialist-enabled.
         </span>
         
-        <span className="font-bold">
+        <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
           System-driven.
         </span>
       </h2>
@@ -271,7 +299,14 @@ const About = () => {
   </span>
  
   <span className="font-light">
-    CODE&rsquo;s <span className="font-bold ">work.</span>
+    CODE&rsquo;s <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">work.</span>
   </span>
 </h2>
           <p className="mt-8 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">

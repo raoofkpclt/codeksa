@@ -85,7 +85,14 @@ const PathwaySection = ({
       }`}
     >
       <span className="font-light">{item.headlinePlain}</span>
-      <span className="font-bold">{item.headlineBold}</span>
+      <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">{item.headlineBold}</span>
     </h2>
 
     <p className="mt-8 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
@@ -176,7 +183,14 @@ const WhatWeSolve: React.FC = () => {
         <h1 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.88] tracking-[-0.08em]">
           <span className="text-[var(--code-white)]">Four pathways.</span>
           <br />
-          <span className="font-bold">One system.</span>
+          <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">One system.</span>
         </h1>
         <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE connects the disciplines required to help a business move with
@@ -202,7 +216,14 @@ const WhatWeSolve: React.FC = () => {
         <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
           <h2 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.08em] text-[var(--code-white)]">
   Start with the pathway closest to your current business{" "}
-  <span className="font-bold">requirement.</span>
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">requirement.</span>
 </h2>
           <p className="mt-6 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
             Each pathway can begin as a focused engagement or as part of a wider

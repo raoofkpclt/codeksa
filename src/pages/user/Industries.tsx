@@ -135,7 +135,14 @@ const Industries: React.FC = () => {
         <h1 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">The scope changes.</span>
 
-          <span className="font-bold">The standard does not.</span>
+          <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">The standard does not.</span>
         </h1>
 
         <p className="mt-10 max-w-[700px] text-white/50 text-lg leading-relaxed">
@@ -196,7 +203,14 @@ const Industries: React.FC = () => {
   </span>
 
   <span className="font-light">
-    your <span className="font-bold">market.</span>
+    your <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">market.</span>
   </span>
 </h2>
 

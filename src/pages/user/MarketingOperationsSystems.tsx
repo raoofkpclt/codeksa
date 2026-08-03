@@ -174,7 +174,14 @@ const MarketingOperationsSystems: React.FC = () => {
         <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">Structure before</span>
           <br />
-          <span className="font-bold">scale.</span>
+          <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">scale.</span>
         </h1>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
           We turn marketing into a connected, repeatable operating rhythm.
@@ -226,7 +233,14 @@ const MarketingOperationsSystems: React.FC = () => {
           </div>
           <h2 className="max-w-3xl text-4xl md:text-6xl leading-tight font-light">
             The disciplines{" "}
-            <span className="font-semibold">this pathway connects.</span>
+            <span className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">this pathway connects.</span>
           </h2>
         </div>
 
@@ -286,7 +300,14 @@ const MarketingOperationsSystems: React.FC = () => {
             </div>
 
             <h2 className="mt-8 font-['Space_Grotesk',sans-serif] text-[clamp(50px,3vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-white">
-              What clients tend to <span className="font-bold">gain.</span>
+              What clients tend to <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">gain.</span>
             </h2>
           </div>
 
@@ -325,7 +346,14 @@ const MarketingOperationsSystems: React.FC = () => {
               <span className="font-light">Where this</span>
               <br />
               <span className="font-light">
-                pathway <span className="font-bold">applies.</span>
+                pathway <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">applies.</span>
               </span>
             </h2>
           </div>
@@ -353,7 +381,14 @@ const MarketingOperationsSystems: React.FC = () => {
             Continue Through The System
           </div>
           <h2 className="text-4xl md:text-6xl font-light">
-            Other pathways. <span className="font-semibold">Same system.</span>
+            Other pathways. <span className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">Same system.</span>
           </h2>
         </div>
 
@@ -386,7 +421,14 @@ const MarketingOperationsSystems: React.FC = () => {
           </span>
 
           <span className="font-light">
-            activity <span className="font-bold">scales.</span>
+            activity <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">scales.</span>
           </span>
         </h2>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">

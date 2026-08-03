@@ -167,7 +167,14 @@ const Engagement :React.FC= () => {
     Different levels of engagement.
   </span>
   <br />
-  <span className="font-bold">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     One standard.
   </span>
 </h1>
@@ -244,7 +251,14 @@ const Engagement :React.FC= () => {
   </span>
 
   <span className="font-light">
-    to the <span className="font-bold"> business.</span>
+    to the <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"> business.</span>
   </span>
 </h2>
         <p className="mt-10 text-lg md:text-xl text-white/60 max-w-2xl">

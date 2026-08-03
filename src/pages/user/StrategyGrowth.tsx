@@ -162,7 +162,14 @@ const StrategyGrowth: React.FC = () => {
     Direction before {" "}
   </span>
 
-  <span className="font-bold">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     activity.
   </span>
 </h1>
@@ -210,9 +217,14 @@ const StrategyGrowth: React.FC = () => {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr] md:gap-16">
             <p className={eyebrow}>CAPABILITIES</p>
             <h2 className="max-w-2xl font-serif-display text-[34px] leading-tight sm:text-[42px]">
-              The disciplines <span className="font-semibold">this pathway</span>
-              <br />
-              <span className="font-semibold">connects.</span>
+              The disciplines <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">this pathway connects.</span>
             </h2>
           </div>
 
@@ -264,7 +276,14 @@ const StrategyGrowth: React.FC = () => {
             <h2 className="mt-6 font-serif-display text-[34px] leading-tight sm:text-[42px]">
               What clients tend
               <br />
-              to <span className="font-semibold">gain.</span>
+              to <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">gain.</span>
             </h2>
           </div>
 
@@ -297,7 +316,14 @@ const StrategyGrowth: React.FC = () => {
       </span>
       <br />
       <span className="font-light">
-        pathway <span className="font-bold">applies.</span>
+        pathway <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">applies.</span>
       </span>
     </h2>
   </div>
@@ -334,7 +360,14 @@ const StrategyGrowth: React.FC = () => {
             <p className={eyebrow}>CONTINUE THROUGH THE SYSTEM</p>
             <h2 className="font-serif-display text-right text-[34px] leading-tight sm:text-[42px]">
               Other pathways.{" "}
-              <span className="font-semibold">Same system.</span>
+              <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">Same system.</span>
             </h2>
           </div>
 
@@ -373,7 +406,14 @@ const StrategyGrowth: React.FC = () => {
   </span>
 
   <span className="font-light">
-    before increasing <span className="font-bold">activity.</span>
+    before increasing <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">activity.</span>
   </span>
 </h2>
  </div>

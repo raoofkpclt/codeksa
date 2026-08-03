@@ -196,7 +196,14 @@ const BrandCreative:React.FC = () => {
     Meaning before {" "}
   </span>
 
-  <span className="font-bold">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     visibility.
   </span>
 </h1>
@@ -238,8 +245,14 @@ const BrandCreative:React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 mb-4">
             <Eyebrow>Capabilities</Eyebrow>
             <h2 className="text-4xl sm:text-5xl font-light leading-tight max-w-3xl">
-              The disciplines <span className="font-medium">this pathway</span>{' '}
-              connects.
+              The disciplines <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">this pathway connects.</span>
             </h2>
           </div>
           <div>
@@ -261,7 +274,14 @@ const BrandCreative:React.FC = () => {
             <h2 className="mt-6 font-serif-display text-[34px] leading-tight sm:text-[42px]">
               What clients tend
               <br />
-              to <span className="font-semibold">gain.</span>
+              to <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">gain.</span>
             </h2>
           </div>
           <div>
@@ -289,7 +309,14 @@ const BrandCreative:React.FC = () => {
             <h2 className="text-4xl sm:text-5xl font-light leading-tight">
               Where this
               <br />
-              pathway <span className="font-medium">applies.</span>
+              pathway <span className="font-medium  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">applies.</span>
             </h2>
           </div>
           <div className="flex flex-wrap gap-x-10 gap-y-6 content-start">
@@ -309,7 +336,14 @@ const BrandCreative:React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-8 sm:gap-16 mb-4">
             <Eyebrow>Continue through the system</Eyebrow>
             <h2 className="text-4xl sm:text-5xl font-light leading-tight">
-              Other pathways. <span className="font-medium">Same system.</span>
+              Other pathways. <span className="font-medium  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">Same system.</span>
             </h2>
           </div>
           <div>
@@ -348,7 +382,14 @@ const BrandCreative:React.FC = () => {
   
   <span className="font-light">
     before increasing{" "}
-    <span className="font-bold">visibility.</span>
+    <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">visibility.</span>
   </span>
 </h2>
           <p className="mt-12 max-w-[760px] font-['Space_Grotesk',sans-serif] text-[24px] font-light leading-[1.8] tracking-[-0.02em] text-white/55">

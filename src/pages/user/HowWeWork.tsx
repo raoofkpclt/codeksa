@@ -143,7 +143,14 @@ const HowWeWork = () => {
     Clarity before
   </span>
   <br />
-  <span className="font-bold text-[var(--code-white)]">
+  <span className="font-bold text-[var(--code-white)]  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     execution.
   </span>
 </h1>
@@ -200,9 +207,14 @@ const HowWeWork = () => {
     <span className="font-light">
       Common ground across every
     </span>{" "}
-    <span className="font-bold">CODE</span>
-    <br />
-    <span className="font-bold">engagement.</span>
+    <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">CODE engagement.</span>
   </h2>
 </div>
 
@@ -232,7 +244,14 @@ const HowWeWork = () => {
   </span>
 
   <span className="font-light">
-    before execution <span className="font-bold">begins.</span>
+    before execution <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">begins.</span>
   </span>
 </h2>
           <p className="mt-8 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">

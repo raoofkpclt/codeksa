@@ -5,6 +5,7 @@ import type { Work } from '../../utils/types'
 import NavbarNew from '../../components/user/NavbarNew'
 import Footer from '../../components/user/Footer'
 import Conversation from '../../components/user/Conversation'
+import clientService from '../../service/firebaseService/clientService'
 
 /* ---------------------------------------------------------
    Reveal — subtle fade-up on scroll entry
@@ -164,6 +165,26 @@ const ClientWorks: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [activeType, setActiveType] = useState('All')
+  const [client, setClient] = useState<{
+  name: string;
+  logo?: string;
+} | null>(null);
+useEffect(() => {
+  if (!clientId) return;
+
+  const loadClient = async () => {
+    const data = await clientService.getClient(clientId);
+
+    if (data) {
+      setClient({
+        name: data.name,
+        logo: data.logo,
+      });
+    }
+  };
+
+  loadClient();
+}, [clientId]);
 
   useEffect(() => {
     if (!clientId) return
@@ -195,8 +216,8 @@ const ClientWorks: React.FC = () => {
     }
   }, [clientId])
 
-  const clientName = works[0]?.clientName || 'Client'
-  const clientLogo = works[0]?.clientLogo
+  const clientName = client?.name
+  const clientLogo = client?.logo
 
   const types = [
     'All',
@@ -255,7 +276,7 @@ const ClientWorks: React.FC = () => {
             </Link>
             <span>/</span>
             <span className="text-white/70">
-              {loading ? '...' : clientName.toUpperCase()}
+              {loading ? '...' : client?.name.toUpperCase()}
             </span>
           </div>
 
@@ -272,7 +293,7 @@ const ClientWorks: React.FC = () => {
               </span>
             ) : null}
             <p className="text-xs tracking-[0.3em] text-white/40">
-              {loading ? 'CLIENT' : clientName.toUpperCase()}
+              {loading ? client?.name.toUpperCase() : client?.name.toUpperCase()}
             </p>
           </div>
 
@@ -283,7 +304,14 @@ const ClientWorks: React.FC = () => {
     <>
       <span className="font-light">{clientName},</span>
    
-      <span className="font-bold">in system.</span>
+      <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">in system.</span>
     </>
   )}
 </h1>

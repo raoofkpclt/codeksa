@@ -221,7 +221,14 @@ const Service :React.FC = () => {
     Capabilities connected by {" "}
   </span>
 
-  <span className="font-bold">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
     one system.
   </span>
 </h1>
@@ -252,7 +259,14 @@ const Service :React.FC = () => {
     Start with the business{" "}
   </span>
 
-  <span className="font-bold ">
+  <span className="font-bold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)] ">
     requirement.
   </span>
 </h2>

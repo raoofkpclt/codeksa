@@ -125,8 +125,6 @@ const industries = [
   "Growing Businesses",
 ];
 
-
-
 interface WorkItem {
   title: string;
 }
@@ -183,10 +181,25 @@ const Home: React.FC = () => {
       {/* Hero */}
       <section className="px-6 md:px-10 lg:px-16 pt-28 pb-16 sm:pt-32 sm:pb-20 md:pt-40 md:pb-28">
         <div className="max-w-[1600px] mx-auto">
-          <h1 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(5rem,15vw,20rem)] leading-[0.9] tracking-[-0.08em]">
+          <h1 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(5rem,15vw,20rem)] leading-[0.999] tracking-[-0.08em]">
             The system
             <br />
-            behind <span className="font-semibold">growth.</span>
+            behind{" "}
+            <span
+              className="
+    font-bold
+    text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]
+  "
+            >
+              growth.
+            </span>
           </h1>
 
           <p className="mt-10 sm:mt-14 md:mt-20 font-['Space_Grotesk',sans-serif] max-w-xl text-base sm:text-lg leading-relaxed text-white/50">
@@ -223,7 +236,18 @@ const Home: React.FC = () => {
           <div>
             <h2 className="font-light text-3xl sm:text-4xl md:text-6xl leading-[1.1] sm:leading-[1.05] tracking-tight max-w-3xl">
               Business growth needs more than{" "}
-              <span className="font-semibold">activity.</span>
+              <span
+                className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+    hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+              >
+                activity.
+              </span>
             </h2>
 
             <p className="mt-8 md:mt-10 max-w-2xl text-white/50 text-base sm:text-lg leading-relaxed">
@@ -251,7 +275,18 @@ const Home: React.FC = () => {
                 <h2 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(2.75rem,8vw,8rem)] leading-[0.95] sm:leading-[0.9] tracking-[-0.03em] sm:tracking-[-0.05em] break-words">
                   Four pathways.
                   <br />
-                  <span className="font-semibold">One system.</span>
+                  <span
+                    className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+    hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+                  >
+                    One system.
+                  </span>
                 </h2>
               </div>
             </div>
@@ -277,12 +312,18 @@ const Home: React.FC = () => {
                 </span>
               </div>
 
-              
               <div className="flex items-center justify-center gap-8">
                 <div className="w-full max-w-[1150px]">
                   <h3 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(2.5rem,7vw,8rem)] leading-[0.85] tracking-[-0.06em]">
                     {pathway.title}{" "}
-                    <span className="font-semibold">{pathway.highlight}</span>
+                    <span className="font-semibold text-white
+    transition-all
+    duration-500
+    ease-out
+    hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">{pathway.highlight}</span>
                   </h3>
 
                   <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/50">
@@ -305,7 +346,14 @@ const Home: React.FC = () => {
           <p className={`${labelBase} self-start`}>THE CODE STANDARD</p>
 
           <h2 className="self-end text-right font-['Space_Grotesk',sans-serif] font-light text-3xl sm:text-4xl md:text-6xl leading-[1.05] tracking-[-0.04em]">
-            Clear before work <span className="font-semibold">begins.</span>
+            Clear before work <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">begins.</span>
           </h2>
         </div>
 
@@ -347,7 +395,14 @@ const Home: React.FC = () => {
             <h2 className="max-w-4xl  font-['Space_Grotesk',sans-serif] font-light text-3xl sm:text-4xl md:text-6xl leading-[1.05] tracking-[-0.04em]">
               Different levels of engagement.
               <br />
-              <span className="font-semibold">One standard.</span>
+              <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">One standard.</span>
             </h2>
           </div>
         </div>
@@ -402,8 +457,15 @@ const Home: React.FC = () => {
             {/* Center Right */}
             <div className="flex items-center justify-between">
               <h2 className="max-w-5xl text font-['Space_Grotesk',sans-serif] font-light text-3xl sm:text-4xl md:text-6xl leading-[1.05] tracking-[-0.04em]">
-                Built for businesses where clarity, trust and
-                <span className="font-semibold">execution matter.</span>
+                Built for businesses where clarity, trust and{" "}
+                <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">execution matter.</span>
               </h2>
             </div>
           </div>
@@ -454,7 +516,14 @@ const Home: React.FC = () => {
           <div className="flex flex-col justify-center items-end">
             <div className="max-w-4xl">
               <h2 className=" font-['Space_Grotesk',sans-serif] font-light text-3xl sm:text-4xl md:text-6xl leading-[1.05] tracking-[-0.04em]">
-                Selected <span className="font-semibold">work.</span>
+                Selected <span className="font-semibold  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">work.</span>
               </h2>
 
               <p className="mt-8  text-white/50 text-base sm:text-lg leading-relaxed">

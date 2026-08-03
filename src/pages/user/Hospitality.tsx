@@ -79,7 +79,14 @@ const Hospitality: React.FC = () => {
         <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">Hospitality,</span>
           <br />
-          <span className="font-bold">structured.</span>
+          <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">structured.</span>
         </h1>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
           Food and hospitality businesses do not compete only on taste.
@@ -133,8 +140,15 @@ const Hospitality: React.FC = () => {
           {/* Right */}
           <div className="flex items-end ">
             <h2 className="max-w-[900px]  font-['Space_Grotesk',sans-serif] text-[clamp(50px,5vw,20px)] font-light leading-[0.999] tracking-[-0.06em] text-white">
-              The parts that make
-              <span className="font-bold">the system.</span>
+              The parts that make{" "}
+              <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">the system.</span>
             </h2>
           </div>
         </div>
@@ -160,7 +174,14 @@ const Hospitality: React.FC = () => {
             Connect brand memory, local discovery and customer
           </span>
 
-          <span className="font-bold">experience.</span>
+          <span className="font-bold text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">experience.</span>
         </h2>
         <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
           Food and hospitality businesses win on memory and confidence. CODE
