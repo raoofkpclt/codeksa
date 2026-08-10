@@ -1,6 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+
+import { auth, db } from "../../config/firebase/firebase";
 import AuthService from "../../service/firebaseService/auth";
 
 // =========================================
@@ -9,24 +13,24 @@ import AuthService from "../../service/firebaseService/auth";
 
 const navItems = [
   {
-    label: "Home",
+    label: "Dashboard",
     path: "/client/home",
-    icon: "home",
+    icon: "grid",
   },
   {
-    label: "Works",
+    label: "My works",
     path: "/client/works",
-    icon: "briefcase",
+    icon: "layers",
+  },
+  {
+    label: "My uploads",
+    path: "/client/clientUploads",
+    icon: "inbox",
   },
   {
     label: "Profile",
     path: "/client/profile",
     icon: "user",
-  },
-  {
-    label: "Client Uploads",
-    path: "/client/clientUploads",
-    icon: "cloud",
   },
 ];
 
@@ -35,10 +39,10 @@ const navItems = [
 // =========================================
 
 const icons: Record<string, ReactNode> = {
-  home: (
+  grid: (
     <svg
-      width="18"
-      height="18"
+      width="17"
+      height="17"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -46,15 +50,17 @@ const icons: Record<string, ReactNode> = {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
     </svg>
   ),
 
-  briefcase: (
+  layers: (
     <svg
-      width="18"
-      height="18"
+      width="17"
+      height="17"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -62,14 +68,16 @@ const icons: Record<string, ReactNode> = {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
     </svg>
   ),
-  cloud: (
+
+  inbox: (
     <svg
-      width="18"
-      height="18"
+      width="17"
+      height="17"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -77,17 +85,15 @@ const icons: Record<string, ReactNode> = {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M16 16l-4-4-4 4" />
-      <path d="M12 12v9" />
-      <path d="M20.39 18.39A5.5 5.5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.3" />
-      <path d="M16 16h1a3 3 0 0 0 0-6" />
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
     </svg>
   ),
 
   user: (
     <svg
-      width="18"
-      height="18"
+      width="17"
+      height="17"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -106,12 +112,44 @@ const icons: Record<string, ReactNode> = {
 // =========================================
 
 const ClientLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const [notifOpen, setNotifOpen] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const [clientName, setClientName] = useState("CODE Hub Test Client");
+  const [clientEmail, setClientEmail] = useState("");
+
+  // =========================================
+  // Fetch Client Info
+  // =========================================
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      setClientEmail(user.email || "");
+
+      try {
+        const clientRef = doc(db, "clients", user.uid);
+        const clientSnapshot = await getDoc(clientRef);
+
+        if (clientSnapshot.exists()) {
+          const clientData = clientSnapshot.data();
+
+          setClientName(
+            clientData.companyName ||
+              clientData.name ||
+              clientData.clientName ||
+              "there",
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // =========================================
   // Logout
@@ -129,38 +167,54 @@ const ClientLayout = () => {
     }
   };
 
-  // =========================================
-  // Temporary Notifications
-  // Replace later with Firestore data
-  // =========================================
-
-  const notifications = [
-    {
-      id: 1,
-      text: "New work has been sent for your approval",
-      time: "2m ago",
-    },
-    {
-      id: 2,
-      text: "Poster design is waiting for review",
-      time: "1h ago",
-    },
-    {
-      id: 3,
-      text: "Your requested edit has been updated",
-      time: "3h ago",
-    },
-  ];
-
-  // =========================================
-  // Current Page
-  // =========================================
-
-  const currentPage =
-    navItems.find((item) => item.path === location.pathname)?.label || "Home";
+  const clientInitial = (clientName || "C").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="flex min-h-screen bg-[#0B0B0F] text-white font-sans [font-family:'Inter',sans-serif]">
+    <div className="flex min-h-screen bg-black text-white font-['Space_Grotesk',sans-serif]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+
+        .sidebar-tooltip {
+          opacity: 0;
+          transform: translateX(-4px);
+          pointer-events: none;
+          transition: opacity 150ms ease, transform 150ms ease;
+        }
+
+        .group:hover .sidebar-tooltip {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      `}</style>
+
       {/* =====================================
           Background Grid
       ====================================== */}
@@ -169,7 +223,7 @@ const ClientLayout = () => {
         className="fixed inset-0 pointer-events-none bg-[length:40px_40px] opacity-60"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)",
+            "linear-gradient(rgba(132,104,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(132,104,255,0.05) 1px, transparent 1px)",
         }}
       />
 
@@ -178,26 +232,57 @@ const ClientLayout = () => {
       ====================================== */}
 
       <aside
-        className={`relative z-20 flex flex-col bg-white/[0.03] border-r border-white/[0.08] transition-all duration-300 ${
-          collapsed ? "w-[72px]" : "w-[240px]"
+        className={`relative z-20 flex flex-col border-r border-white/[0.08] bg-white/[0.03] transition-all duration-300 ${
+          collapsed ? "w-20" : "w-[260px]"
         }`}
       >
+        {/* =================================
+            Collapse toggle — anchored to the edge, always reachable
+        ================================== */}
+
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="absolute -right-3 top-8 z-30 flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#111116] text-white/50 transition hover:border-[#8468FF]/50 hover:text-white"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {collapsed ? (
+              <polyline points="9 18 15 12 9 6" />
+            ) : (
+              <polyline points="15 18 9 12 15 6" />
+            )}
+          </svg>
+        </button>
+
         {/* =================================
             Brand
         ================================== */}
 
-        <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-5">
+        <div
+          className={`flex items-center border-b border-white/[0.08] py-6 ${
+            collapsed ? "justify-center px-0" : "px-5"
+          }`}
+        >
           <img
             src="/logo/backgroundless-2.png"
-            alt="CODE Logo"
             className={`object-contain transition-all duration-300 ${
-              collapsed ? "h-10 w-10" : "h-12 w-auto max-w-[140px]"
+              collapsed ? "h-6 w-6" : "h-7 w-7"
             }`}
           />
 
           {!collapsed && (
-            <span className="text-lg font-bold tracking-[0.08em] uppercase text-white">
-              CODE
+            <span className="ml-3 text-base font-medium tracking-[0.15em] uppercase text-white">
+              Code Hub
+              <sup className="ml-0.5 text-[9px] text-white/40">TM</sup>
             </span>
           )}
         </div>
@@ -206,7 +291,11 @@ const ClientLayout = () => {
             Navigation
         ================================== */}
 
-        <nav className="flex-1 px-3 py-5 flex flex-col gap-1">
+        <nav
+          className={`flex flex-1 flex-col gap-1 py-6 ${
+            collapsed ? "px-0" : "px-4"
+          }`}
+        >
           {navItems.map((item) => {
             const active = location.pathname === item.path;
 
@@ -215,150 +304,63 @@ const ClientLayout = () => {
                 key={item.path}
                 to={item.path}
                 title={collapsed ? item.label : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium tracking-[0.01em] transition-colors duration-150 ${
+                className={`group relative flex items-center transition-all duration-200 ${
+                  collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-3"
+                } ${
                   active
-                    ? "bg-[#8B5CF6]/10 text-[#8B5CF6] border-l-2 border-[#8B5CF6]"
-                    : "text-white/50 hover:text-white/90 hover:bg-white/[0.04] border-l-2 border-transparent"
+                    ? "bg-white/[0.06] text-white"
+                    : "text-white/40 hover:bg-white/[0.03] hover:text-white"
                 }`}
               >
+                <span
+                  className={`absolute left-0 top-1/2 h-7 w-[2px] -translate-y-1/2 rounded-full bg-[#8468FF] transition ${
+                    active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  }`}
+                />
+
                 <span className="flex-shrink-0">{icons[item.icon]}</span>
 
-                {!collapsed && <span>{item.label}</span>}
+                {!collapsed && (
+                  <span className="text-sm tracking-[0.02em]">
+                    {item.label}
+                  </span>
+                )}
+
+                {collapsed && (
+                  <span className="sidebar-tooltip pointer-events-none absolute left-full top-1/2 z-40 ml-3 -translate-y-1/2 whitespace-nowrap border border-white/10 bg-[#111116] px-3 py-1.5 text-xs tracking-[0.05em] text-white shadow-lg">
+                    {item.label}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
 
         {/* =================================
-            Collapse Toggle
+            Client Info / Sign Out
         ================================== */}
 
-        <button
-          onClick={() => setCollapsed((value) => !value)}
-          className="flex items-center justify-center gap-2 px-3 py-3 mx-3 mb-3 text-[11px] text-white/30 hover:text-white/60 border-t border-white/[0.08] transition-colors"
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{
-              transform: collapsed ? "rotate(180deg)" : "none",
-              transition: "transform 0.2s",
-            }}
-          >
-            <polyline points="11 17 6 12 11 7" />
-            <polyline points="18 17 13 12 18 7" />
-          </svg>
-
-          {!collapsed && (
-            <span className="uppercase tracking-[0.1em]">Collapse</span>
-          )}
-        </button>
-      </aside>
-
-      {/* =====================================
-          Main Column
-      ====================================== */}
-
-      <div className="relative z-10 flex-1 flex flex-col min-w-0">
-        {/* =================================
-            Navbar
-        ================================== */}
-
-        <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#0B0B0F]/80 backdrop-blur-sm sticky top-0 z-30">
-          {/* Page Title */}
-
-          <div>
-            <p className="text-[10px] font-semibold tracking-[0.15em] text-white/30 uppercase">
-              Client Portal
+        {!collapsed ? (
+          <div className="border-t border-white/[0.08] px-6 py-6">
+            <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-white/30">
+              Client
             </p>
 
-            <h2 className="text-base font-bold tracking-[-0.01em]">
-              {currentPage}
-            </h2>
-          </div>
+            <p className="mt-2 text-[13px] font-medium text-white/90">
+              {clientName}
+            </p>
 
-          {/* =================================
-              Right Actions
-          ================================== */}
-
-          <div className="flex items-center gap-3">
-            {/* =============================
-                Notification Bell
-            ============================== */}
-
-            <div className="relative">
-              <button
-                onClick={() => setNotifOpen((value) => !value)}
-                className="relative w-9 h-9 flex items-center justify-center border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                </svg>
-
-                {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[9px] font-bold bg-[#8B5CF6] rounded-full">
-                    {notifications.length}
-                  </span>
-                )}
-              </button>
-
-              {/* =============================
-                  Notification Dropdown
-              ============================== */}
-
-              {notifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-[#111114] border border-white/[0.08] shadow-2xl z-40">
-                  <div className="px-4 py-3 border-b border-white/[0.08] text-[11px] font-semibold tracking-[0.1em] text-white/40 uppercase">
-                    Notifications
-                  </div>
-
-                  <div className="max-h-72 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className="px-4 py-3 border-b border-white/[0.05] hover:bg-white/[0.03] transition-colors"
-                      >
-                        <p className="text-[13px] text-white/80">
-                          {notification.text}
-                        </p>
-
-                        <p className="text-[10px] text-white/30 mt-1">
-                          {notification.time}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* =============================
-                Logout
-            ============================== */}
+            <p className="mt-0.5 truncate text-[11px] text-white/35">
+              {clientEmail}
+            </p>
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3.5 py-2 text-[11px] font-bold tracking-[0.1em] uppercase text-white/70 hover:text-white border border-white/10 bg-white/[0.03] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors"
+              className="mt-4 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.1em] text-white/40 transition-colors hover:text-white/80"
             >
               <svg
-                width="14"
-                height="14"
+                width="13"
+                height="13"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -370,16 +372,54 @@ const ClientLayout = () => {
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
-              Logout
+              Sign out
             </button>
           </div>
-        </header>
+        ) : (
+          <div className="flex flex-col items-center gap-4 border-t border-white/[0.08] py-6">
+            <div
+              className="group relative flex h-8 w-8 items-center justify-center border border-[#8468FF]/30 bg-[#8468FF]/10 text-xs font-medium text-[#8468FF]"
+              title={clientName}
+            >
+              {clientInitial}
+              <span className="sidebar-tooltip pointer-events-none absolute left-full top-1/2 z-40 ml-3 -translate-y-1/2 whitespace-nowrap border border-white/10 bg-[#111116] px-3 py-1.5 text-xs tracking-[0.05em] text-white shadow-lg">
+                {clientName}
+              </span>
+            </div>
 
-        {/* =================================
-            Routed Inner Content
-        ================================== */}
+            <button
+              onClick={handleLogout}
+              title="Sign out"
+              className="group relative flex h-8 w-8 items-center justify-center text-white/40 transition-colors hover:text-white/80"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span className="sidebar-tooltip pointer-events-none absolute left-full top-1/2 z-40 ml-3 -translate-y-1/2 whitespace-nowrap border border-white/10 bg-[#111116] px-3 py-1.5 text-xs tracking-[0.05em] text-white shadow-lg">
+                Sign out
+              </span>
+            </button>
+          </div>
+        )}
+      </aside>
 
-        <main className="flex-1 p-6 overflow-y-auto">
+      {/* =====================================
+          Main Column
+      ====================================== */}
+
+      <div className="relative z-10 flex-1 min-w-0">
+        <main className="min-h-screen p-10">
           <Outlet />
         </main>
       </div>

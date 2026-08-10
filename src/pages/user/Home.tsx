@@ -140,7 +140,7 @@ const workItems: WorkItem[] = [
 
 const labelBase = "text-xs tracking-[0.2em] text-white/40";
 const accentLine =
-  "w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block";
+  "w-6 h-px bg-[#8468FF] inline-block";
 
 const Home: React.FC = () => {
   return (
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]
@@ -222,7 +222,9 @@ const Home: React.FC = () => {
               className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/50 hover:text-white/80 transition-colors group"
             >
               EXPLORE WHAT WE SOLVE
-              <span className="w-6 h-px bg-white/30 inline-block group-hover:w-10 transition-all" />
+              <span
+                className={`${accentLine} group-hover:w-10 transition-all`}
+              />
             </Link>
           </div>
         </div>
@@ -241,7 +243,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-    hover:text-[#8a6dff]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
@@ -280,7 +282,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-    hover:text-[#8a6dff]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
@@ -320,7 +322,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-    hover:text-[#8a6dff]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">{pathway.highlight}</span>
@@ -350,7 +352,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">begins.</span>
@@ -399,7 +401,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">One standard.</span>
@@ -462,7 +464,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">execution matter.</span>
@@ -520,7 +522,7 @@ const Home: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">work.</span>

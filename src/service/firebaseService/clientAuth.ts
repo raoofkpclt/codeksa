@@ -8,7 +8,7 @@ import { auth, db } from "../../config/firebase/firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 class ClientAuthService {
-  async register(name: string, email: string, password: string) {
+  async register(name: string, email: string, password: string ,company:string) {
     const credential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -19,6 +19,7 @@ class ClientAuthService {
       uid: credential.user.uid,
       name,
       email,
+      company,
       role: "client",
       active: false,
       onboarding: false,

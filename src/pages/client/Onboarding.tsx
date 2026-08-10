@@ -16,11 +16,25 @@ import {
   db,
 } from "../../config/firebase/firebase";
 
+const labelBase = "text-xs tracking-[0.2em] text-white/40";
+const glowSpan =
+  "font-semibold text-white transition-all duration-500 ease-out hover:text-[#8468FF] hover:scale-[1.01] hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)] hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]";
+
 const Onboarding = () => {
   const navigate = useNavigate();
 
   const [checking, setChecking] =
     useState(true);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     let unsubscribeClient:
@@ -113,12 +127,17 @@ const Onboarding = () => {
 
   if (checking) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0B0B0F]">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-violet-500" />
+      <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-black text-white">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+          * { font-family: 'Space Grotesk', sans-serif; font-synthesis: none; }
+        `}</style>
 
-          <p className="mt-4 text-xs uppercase tracking-[0.15em] text-white/40">
-            Checking Account Status
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-[#8468FF]" />
+
+          <p className={`mt-4 ${labelBase}`}>
+            CHECKING ACCOUNT STATUS
           </p>
         </div>
       </div>
@@ -126,103 +145,120 @@ const Onboarding = () => {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0B0B0F] p-8">
+    <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-black text-white px-6 md:px-10 lg:px-16 py-16 sm:py-20 md:py-28">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-      {/* Grid Background */}
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
+
+      {/* Background grid */}
       <div
-        className="absolute inset-0 bg-[length:40px_40px]"
+        className="absolute inset-0 pointer-events-none bg-[length:40px_40px]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)",
+            "linear-gradient(rgba(132,104,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(132,104,255,0.05) 1px, transparent 1px)",
         }}
       />
 
-      {/* Purple Glow */}
-      <div className="absolute h-[650px] w-[650px] rounded-full bg-violet-600/10 blur-[120px]" />
-
-      {/* Card */}
-      <div className="relative w-full max-w-lg border border-white/10 bg-white/[0.03] p-10 backdrop-blur-xl">
-
-        {/* Corner Borders */}
-        <span className="absolute left-0 top-0 h-4 w-4 border-l border-t border-violet-500" />
-
-        <span className="absolute right-0 top-0 h-4 w-4 border-r border-t border-violet-500" />
-
-        <span className="absolute bottom-0 left-0 h-4 w-4 border-b border-l border-violet-500" />
-
-        <span className="absolute bottom-0 right-0 h-4 w-4 border-b border-r border-violet-500" />
-
-        {/* Badge */}
-        <span className="inline-block border border-violet-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-400">
-          Client Portal
-        </span>
-
-        {/* Title */}
-        <h1 className="mt-6 text-3xl font-black uppercase tracking-tight text-white">
-          Account Under Review
-        </h1>
-
-        <div className="mt-4 h-[2px] w-20 bg-violet-500" />
-
-        {/* Icon */}
-        <div className="mt-10 flex justify-center">
-          <div className="flex h-24 w-24 items-center justify-center rounded-full border border-violet-500 bg-violet-500/10">
-
-            <svg
-              className="h-10 w-10 text-violet-400"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v4l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-
+      <div
+        className={`relative max-w-lg transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
+        {/* Logo / wordmark */}
+        <div className="flex items-center gap-2.5 mb-16">
+          <div className="w-7 h-7 flex items-center justify-center border border-white/15 text-white text-sm font-semibold font-['Space_Grotesk',sans-serif]">
+            C
           </div>
-        </div>
-
-        {/* Message */}
-        <h2 className="mt-8 text-center text-xl font-bold text-white">
-          Waiting for Approval
-        </h2>
-
-        <p className="mt-4 text-center text-sm leading-7 text-white/50">
-          Your account has been created successfully.
-          <br />
-          It is currently under review by the administrator.
-          <br />
-          You'll receive access once your account has been approved.
-        </p>
-
-        {/* Live Status */}
-        <div className="mt-6 flex items-center justify-center gap-2">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-
-          <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-amber-400">
-            Live Approval Check
+          <span className="text-white text-[13px] font-medium tracking-[0.08em] font-['Space_Grotesk',sans-serif]">
+            CODE HUB
+            <sup className="text-[8px] ml-0.5">™</sup>
           </span>
         </div>
 
-        {/* Logout Button */}
+        {/* Tag */}
+        <p className={`${labelBase} mb-4`}>CLIENT PORTAL</p>
+
+        {/* Headline */}
+        <h1 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(2.25rem,5.5vw,3.25rem)] leading-[1.05] tracking-[-0.03em] mb-6">
+          Account under
+          <br />
+          <span className={glowSpan}>review.</span>
+        </h1>
+
+        {/* Subtext */}
+        <p className="font-['Space_Grotesk',sans-serif] text-white/50 text-base leading-relaxed mb-10 max-w-sm">
+          Your account has been created successfully. It's currently being
+          reviewed by the administrator — you'll get access as soon as it's
+          approved.
+        </p>
+
+        {/* Status icon */}
+        <div className="mb-10 flex items-center gap-5">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-[#8468FF]/40 bg-[#8468FF]/[0.06]">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#8468FF"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 8v4l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-white">
+              Waiting for approval
+            </p>
+
+            <div className="mt-2 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] text-amber-400">
+                Live approval check
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="mt-10 w-full border border-red-500 py-3 text-sm font-bold uppercase tracking-[0.15em] text-red-400 transition-all duration-300 hover:bg-red-500 hover:text-white"
+          className="w-full border border-red-500/40 py-4 text-xs font-medium uppercase tracking-[0.2em] text-red-400 transition-colors duration-200 hover:bg-red-500/10 hover:text-red-300"
         >
           Logout
         </button>
 
         {/* Footer */}
-        <div className="mt-8 flex items-center justify-center gap-2">
-          <div className="h-1 w-1 rounded-full bg-violet-500" />
-
-          <span className="text-[10px] uppercase tracking-[0.15em] text-white/30">
-            CODE • Structured Marketing
-          </span>
-        </div>
+        <p className={`${labelBase} mt-8`}>
+          CODE &middot; STRUCTURED MARKETING
+        </p>
       </div>
     </div>
   );

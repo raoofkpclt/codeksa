@@ -9,6 +9,7 @@ import ClientWorkService, {
   type ClientWork,
   type WorkStatus,
 } from "../../service/firebaseService/clientWorkService";
+import { useNavigate } from "react-router-dom";
 
 // =========================================
 // Filter Type
@@ -31,6 +32,8 @@ const Works = () => {
 
   const [filter, setFilter] = useState<FilterStatus>("all");
 
+  const [search, setSearch] = useState("");
+
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const [selectedWork, setSelectedWork] = useState<ClientWork | null>(null);
@@ -38,6 +41,8 @@ const Works = () => {
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
   const [editRequestNote, setEditRequestNote] = useState("");
+
+  const navigate = useNavigate();
 
   // =======================================
   // Fetch Works
@@ -82,12 +87,21 @@ const Works = () => {
   // =======================================
 
   const filteredWorks = useMemo(() => {
-    if (filter === "all") {
-      return works;
+    let result = works;
+
+    if (filter !== "all") {
+      result = result.filter((work) => work.status === filter);
     }
 
-    return works.filter((work) => work.status === filter);
-  }, [works, filter]);
+    if (search.trim()) {
+      const query = search.trim().toLowerCase();
+      result = result.filter((work) =>
+        work.postName?.toLowerCase().includes(query),
+      );
+    }
+
+    return result;
+  }, [works, filter, search]);
 
   // =======================================
   // Counts
@@ -111,18 +125,8 @@ const Works = () => {
     [works],
   );
 
-  // =======================================
-  // Open Confirmation
-  // =======================================
 
-  const openAction = (work: ClientWork, action: ActionType) => {
-    setSelectedWork(work);
-    setPendingAction(action);
-
-    if (action === "edit") {
-      setEditRequestNote("");
-    }
-  };
+ 
 
   // =======================================
   // Close Confirmation
@@ -210,24 +214,25 @@ const Works = () => {
       setActionLoading(null);
     }
   };
+
   // =======================================
   // Status Styles
   // =======================================
 
   const statusStyles: Record<WorkStatus, string> = {
-    sent_to_client: "border-amber-500/20 bg-amber-500/10 text-amber-400",
+    sent_to_client: "border-[#8468FF]/50 bg-[#8468FF]/10 text-[#a78bfa]",
 
-    requested_to_edit: "border-blue-500/20 bg-blue-500/10 text-blue-400",
+    requested_to_edit: "border-amber-500/40 bg-amber-500/5 text-amber-400",
 
-    approved: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+    approved: "border-emerald-500/40 bg-emerald-500/5 text-emerald-400",
 
-    rejected: "border-red-500/20 bg-red-500/10 text-red-400",
+    rejected: "border-red-500/40 bg-red-500/5 text-red-400",
   };
 
   const statusLabels: Record<WorkStatus, string> = {
-    sent_to_client: "Pending Approval",
+    sent_to_client: "Sent to Client",
 
-    requested_to_edit: "Edit Requested",
+    requested_to_edit: "Changes Requested",
 
     approved: "Approved",
 
@@ -249,12 +254,12 @@ const Works = () => {
       count: counts.all,
     },
     {
-      label: "Pending",
+      label: "Sent to client",
       value: "sent_to_client",
       count: counts.sent_to_client,
     },
     {
-      label: "Edit Requested",
+      label: "Changes requested",
       value: "requested_to_edit",
       count: counts.requested_to_edit,
     },
@@ -290,29 +295,62 @@ const Works = () => {
 
   return (
     <>
-      <div className="mx-auto flex max-w-7xl flex-col gap-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 font-['Space_Grotesk',sans-serif]">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+          :root {
+            --charcoal: #151518;
+            --graphite: #1E1F24;
+            --steel: #2B2C31;
+            --slate-muted: #7D7D86;
+            --mist: #D8D8DE;
+            --code-white: #FFFFFF;
+            --code-purple: #6F4BFF;
+            --code-electric: #8468FF;
+            --violet-glow: #9B83FF;
+          }
+
+          body {
+            font-family: 'Space Grotesk', sans-serif;
+          }
+
+          * { font-synthesis: none; }
+
+          .hover-glow:hover {
+            color: var(--violet-glow) !important;
+            text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+          }
+
+          .glow-text {
+            color: var(--violet-glow);
+            text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+          }
+        `}</style>
+
         {/* =================================
-            Header
+            Hero
         ================================== */}
 
-        <div className="relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-[#8B5CF6]/10 via-white/[0.02] to-transparent p-6 sm:p-8">
-          <span className="absolute -left-px -top-px h-3 w-3 border-l-[1.5px] border-t-[1.5px] border-[#8B5CF6]" />
-
-          <span className="absolute -bottom-px -right-px h-3 w-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
-            Client Portal
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+            your works
           </p>
 
-          <h1 className="mt-2 text-2xl font-black tracking-[-0.02em] sm:text-3xl">
-            Your Works
+          <h1 className="mt-3 max-w-2xl font-light text-4xl  leading-[1.15] tracking-[-0.02em] text-white sm:text-[42px]">
+            Everything we have 
+            <br />
+            <span className="font-bold">prepared</span>
+            
+            <span className="font-bold">for you.</span>
           </h1>
 
-          <p className="mt-2 max-w-xl text-sm text-white/40">
-            Review posters and reels, approve completed work, request changes,
-            or reject submissions.
+          <p className="mt-4 max-w-lg text-sm text-white/40">
+            Review, approve or request changes. Each decision is recorded.
           </p>
         </div>
+
+        <div className="border-t border-white/[0.08]" />
 
         {/* =================================
             Error
@@ -332,33 +370,33 @@ const Works = () => {
         )}
 
         {/* =================================
-            Filters
+            Filters + Search
         ================================== */}
 
-        <div className="flex flex-wrap gap-2 border border-white/[0.08] bg-white/[0.03] p-3">
-          {filterButtons.map((item) => (
-            <button
-              key={item.value}
-              onClick={() => setFilter(item.value)}
-              className={`flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                filter === item.value
-                  ? "bg-[#8B5CF6] text-white"
-                  : "border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white"
-              }`}
-            >
-              {item.label}
-
-              <span
-                className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[9px] ${
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap gap-2">
+            {filterButtons.map((item) => (
+              <button
+                key={item.value}
+                onClick={() => setFilter(item.value)}
+                className={`px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.1em] transition-colors ${
                   filter === item.value
-                    ? "bg-white/20 text-white"
-                    : "bg-white/[0.06] text-white/40"
+                    ? "border border-[#8468FF] text-white"
+                    : "border border-white/[0.1] text-white/40 hover:text-white"
                 }`}
               >
-                {item.count}
-              </span>
-            </button>
-          ))}
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search works"
+            className="ml-auto min-w-[200px] flex-1 max-w-xs border border-white/[0.1] bg-transparent px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#8468FF]/50 sm:flex-none"
+          />
         </div>
 
         {/* =================================
@@ -366,18 +404,16 @@ const Works = () => {
         ================================== */}
 
         {loading && (
-          <div className="grid gap-5 md:grid-cols-2">
-            {[1, 2, 3, 4].map((item) => (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="animate-pulse border border-white/[0.08] bg-white/[0.03]"
+                className="animate-pulse border border-white/[0.08] bg-white/[0.03] p-6"
               >
-                <div className="aspect-video bg-white/[0.04]" />
-
-                <div className="space-y-3 p-5">
-                  <div className="h-4 w-2/3 bg-white/[0.06]" />
-                  <div className="h-3 w-full bg-white/[0.04]" />
-                  <div className="h-3 w-1/2 bg-white/[0.04]" />
+                <div className="space-y-3">
+                  <div className="h-4 w-1/2 bg-white/[0.06]" />
+                  <div className="h-5 w-full bg-white/[0.06]" />
+                  <div className="h-3 w-1/3 bg-white/[0.04]" />
                 </div>
               </div>
             ))}
@@ -405,7 +441,7 @@ const Works = () => {
               </svg>
             </div>
 
-            <p className="mt-4 text-sm font-semibold text-white/60">
+            <p className="mt-4 text-sm font-medium text-white/60">
               No works found
             </p>
 
@@ -420,18 +456,23 @@ const Works = () => {
         ================================== */}
 
         {!loading && filteredWorks.length > 0 && (
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {filteredWorks.map((work) => (
+              // <article
+              //   key={work.id}
+              //   className="group flex flex-col gap-5 border border-white/[0.08] bg-white/[0.03] p-6 transition-colors hover:border-[#8468FF]/30"
+              // >
               <article
                 key={work.id}
-                className="group overflow-hidden border border-white/[0.08] bg-white/[0.03] transition-colors hover:border-[#8B5CF6]/30"
+                onClick={() => navigate(`/client/works/${work.id}`)}
+                className="group flex cursor-pointer flex-col gap-5 border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:border-[#8468FF]/30 hover:bg-white/[0.04]"
               >
                 {/* =====================
-                        Media
+                        Media (only when present)
                     ====================== */}
 
-                <div className="relative bg-black">
-                  {work.media && work.media.length > 0 ? (
+                {/* {work.media && work.media.length > 0 && (
+                  <div className="relative -mx-6 -mt-6 mb-1 bg-black">
                     <div className="grid gap-px bg-white/[0.05]">
                       {work.media.map((media, index) => {
                         const mediaUrl =
@@ -449,13 +490,13 @@ const Works = () => {
                                 ? `${work.id}-${index}`
                                 : media.key || `${work.id}-${index}`
                             }
-                            className="relative flex min-h-[260px] items-center justify-center overflow-hidden bg-black"
+                            className="relative flex min-h-[220px] items-center justify-center overflow-hidden bg-black"
                           >
                             {work.postType === "poster" ? (
                               <img
                                 src={mediaUrl}
                                 alt={mediaName}
-                                className="max-h-[500px] w-full object-contain"
+                                className="max-h-[440px] w-full object-contain"
                                 loading="lazy"
                                 onError={(event) => {
                                   console.error("Image failed:", mediaUrl);
@@ -469,127 +510,80 @@ const Works = () => {
                                 controls
                                 playsInline
                                 preload="metadata"
-                                className="max-h-[500px] w-full"
+                                className="max-h-[440px] w-full"
                               />
                             )}
                           </div>
                         );
                       })}
                     </div>
-                  ) : (
-                    <div className="flex aspect-video items-center justify-center bg-white/[0.02]">
-                      <p className="text-xs text-white/20">No media</p>
-                    </div>
-                  )}
+                  </div>
+                )} */}
 
-                  {/* Type Badge */}
+                {/* =====================
+                        Status + Type
+                    ====================== */}
 
-                  <span className="absolute left-3 top-3 border border-white/10 bg-black/70 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white/70 backdrop-blur-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <span
+                    className={`border px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.1em] ${
+                      statusStyles[work.status]
+                    }`}
+                  >
+                    {statusLabels[work.status]}
+                  </span>
+
+                  <span className="text-[12px] capitalize text-white/30">
                     {work.postType}
                   </span>
                 </div>
 
                 {/* =====================
-                        Content
+                        Title + Description
                     ====================== */}
 
-                <div className="p-5">
-                  {/* Status */}
-
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <h2 className="text-base font-bold tracking-[-0.01em] text-white">
-                      {work.postName}
-                    </h2>
-
-                    <span
-                      className={`shrink-0 rounded-full border px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.08em] ${
-                        statusStyles[work.status]
-                      }`}
-                    >
-                      {statusLabels[work.status]}
-                    </span>
-                  </div>
-
-                  {/* Description */}
+                <div>
+                  <h2 className="text-[15px] font-medium leading-snug text-white/90">
+                    {work.postName}
+                  </h2>
 
                   {work.description && (
-                    <p className="line-clamp-3 text-[12px] leading-5 text-white/40">
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-5 text-white/40">
                       {work.description}
                     </p>
                   )}
 
-                  {/* Posting Date */}
-
-                  <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-4">
-                    <div>
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-white/25">
-                        Posting Date
-                      </p>
-
-                      <p className="mt-1 text-[11px] font-medium text-white/60">
-                        {formatPostingDate(work.postingDate)}
-                      </p>
-                    </div>
-
-                    {work.active && (
-                      <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-emerald-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        Active
-                      </span>
-                    )}
-                  </div>
-
-                  {/* =====================
-                          Actions
-                      ====================== */}
-
-                  {work.status === "sent_to_client" && (
-                    <div className="mt-5 grid grid-cols-3 gap-2">
-                      {/* Approve */}
-
-                      <button
-                        onClick={() => openAction(work, "approve")}
-                        disabled={actionLoading === work.id}
-                        className="border border-emerald-500/20 bg-emerald-500/10 px-3 py-2.5 text-[9px] font-bold uppercase tracking-[0.08em] text-emerald-400 transition-colors hover:bg-emerald-500/20 disabled:opacity-50"
-                      >
-                        Approve
-                      </button>
-
-                      {/* Edit */}
-
-                      <button
-                        onClick={() => openAction(work, "edit")}
-                        disabled={actionLoading === work.id}
-                        className="border border-blue-500/20 bg-blue-500/10 px-3 py-2.5 text-[9px] font-bold uppercase tracking-[0.08em] text-blue-400 transition-colors hover:bg-blue-500/20 disabled:opacity-50"
-                      >
-                        Edit
-                      </button>
-
-                      {/* Reject */}
-
-                      <button
-                        onClick={() => openAction(work, "reject")}
-                        disabled={actionLoading === work.id}
-                        className="border border-red-500/20 bg-red-500/10 px-3 py-2.5 text-[9px] font-bold uppercase tracking-[0.08em] text-red-400 transition-colors hover:bg-red-500/20 disabled:opacity-50"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Already Responded */}
-
-                  {work.status !== "sent_to_client" && (
-                    <div className="mt-5 border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                      <p className="text-center text-[10px] font-medium text-white/30">
-                        Response submitted:{" "}
-                        <span className="text-white/55">
-                          {statusLabels[work.status]}
-                        </span>
-                      </p>
-                    </div>
-                  )}
+                  <p className="mt-3 text-[11px] text-white/30">
+                    {work.media?.length ?? 0} files ·{" "}
+                    {formatPostingDate(work.postingDate)}
+                  </p>
                 </div>
+
+                {work.active && (
+                  <span className="-mt-2 flex items-center gap-1.5 text-[9px] font-medium uppercase tracking-wider text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    Active
+                  </span>
+                )}
+
+                {/* =====================
+                        Actions
+                    ====================== */}
+
+                
+
+                {/* Already Responded */}
+
+                {work.status !== "sent_to_client" && (
+                  <div className="border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                    <p className="text-center text-[10px] font-normal text-white/30">
+                      Response submitted:{" "}
+                      <span className="text-white/55">
+                        {statusLabels[work.status]}
+                      </span>
+                    </p>
+                  </div>
+                )}
               </article>
             ))}
           </div>
@@ -602,7 +596,7 @@ const Works = () => {
 
       {selectedWork && pendingAction && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm font-['Space_Grotesk',sans-serif]"
           onClick={closeAction}
         >
           <div
@@ -612,11 +606,11 @@ const Works = () => {
             {/* Modal Header */}
 
             <div className="border-b border-white/[0.08] px-5 py-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/30">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/30">
                 Confirm Action
               </p>
 
-              <h3 className="mt-1 text-lg font-bold text-white">
+              <h3 className="mt-1 text-lg font-medium text-white">
                 {pendingAction === "approve"
                   ? "Approve Work"
                   : pendingAction === "edit"
@@ -630,7 +624,7 @@ const Works = () => {
             <div className="p-5">
               <p className="text-sm leading-6 text-white/50">
                 Are you sure you want to{" "}
-                <span className="font-semibold text-white/80">
+                <span className="font-medium text-white/80">
                   {pendingAction === "approve"
                     ? "approve"
                     : pendingAction === "edit"
@@ -638,7 +632,7 @@ const Works = () => {
                       : "reject"}
                 </span>{" "}
                 the work{" "}
-                <span className="font-semibold text-white">
+                <span className="font-medium text-white">
                   "{selectedWork.postName}"
                 </span>
                 ?
@@ -650,7 +644,7 @@ const Works = () => {
 
               {pendingAction === "edit" && (
                 <div className="mt-5">
-                  <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.1em] text-white/40">
+                  <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.1em] text-white/40">
                     Changes Required
                   </label>
 
@@ -661,7 +655,7 @@ const Works = () => {
                     rows={6}
                     autoFocus
                     placeholder="Example: Please change the background color, update the offer text, and move the logo to the top-right corner..."
-                    className="w-full resize-none border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/20 focus:border-blue-500/50"
+                    className="w-full resize-none border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/20 focus:border-[#8468FF]/50"
                   />
 
                   <div className="mt-2 flex items-center justify-between">
@@ -690,7 +684,7 @@ const Works = () => {
               <button
                 onClick={closeAction}
                 disabled={!!actionLoading}
-                className="border border-white/10 bg-white/[0.03] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white/50 transition hover:text-white disabled:opacity-50"
+                className="border border-white/10 bg-white/[0.03] px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.08em] text-white/50 transition hover:text-white disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -698,11 +692,11 @@ const Works = () => {
               <button
                 onClick={handleConfirmAction}
                 disabled={!!actionLoading}
-                className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.08em] transition disabled:opacity-50 ${
+                className={`px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.08em] transition disabled:opacity-50 ${
                   pendingAction === "approve"
                     ? "bg-emerald-500 text-white hover:bg-emerald-600"
                     : pendingAction === "edit"
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      ? "bg-[#8468FF] text-white hover:bg-[#6F4BFF]"
                       : "bg-red-500 text-white hover:bg-red-600"
                 }`}
               >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Client } from "../../utils/types";
 import ClientService from "../../service/firebaseService/clientService";
 import ReusableModal from "../../components/ReusableModal";
@@ -6,8 +6,7 @@ import EditClientModal from "../../components/EditClinetModal";
 import AddClientModal from "../../components/AddClinetModal";
 import DeleteModal from "../../components/DeleteModal";
 import { FirebaseError } from "firebase/app";
-const DEFAULT_CLIENT_LOGO =
-  "https://codeksa-web.s3.ap-south-1.amazonaws.com/clients/logos/Preto.jpeg";
+
 
 type ModalAction =
   | "delete"
@@ -30,6 +29,8 @@ const ClientManagement = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const [modal, setModal] = useState<ModalState>({
     isOpen: false,
@@ -37,41 +38,6 @@ const ClientManagement = () => {
     client: null,
   });
   const [deleteError, setDeleteError] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   let cancelled = false;
-
-  //   const fetchClients = async () => {
-  //     try {
-  //       const data = await ClientService.getAllClients();
-
-  //       if (!cancelled) {
-  //         setClients(data as Client[]);
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to load clients:", error);
-  //     } finally {
-  //       if (!cancelled) {
-  //         setLoading(false);
-  //       }
-  //     }
-  //   };
-
-  //   void fetchClients();
-
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
-
-  // const refreshClients = async () => {
-  //   try {
-  //     const data = await ClientService.getAllClients();
-  //     setClients(data as Client[]);
-  //   } catch (error) {
-  //     console.error("Failed to refresh clients:", error);
-  //   }
-  // };
 
   const sortClientsNewestFirst = (data: Client[]) => {
     return [...data].sort((a, b) => {
@@ -122,6 +88,8 @@ const ClientManagement = () => {
     action: Exclude<ModalAction, null>,
     client: Client | null = null,
   ) => {
+    setOpenMenuId(null);
+
     setModal({
       isOpen: true,
       action,
@@ -274,24 +242,6 @@ const ClientManagement = () => {
 
   const modalConfig = getModalConfig();
 
-  // const handleEditClient = async (updatedData: Partial<Client>) => {
-  //   if (!modal.client?.id) return;
-
-  //   try {
-  //     setEditLoading(true);
-
-  //     await ClientService.editClient(modal.client.id, updatedData);
-
-  //     await refreshClients();
-
-  //     resetModal();
-  //   } catch (error) {
-  //     console.error("Failed to update client:", error);
-  //   } finally {
-  //     setEditLoading(false);
-  //   }
-  // };
-
   const handleEditClient = async (updatedData: Partial<Client>) => {
     if (!modal.client?.id) return;
 
@@ -310,34 +260,11 @@ const ClientManagement = () => {
     }
   };
 
-  // const handleAddClient = async (data: any) => {
-  //   try {
-  //     setAddLoading(true);
-
-  //     // Create Firebase Auth user
-  //     // + save client data in Firestore
-  //     await ClientService.register(data.name, data.email, data.password);
-
-  //     // Refresh client list
-  //     await refreshClients();
-
-  //     // Close modal
-  //     resetModal();
-  //   } catch (error) {
-  //     console.error("Failed to add client:", error);
-
-  //     // Throw again so AddClientModal
-  //     // can display the error
-  //     throw error;
-  //   } finally {
-  //     setAddLoading(false);
-  //   }
-  // };
-
   const handleAddClient = async (data: {
     name: string;
     email: string;
     password: string;
+    company: string;
     logo?: string;
   }) => {
     try {
@@ -347,8 +274,14 @@ const ClientManagement = () => {
         data.name,
         data.email,
         data.password,
+        data.company,
         data.logo || "",
       );
+
+      // NOTE: adjust if your register()/ClientService also needs to persist
+      // `company` — if register() doesn't accept it, you may need a follow-up
+      // ClientService.editClient(newClientId, { company: data.company }) call
+      // here once register() returns the created client's id.
 
       await refreshClients();
 
@@ -362,296 +295,292 @@ const ClientManagement = () => {
     }
   };
 
-  // const handleDeleteClient = async (password: string) => {
-  //   const client = modal.client;
-
-  //   if (!client?.id || !client.email) {
-  //     setDeleteError("Client information is missing.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setModalLoading(true);
-  //     setDeleteError(null);
-
-  //     await ClientService.deleteClient(client.id, client.email, password);
-
-  //     setClients((prev) => prev.filter((item) => item.id !== client.id));
-
-  //     resetModal();
-  //   } catch (error: any) {
-  //     console.error("Failed to delete client:", error);
-
-  //     switch (error?.code) {
-  //       case "auth/invalid-credential":
-  //         setDeleteError("Invalid client password.");
-  //         break;
-
-  //       case "auth/wrong-password":
-  //         setDeleteError("Incorrect client password.");
-  //         break;
-
-  //       case "auth/user-not-found":
-  //         setDeleteError("Firebase Auth account was not found.");
-  //         break;
-
-  //       case "auth/too-many-requests":
-  //         setDeleteError("Too many attempts. Please try again later.");
-  //         break;
-
-  //       default:
-  //         setDeleteError(error?.message || "Failed to delete client.");
-  //     }
-  //   } finally {
-  //     setModalLoading(false);
-  //   }
-  // };
-
   const handleDeleteClient = async (password: string) => {
-  const client = modal.client;
+    const client = modal.client;
 
-  if (!client?.id || !client.email) {
-    setDeleteError("Client information is missing.");
-    return;
-  }
-
-  try {
-    setModalLoading(true);
-    setDeleteError(null);
-
-    await ClientService.deleteClient(client.id, client.email, password);
-
-    setClients((prev) => prev.filter((item) => item.id !== client.id));
-
-    resetModal();
-  } catch (error: unknown) {
-    console.error("Failed to delete client:", error);
-
-    if (error instanceof FirebaseError) {
-      switch (error.code) {
-        case "auth/invalid-credential":
-          setDeleteError("Invalid client password.");
-          break;
-
-        case "auth/wrong-password":
-          setDeleteError("Incorrect client password.");
-          break;
-
-        case "auth/user-not-found":
-          setDeleteError("Firebase Auth account was not found.");
-          break;
-
-        case "auth/too-many-requests":
-          setDeleteError("Too many attempts. Please try again later.");
-          break;
-
-        default:
-          setDeleteError(error.message);
-      }
-    } else if (error instanceof Error) {
-      setDeleteError(error.message);
-    } else {
-      setDeleteError("Failed to delete client.");
+    if (!client?.id || !client.email) {
+      setDeleteError("Client information is missing.");
+      return;
     }
-  } finally {
-    setModalLoading(false);
-  }
-};
+
+    try {
+      setModalLoading(true);
+      setDeleteError(null);
+
+      await ClientService.deleteClient(client.id, client.email, password);
+
+      setClients((prev) => prev.filter((item) => item.id !== client.id));
+
+      resetModal();
+    } catch (error: unknown) {
+      console.error("Failed to delete client:", error);
+
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/invalid-credential":
+            setDeleteError("Invalid client password.");
+            break;
+
+          case "auth/wrong-password":
+            setDeleteError("Incorrect client password.");
+            break;
+
+          case "auth/user-not-found":
+            setDeleteError("Firebase Auth account was not found.");
+            break;
+
+          case "auth/too-many-requests":
+            setDeleteError("Too many attempts. Please try again later.");
+            break;
+
+          default:
+            setDeleteError(error.message);
+        }
+      } else if (error instanceof Error) {
+        setDeleteError(error.message);
+      } else {
+        setDeleteError("Failed to delete client.");
+      }
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  const formatDate = (client: Client) =>
+    client.createdAt
+      ? client.createdAt.toDate().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "--";
+
+  const filteredClients = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) return clients;
+
+    return clients.filter((client) => {
+      const name = client.name?.toLowerCase() || "";
+      const email = client.email?.toLowerCase() || "";
+      const company = client.company?.toLowerCase() || "";
+
+      return (
+        name.includes(query) ||
+        email.includes(query) ||
+        company.includes(query)
+      );
+    });
+  }, [clients, search]);
 
   return (
     <>
-      <div className="min-h-screen bg-[#08080c] p-4 sm:p-6 lg:p-8">
+      <div className="min-h-screen bg-[#08080c] px-6 py-10 sm:px-10 lg:px-16">
         {/* Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div></div>
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+  Client Management
+</p>
+
+            <h4 className="mt-3 text-3xl md:text-4xl font-light leading-tight tracking-tight text-white">
+  Every relationship,
+  <span className="font-semibold"> structured.</span>
+</h4>
+
+            <p className="mt-4 max-w-xl text-sm text-white/40">
+              Client accounts, their access to CODE Hub™ and the work held
+              against each of them.
+            </p>
+          </div>
 
           <button
             onClick={() => openModal("add")}
-            className="group flex items-center justify-center gap-2  bg-violet-600 px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-violet-500"
+            className="h-fit shrink-0 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-violet-500"
           >
-            <span className="text-lg leading-none">+</span>
             Add Client
           </button>
         </div>
 
+        {/* Divider */}
+        <div className="mt-10 h-px bg-white/10" />
+
+        {/* Search */}
+        <div className="mt-8 flex items-center gap-3 border-b border-white/10 pb-4">
+          <span className="text-white/30">⌕</span>
+
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search clients by name, company or email"
+            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/25"
+          />
+        </div>
+
         {/* Loading */}
         {loading ? (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="mt-8 space-y-3">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="h-[360px] animate-pulse rounded-2xl border border-white/[0.06] bg-white/[0.03]"
+                className="h-16 w-full animate-pulse border-b border-white/[0.06] bg-white/[0.02]"
               />
             ))}
           </div>
-        ) : clients.length === 0 ? (
+        ) : filteredClients.length === 0 ? (
           /* Empty State */
-          <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.02]">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
-              <span className="text-2xl text-white/30">◫</span>
-            </div>
-
+          <div className="mt-8 flex min-h-[300px] flex-col items-center justify-center border border-dashed border-white/10">
             <h3 className="text-base font-semibold text-white">
               No clients found
             </h3>
 
             <p className="mt-2 text-sm text-white/35">
-              Add your first client to get started.
+              {search
+                ? "Try a different search term."
+                : "Add your first client to get started."}
             </p>
           </div>
         ) : (
-          /* Client Cards */
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {clients.map((client) => (
-              <div
-                key={client.id}
-                className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111116] transition-all duration-500 hover:-translate-y-1 hover:border-violet-500/30"
-              >
-                {/* Accent Line */}
-                <div
-                  className={`absolute left-0 top-0 h-1 w-full ${
-                    client.active
-                      ? "bg-gradient-to-r from-emerald-500 via-green-400 to-transparent"
-                      : "bg-gradient-to-r from-amber-500 via-orange-400 to-transparent"
-                  }`}
-                />
+          /* Table */
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full min-w-[860px] border-collapse">
+              <thead>
+                <tr className="border-b border-white/10 text-left">
+                  <th className="py-4 pr-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                    Client
+                  </th>
+                  <th className="py-4 pr-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                    Company
+                  </th>
+                  <th className="py-4 pr-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                    Works
+                  </th>
+                  <th className="py-4 pr-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                    Access
+                  </th>
+                  <th className="py-4 pr-4 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                    Added
+                  </th>
+                  <th className="py-4 text-right text-[10px] font-bold uppercase tracking-[0.14em] text-white/35" >
+                  Action
+                  </th>
+                </tr>
+              </thead>
 
-                <div className="relative p-5">
-                  {/* Top */}
-                  <div className="flex items-start justify-between">
-                    <div className="relative">
-                      <div className="h-20 w-20 overflow-hidden rounded-2xl">
-                        <img
-                          src={
-                            client.logo?.trim()
-                              ? client.logo
-                              : DEFAULT_CLIENT_LOGO
-                          }
-                          alt={client.name || "Client logo"}
-                          className="h-full w-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = DEFAULT_CLIENT_LOGO;
-                          }}
-                        />
-                      </div>
+              <tbody>
+                {filteredClients.map((client) => (
+                  <tr
+                    key={client.id}
+                    className="group border-b border-white/[0.06] transition hover:bg-white/[0.02]"
+                  >
+                    <td className="py-5 pr-4">
+                      <p className="text-sm font-medium text-white">
+                        {client.name || client.email}
+                      </p>
+                      {client.name && (
+                        <p className="mt-0.5 text-xs text-white/35">
+                          {client.email}
+                        </p>
+                      )}
+                    </td>
 
+                    <td className="py-5 pr-4 text-sm text-white/40">
+                      {client.company || "—"}
+                    </td>
+
+                    <td className="py-5 pr-4 text-sm text-white/50">
+                      {(client as any).works?.length ?? 0}
+                    </td>
+
+                    <td className="py-5 pr-4">
                       <span
-                        className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-[3px] border-[#111116] ${
-                          client.active ? "bg-emerald-400" : "bg-amber-400"
-                        }`}
-                      />
-                    </div>
-
-                    <span
-                      className={`rounded-full border px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] ${
-                        client.active
-                          ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                          : "border-amber-500/20 bg-amber-500/10 text-amber-400"
-                      }`}
-                    >
-                      {client.active ? "Active" : "Pending"}
-                    </span>
-                  </div>
-
-                  {/* Info */}
-                  <div className="mt-5">
-                    <h3 className="truncate text-lg font-semibold text-white">
-                      {client.name}
-                    </h3>
-
-                    <p className="mt-1 truncate text-sm text-white/40">
-                      {client.email}
-                    </p>
-                  </div>
-
-                  <div className="my-5 h-px bg-white/10" />
-
-                  {/* Details */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
-                        Client ID
-                      </span>
-
-                      <span className="max-w-[150px] truncate rounded-md bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-white/50">
-                        {client.uid || "--"}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
-                        Onboarding
-                      </span>
-
-                      <span
-                        className={`text-xs font-medium ${
-                          client.onboarding ? "text-blue-400" : "text-rose-400"
+                        className={`inline-block border px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] ${
+                          client.active
+                            ? "border-emerald-500/30 text-emerald-400"
+                            : "border-amber-500/30 text-amber-400"
                         }`}
                       >
-                        {client.onboarding ? "Completed" : "Incomplete"}
+                        {client.active ? "Active" : "Pending"}
                       </span>
-                    </div>
+                    </td>
 
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
-                        Created
-                      </span>
+                    <td className="py-5 pr-4 text-sm text-white/40">
+                      {formatDate(client)}
+                    </td>
 
-                      <span className="text-xs text-white/50">
-                        {client.createdAt
-                          ? client.createdAt
-                              .toDate()
-                              .toLocaleDateString("en-IN", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              })
-                          : "--"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="mt-6">
-                    {!client.active ? (
+                    <td className="relative py-5 text-right">
                       <button
-                        onClick={() => openModal("onboarding", client)}
-                        className="w-full rounded-xl bg-violet-600 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-violet-500"
+                        onClick={() =>
+                          setOpenMenuId((prev) =>
+                            prev === client.id ? null : client.id!,
+                          )
+                        }
+                        className="px-2 text-white/30 opacity-0 transition hover:text-white group-hover:opacity-100"
                       >
-                        Activate Client
+                        ⋯
                       </button>
-                    ) : (
-                      <div className="grid grid-cols-3 gap-2">
-                        <button
-                          onClick={() => openModal("edit", client)}
-                          className="rounded-xl border border-violet-500/20 bg-violet-500/10 px-3 py-2.5 text-[10px] font-bold uppercase text-violet-400"
-                        >
-                          Edit
-                        </button>
 
-                        <button
-                          onClick={() => openModal("block", client)}
-                          className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-[10px] font-bold uppercase text-amber-400"
-                        >
-                          Block
-                        </button>
+                      {openMenuId === client.id && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setOpenMenuId(null)}
+                          />
 
-                        <button
-                          onClick={() => openModal("delete", client)}
-                          className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-2.5 text-[10px] font-bold uppercase text-rose-400"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                          <div className="absolute right-0 top-12 z-20 w-40 border border-white/10 bg-[#111116] py-1 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                            {!client.active && (
+                              <button
+                                onClick={() => openModal("onboarding", client)}
+                                className="block w-full px-4 py-2.5 text-left text-xs text-violet-400 hover:bg-white/[0.05]"
+                              >
+                                Activate
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => openModal("edit", client)}
+                              className="block w-full px-4 py-2.5 text-left text-xs text-white/70 hover:bg-white/[0.05]"
+                            >
+                              Edit
+                            </button>
+
+                            {client.active && (
+                              <button
+                                onClick={() => openModal("block", client)}
+                                className="block w-full px-4 py-2.5 text-left text-xs text-amber-400 hover:bg-white/[0.05]"
+                              >
+                                Block
+                              </button>
+                            )}
+
+                            {!client.active && client.onboarding && (
+                              <button
+                                onClick={() => openModal("unblock", client)}
+                                className="block w-full px-4 py-2.5 text-left text-xs text-emerald-400 hover:bg-white/[0.05]"
+                              >
+                                Unblock
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => openModal("delete", client)}
+                              className="block w-full px-4 py-2.5 text-left text-xs text-rose-400 hover:bg-white/[0.05]"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
+
       {modal.isOpen && (
         <AddClientModal
           isOpen={modal.isOpen && modal.action === "add"}

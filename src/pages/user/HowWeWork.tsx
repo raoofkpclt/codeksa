@@ -83,10 +83,13 @@ const DiagonalDivider = () => (
 const ExploreLink = ({ label, href }: { label: string; href: string }) => (
   <a
     href={href}
-    className="hover-glow group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] text-[var(--mist)] transition-colors duration-200"
+    className="group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
   >
-    {label}
-    <span className="h-px w-10 bg-[var(--code-purple)] transition-all duration-300 group-hover:w-16 group-hover:bg-[var(--violet-glow)]" />
+    <span className="transition-transform duration-300 ease-out group-hover:translate-x-0.5">
+      {label}
+    </span>
+
+    <span className="h-px w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-16" />
   </a>
 );
 

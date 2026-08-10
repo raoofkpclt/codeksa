@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import ClientService from "../../service/firebaseService/clientService";
 import WorkService from "../../service/firebaseService/workService";
 import ClientUploadService from "../../service/firebaseService/clientUploadService";
+import AddWorkModal from "../../components/AddWorkModal"; // adjust path to match where you saved it
 import type { Client, Work, WorkStatus, ClientUpload } from "../../utils/types";
 
-type ActivityItem = {
-  id: string;
-  title: string;
-  subtitle: string;
-  time: number;
-  kind: "client" | "work" | "upload";
-};
+// =========================================
+// Helpers
+// =========================================
 
 const toMillis = (value: unknown): number => {
   if (!value) return 0;
@@ -19,9 +17,9 @@ const toMillis = (value: unknown): number => {
     typeof value === "object" &&
     value !== null &&
     "toMillis" in value &&
-    typeof value.toMillis === "function"
+    typeof (value as { toMillis?: unknown }).toMillis === "function"
   ) {
-    return value.toMillis();
+    return (value as { toMillis: () => number }).toMillis();
   }
 
   if (typeof value === "string" || typeof value === "number") {
@@ -32,40 +30,36 @@ const toMillis = (value: unknown): number => {
   return 0;
 };
 
-const formatRelativeTime = (millis: number) => {
+const formatDate = (millis: number) => {
   if (!millis) return "--";
-
-  const diffMs = Date.now() - millis;
-  const diffMin = Math.floor(diffMs / 60000);
-
-  if (diffMin < 1) return "Just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `${diffHr}h ago`;
-
-  const diffDay = Math.floor(diffHr / 24);
-  if (diffDay < 30) return `${diffDay}d ago`;
-
-  return new Date(millis).toLocaleDateString("en-IN", {
+  return new Date(millis).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 };
 
-const STATUS_LABELS: Record<WorkStatus, string> = {
-  sent_to_client: "Sent to Client",
-  requested_to_edit: "Edit Requested",
-  approved: "Approved",
-  rejected: "Rejected",
+const formatDateTime = (millis: number) => {
+  if (!millis) return "--";
+  const d = new Date(millis);
+  const date = d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const time = d.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `${date}, ${time}`;
 };
 
-const STATUS_DOT: Record<WorkStatus, string> = {
-  sent_to_client: "bg-blue-400",
-  requested_to_edit: "bg-amber-400",
-  approved: "bg-emerald-400",
-  rejected: "bg-rose-400",
+const STATUS_LABELS: Record<WorkStatus, string> = {
+  sent_to_client: "Sent to Client",
+  requested_to_edit: "Changes Requested",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 const Home = () => {
@@ -75,46 +69,70 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [isAddWorkOpen, setIsAddWorkOpen] = useState(false);
+  const [savingWork, setSavingWork] = useState(false);
+
+  const fetchAll = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [clientData, workData, uploadData] = await Promise.all([
+        ClientService.getAllClients(),
+        WorkService.getAllWorks(),
+        ClientUploadService.getUploads(),
+      ]);
+
+      setClients(clientData || []);
+      setWorks(workData || []);
+      setUploads(uploadData || []);
+    } catch (err) {
+      console.error("Failed to fetch dashboard data:", err);
+      setError("Failed to load dashboard data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     let cancelled = false;
 
-    const fetchAll = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const [clientData, workData, uploadData] = await Promise.all([
-          ClientService.getAllClients(),
-          WorkService.getAllWorks(),
-          ClientUploadService.getUploads(),
-        ]);
-
-        if (!cancelled) {
-          setClients(clientData || []);
-          setWorks(workData || []);
-          setUploads(uploadData || []);
-        }
-      } catch (err) {
-        console.error("Failed to fetch dashboard data:", err);
-        if (!cancelled) setError("Failed to load dashboard data.");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    const run = async () => {
+      if (cancelled) return;
+      await fetchAll();
     };
 
-    void fetchAll();
+    void run();
 
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---- Client stats ----
-  const totalClients = clients.length;
-  const activeClients = clients.filter((c) => c.active === true).length;
-  const pendingOnboarding = clients.filter((c) => c.onboarding !== true).length;
+  const handleSaveWork = async (
+    data: Omit<Work, "id" | "createdAt" | "updatedAt">,
+  ) => {
+    try {
+      setSavingWork(true);
 
-  // ---- Work stats ----
+      // NOTE: adjust this to whatever your WorkService's create method is
+      // actually named (e.g. createWork, addWork, create) — getAllWorks
+      // was the only method visible on this service in what you shared.
+      await WorkService.addWork(data);
+
+      // Refresh the dashboard so the new work shows up in stats/activity
+      await fetchAll();
+    } catch (err) {
+      console.error("Failed to create work:", err);
+      throw err; // let the modal surface the error to the user
+    } finally {
+      setSavingWork(false);
+    }
+  };
+
+  // ---- Stats ----
+  const activeClients = clients.filter((c) => c.active === true).length;
   const totalWorks = works.length;
   const liveWorks = works.filter((w) => w.isDisplay === true).length;
 
@@ -133,242 +151,347 @@ const Home = () => {
     return counts;
   }, [works]);
 
-  const workTypeCounts = useMemo(() => {
-    const counts = { poster: 0, reel: 0 };
-
-    works.forEach((w) => {
-      if (w.postType === "poster") counts.poster += 1;
-      else if (w.postType === "reel") counts.reel += 1;
-    });
-
-    return counts;
-  }, [works]);
-
-  // ---- Upload stats ----
-  const totalUploads = uploads.length;
-
-  const uploadTypeCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-
-    uploads.forEach((u) => {
-      const key = u.postType || "other";
-      counts[key] = (counts[key] || 0) + 1;
-    });
-
-    return counts;
-  }, [uploads]);
-
-  // ---- Combined recent activity ----
-  const recentActivity = useMemo(() => {
-    const items: ActivityItem[] = [];
-
-    clients.forEach((c) => {
-      const time = toMillis((c as { createdAt?: unknown }).createdAt);
-      items.push({
-        id: `client-${c.id}`,
-        title: `New client added: ${c.name}`,
-        subtitle: c.active ? "Active" : "Inactive",
-        time,
-        kind: "client",
-      });
-    });
-
-    works.forEach((w) => {
-      const time = toMillis(w.createdAt);
-      items.push({
-        id: `work-${w.id}`,
-        title: `Work added: ${w.postName}`,
-        subtitle: `${w.clientName} · ${STATUS_LABELS[w.status]}`,
-        time,
-        kind: "work",
-      });
-    });
-
-    uploads.forEach((u) => {
-      const time = toMillis((u as { createdAt?: unknown }).createdAt);
-      items.push({
-        id: `upload-${u.id}`,
-        title: `Client upload received (${u.postType})`,
-        subtitle: u.note ? u.note.slice(0, 60) : "No note added",
-        time,
-        kind: "upload",
-      });
-    });
-
-    return items
-      .sort((a, b) => b.time - a.time)
-      .slice(0, 8);
-  }, [clients, works, uploads]);
-
-  const statCards = [
+  const stats = [
     {
-      label: "Total Clients",
-      value: loading ? "..." : totalClients.toString(),
-      delta: "All registered clients",
+      label: "ACTIVE CLIENTS",
+      value: loading ? "-" : activeClients.toString(),
+      accent: false,
     },
     {
-      label: "Active Clients",
-      value: loading ? "..." : activeClients.toString(),
-      delta: "Currently active",
+      label: "TOTAL WORKS",
+      value: loading ? "-" : totalWorks.toString(),
+      accent: false,
     },
     {
-      label: "Pending Onboarding",
-      value: loading ? "..." : pendingOnboarding.toString(),
-      delta: "Needs completion",
+      label: "AWAITING RESPONSE",
+      value: loading ? "-" : workStatusCounts.sent_to_client.toString(),
+      accent: true,
     },
     {
-      label: "Total Works",
-      value: loading ? "..." : totalWorks.toString(),
-      delta: `${workTypeCounts.poster} posters · ${workTypeCounts.reel} reels`,
+      label: "CHANGES REQUESTED",
+      value: loading ? "-" : workStatusCounts.requested_to_edit.toString(),
+      accent: false,
     },
     {
-      label: "Live on Website",
-      value: loading ? "..." : liveWorks.toString(),
-      delta: "Currently displayed",
+      label: "APPROVED",
+      value: loading ? "-" : workStatusCounts.approved.toString(),
+      accent: false,
     },
     {
-      label: "Client Uploads",
-      value: loading ? "..." : totalUploads.toString(),
-      delta: "Total submissions received",
+      label: "LIVE ON WEBSITE",
+      value: loading ? "-" : liveWorks.toString(),
+      accent: false,
     },
   ];
 
-  const kindDot: Record<ActivityItem["kind"], string> = {
-    client: "bg-violet-400",
-    work: "bg-cyan-400",
-    upload: "bg-amber-400",
-  };
+  // ---- Requires attention (changes requested) ----
+  const requiresAttention = useMemo(() => {
+    return works
+      .filter((w) => w.status === "requested_to_edit")
+      .sort((a, b) => toMillis(b.updatedAt) - toMillis(a.updatedAt));
+  }, [works]);
+
+  // ---- Recent activity (work status changes) ----
+  const recentActivity = useMemo(() => {
+    return [...works]
+      .sort(
+        (a, b) =>
+          toMillis(b.updatedAt || b.createdAt) -
+          toMillis(a.updatedAt || a.createdAt),
+      )
+      .slice(0, 6);
+  }, [works]);
+
+  // ---- Latest client uploads ----
+  const latestUploads = useMemo(() => {
+    return [...uploads]
+      .sort(
+        (a, b) =>
+          toMillis((b as { createdAt?: unknown }).createdAt) -
+          toMillis((a as { createdAt?: unknown }).createdAt),
+      )
+      .slice(0, 4);
+  }, [uploads]);
 
   return (
-    <div className="flex flex-col gap-6">
-      {error && (
-        <div className="border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
-          {error}
-        </div>
-      )}
+    <>
+      <div className="min-h-screen bg-[#08080c] px-6 py-10 sm:px-10 lg:px-16 font-['Space_Grotesk',sans-serif]">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {statCards.map((stat) => (
-          <div
-            key={stat.label}
-            className="relative border border-white/[0.08] bg-white/[0.03] p-5"
-          >
-            {/* Top Left Corner */}
-            <span className="absolute -left-px -top-px h-3 w-3 border-l-[1.5px] border-t-[1.5px] border-[#8B5CF6]" />
+          :root {
+            --charcoal: #151518;
+            --graphite: #1E1F24;
+            --steel: #2B2C31;
+            --slate-muted: #7D7D86;
+            --mist: #D8D8DE;
+            --code-white: #FFFFFF;
+            --code-purple: #6F4BFF;
+            --code-electric: #8468FF;
+            --violet-glow: #9B83FF;
+          }
 
-            {/* Bottom Right Corner */}
-            <span className="absolute -bottom-px -right-px h-3 w-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
+          body {
+            font-family: 'Space Grotesk', sans-serif;
+          }
 
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-              {stat.label}
-            </p>
+          * { font-synthesis: none; }
+        `}</style>
 
-            <p className="text-3xl font-black tracking-[-0.02em] text-white">
-              {stat.value}
-            </p>
-
-            <p className="mt-1 text-[11px] text-white/30">{stat.delta}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Work Status Breakdown */}
-        <div className="border border-white/[0.08] bg-white/[0.03] p-5">
-          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-            Work Status Breakdown
-          </p>
-
-          <div className="flex flex-col gap-3">
-            {(Object.keys(STATUS_LABELS) as WorkStatus[]).map((status) => (
-              <div
-                key={status}
-                className="flex items-center justify-between text-[13px] text-white/70"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${STATUS_DOT[status]}`}
-                  />
-                  {STATUS_LABELS[status]}
-                </div>
-
-                <span className="font-semibold text-white">
-                  {loading ? "..." : workStatusCounts[status]}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Upload Type Breakdown */}
-        <div className="border border-white/[0.08] bg-white/[0.03] p-5">
-          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-            Client Uploads by Type
-          </p>
-
-          {Object.keys(uploadTypeCounts).length === 0 ? (
-            <p className="text-[13px] text-white/30">
-              {loading ? "Loading..." : "No uploads yet."}
-            </p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {Object.entries(uploadTypeCounts).map(([type, count]) => (
-                <div
-                  key={type}
-                  className="flex items-center justify-between text-[13px] text-white/70"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#8B5CF6]" />
-                    <span className="capitalize">{type}</span>
-                  </div>
-
-                  <span className="font-semibold text-white">{count}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="border border-white/[0.08] bg-white/[0.03] p-5">
-        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-          Recent Activity
-        </p>
-
-        {loading ? (
-          <p className="text-[13px] text-white/30">Loading...</p>
-        ) : recentActivity.length === 0 ? (
-          <p className="text-[13px] text-white/30">No recent activity.</p>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {recentActivity.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-start justify-between gap-4 text-[13px] text-white/70"
-              >
-                <div className="flex items-start gap-3">
-                  <div
-                    className={`mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full ${kindDot[item.kind]}`}
-                  />
-                  <div>
-                    <p className="text-white/85">{item.title}</p>
-                    <p className="mt-0.5 text-[11px] text-white/35">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </div>
-
-                <span className="shrink-0 text-[11px] text-white/30">
-                  {formatRelativeTime(item.time)}
-                </span>
-              </div>
-            ))}
+        {error && (
+          <div className="mb-8 border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
+            {error}
           </div>
         )}
+
+        {/* =================================
+            Hero
+        ================================== */}
+
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+              Operating Overview
+            </p>
+
+            <h1 className="mt-3 text-3xl md:text-4xl font-light leading-tight tracking-tight text-white">
+              The system <span className="font-semibold">in motion.</span>
+            </h1>
+
+            <p className="mt-4 max-w-xl text-sm text-white/40">
+              Every client, every piece of work and every decision waiting on
+              a response — held in one structure.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsAddWorkOpen(true)}
+            className="h-fit shrink-0 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-violet-500"
+          >
+            Add New Work
+          </button>
+        </div>
+
+        {/* Divider */}
+        <div className="mt-10 h-px bg-white/10" />
+
+        {/* =================================
+            Stats row
+        ================================== */}
+
+        <div className="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
+          {stats.map((stat) => (
+            <div key={stat.label}>
+              <p
+                className={`mb-3 text-5xl font-light tracking-[-0.02em] ${
+                  stat.accent ? "text-violet-400" : "text-white"
+                }`}
+              >
+                {stat.value}
+              </p>
+              <p className="text-[10px] font-bold uppercase leading-relaxed tracking-[0.14em] text-white/35">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* =================================
+            Requires attention
+        ================================== */}
+
+        <div className="mt-10">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-light text-white sm:text-3xl">
+                Requires attention
+              </h2>
+              <p className="mt-2 max-w-xl text-sm text-white/40">
+                Work where a client has asked for a change. These move first.
+              </p>
+            </div>
+
+            <Link
+              to="/admin/work"
+              className="shrink-0 text-[11px] font-bold uppercase tracking-[0.15em] text-white/35 transition hover:text-violet-400"
+            >
+              All Works
+            </Link>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-4">
+            {loading ? (
+              <p className="text-[13px] text-white/30">Loading...</p>
+            ) : requiresAttention.length === 0 ? (
+              <p className="text-[13px] text-white/30">
+                Nothing needs attention right now.
+              </p>
+            ) : (
+              requiresAttention.map((work) => (
+                <Link
+                  key={work.id}
+                  to="/admin/work"
+                  state={{ workId: work.id }}
+                  className="flex flex-col gap-3 border border-white/[0.06] bg-white/[0.02] p-6 transition hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="text-[15px] font-medium text-white/90">
+                      {work.postName}
+                    </p>
+                    <p className="mt-1.5 text-[12px] text-white/35">
+                      {work.clientName} · {work.postType} ·{" "}
+                      {formatDate(toMillis(work.updatedAt || work.createdAt))}
+                    </p>
+                  </div>
+
+                  <span className="w-fit shrink-0 border border-amber-500/40 bg-amber-500/5 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-amber-400">
+                    Changes Requested
+                  </span>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* =================================
+            Recent activity + Latest uploads
+        ================================== */}
+
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2">
+          {/* =============== Recent activity =============== */}
+
+          <div>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-light text-white">
+                  Recent activity
+                </h2>
+                <p className="mt-2 text-sm text-white/40">
+                  A continuous record of decisions.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col">
+              {loading ? (
+                <p className="py-4 text-[13px] text-white/30">Loading...</p>
+              ) : recentActivity.length === 0 ? (
+                <p className="py-4 text-[13px] text-white/30">
+                  No recent activity.
+                </p>
+              ) : (
+                recentActivity.map((work) => (
+                  <Link
+                    key={work.id}
+                    to="/admin/work"
+                    state={{ workId: work.id }}
+                    className="border-b border-white/[0.06] py-5 transition hover:bg-white/[0.02]"
+                  >
+                    <p className="text-[15px] font-medium leading-snug text-white/90">
+                      {work.postName} —{" "}
+                      <span className="text-white/60">
+                        {STATUS_LABELS[work.status]}
+                      </span>
+                    </p>
+                    <p className="mt-1.5 text-[11px] text-white/35">
+                      {formatDateTime(
+                        toMillis(work.updatedAt || work.createdAt),
+                      )}
+                    </p>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* =============== Latest client uploads =============== */}
+
+          <div>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-light text-white">
+                  Latest client uploads
+                </h2>
+                <p className="mt-2 text-sm text-white/40">
+                  Material submitted by clients for the team.
+                </p>
+              </div>
+
+              <Link
+                to="/admin/clientUploads"
+                className="shrink-0 text-[11px] font-bold uppercase tracking-[0.15em] text-white/35 transition hover:text-violet-400"
+              >
+                All Uploads
+              </Link>
+            </div>
+
+            <div className="mt-6 flex flex-col">
+              {loading ? (
+                <p className="py-4 text-[13px] text-white/30">Loading...</p>
+              ) : latestUploads.length === 0 ? (
+                <p className="py-4 text-[13px] text-white/30">
+                  No uploads yet.
+                </p>
+              ) : (
+                latestUploads.map((upload) => {
+                  const media = upload.media?.[0];
+                  const isLink = !media && !!upload.link;
+
+                  const badgeLabel = isLink
+                    ? "LINK"
+                    : media?.fileType === "application/pdf"
+                      ? "PDF"
+                      : media?.fileType?.startsWith("video/")
+                        ? "VIDEO"
+                        : media?.fileType?.startsWith("image/")
+                          ? "IMAGE"
+                          : upload.postType?.toUpperCase() || "FILE";
+
+                  const titleLine = isLink
+                    ? upload.link
+                    : media?.fileName || "Untitled upload";
+
+                  return (
+                    <div
+                      key={upload.id}
+                      className="flex items-center justify-between gap-4 border-b border-white/[0.06] py-5"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-[15px] font-medium text-white/90">
+                          {titleLine}
+                        </p>
+                        <p className="mt-1.5 text-[11px] text-white/35">
+                          {(upload as { clientName?: string }).clientName ||
+                            "Client"}{" "}
+                          ·{" "}
+                          {formatDate(
+                            toMillis(
+                              (upload as { createdAt?: unknown }).createdAt,
+                            ),
+                          )}
+                        </p>
+                      </div>
+
+                      <span className="shrink-0 border border-white/10 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/50">
+                        {badgeLabel}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <AddWorkModal
+        isOpen={isAddWorkOpen}
+        loading={savingWork}
+        onClose={() => setIsAddWorkOpen(false)}
+        onSave={handleSaveWork}
+      />
+    </>
   );
 };
 

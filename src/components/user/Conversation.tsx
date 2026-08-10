@@ -27,7 +27,7 @@ const Conversation: React.FC = () => {
             text-white
             transition-all
             duration-500
-            group-hover:text-[#8a6dff]
+            group-hover:text-[#8468FF]
             group-hover:scale-[1.01]
             group-hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]
           "
@@ -55,7 +55,7 @@ const Conversation: React.FC = () => {
           text-white
           transition-all
           duration-500
-          group-hover:text-[#8a6dff]
+          group-hover:text-[#8468FF]
           group-hover:scale-[1.01]
           group-hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]
         "

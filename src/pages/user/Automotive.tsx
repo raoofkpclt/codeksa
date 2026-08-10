@@ -27,6 +27,10 @@ const systemParts = [
   "Performance reporting",
 ];
 
+//  <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
+const accentLine =
+  "w-6 h-px bg-[#8468FF] inline-block";
+
 const Automotive: React.FC = () => {
   return (
     <div className="bg-black text-white">
@@ -98,7 +102,7 @@ const Automotive: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">structured.</span>
@@ -167,7 +171,7 @@ const Automotive: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">the system.</span>{" "}
@@ -197,7 +201,7 @@ const Automotive: React.FC = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">customer action.</span>
@@ -215,8 +219,7 @@ const Automotive: React.FC = () => {
   >
     <span>Discuss Your Automotive Business</span>
 
-    <span className="h-px w-10 bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all duration-300 group-hover:w-16" />
-  </a>
+<span className={`${accentLine} group-hover:w-10 transition-all`} />   </a>
 </div>
       </section>
 

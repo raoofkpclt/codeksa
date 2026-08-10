@@ -1,33 +1,31 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { onAuthStateChanged } from "firebase/auth";
-
-import { doc, getDoc } from "firebase/firestore";
-
-import { auth, db } from "../../config/firebase/firebase";
-// Change path if needed
 
 import ClientWorkService, {
   type ClientWork,
-  type ClientWorkStats,
   type WorkStatus,
 } from "../../service/firebaseService/clientWorkService";
 
+
+
+
+
 // =========================================
-// Default Stats
+// Status Badge Styles
 // =========================================
 
-const defaultStats: ClientWorkStats = {
-  totalWorks: 0,
-  activeWorks: 0,
-  approvedWorks: 0,
-  pendingApproval: 0,
-  editRequested: 0,
-  rejectedWorks: 0,
-  posters: 0,
-  reels: 0,
+const statusStyles: Record<WorkStatus, string> = {
+  sent_to_client: "border-[#8468FF]/50 bg-[#8468FF]/10 text-[#a78bfa]",
+  requested_to_edit: "border-amber-500/40 bg-amber-500/5 text-amber-400",
+  approved: "border-emerald-500/40 bg-emerald-500/5 text-emerald-400",
+  rejected: "border-red-500/40 bg-red-500/5 text-red-400",
+};
+
+const statusLabel: Record<WorkStatus, string> = {
+  sent_to_client: "Sent to client",
+  requested_to_edit: "Changes requested",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 // =========================================
@@ -38,87 +36,30 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-
-  const [clientName, setClientName] = useState("there");
-
-  const [stats, setStats] = useState<ClientWorkStats>(defaultStats);
-
-  const [recentWork, setRecentWork] = useState<ClientWork[]>([]);
-
+  const [works, setWorks] = useState<ClientWork[]>([]);
   const [error, setError] = useState("");
 
   // =======================================
-  // Fetch Dashboard
+  // Fetch Works
   // =======================================
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
+    const fetchWorks = async () => {
       try {
         setLoading(true);
         setError("");
 
-        // Fetch client profile
-        const clientRef = doc(db, "clients", user.uid);
-
-        const clientSnapshot = await getDoc(clientRef);
-
-        if (clientSnapshot.exists()) {
-          const clientData = clientSnapshot.data();
-
-          setClientName(
-            clientData.companyName ||
-              clientData.name ||
-              clientData.clientName ||
-              "there",
-          );
-        }
-
-        // Fetch all works once
-        const works = await ClientWorkService.getWorks();
-
-        // Calculate stats locally
-        const calculatedStats: ClientWorkStats = {
-          totalWorks: works.length,
-
-          activeWorks: works.filter((work) => work.active === true).length,
-
-          approvedWorks: works.filter((work) => work.status === "approved")
-            .length,
-
-          pendingApproval: works.filter(
-            (work) => work.status === "sent_to_client",
-          ).length,
-
-          editRequested: works.filter(
-            (work) => work.status === "requested_to_edit",
-          ).length,
-
-          rejectedWorks: works.filter((work) => work.status === "rejected")
-            .length,
-
-          posters: works.filter((work) => work.postType === "poster").length,
-
-          reels: works.filter((work) => work.postType === "reel").length,
-        };
-
-        setStats(calculatedStats);
-
-        setRecentWork(works.slice(0, 5));
-      } catch (error) {
-        console.error("Dashboard fetch error:", error);
-
-        setError("Failed to load dashboard data.");
+        const data = await ClientWorkService.getWorks();
+        setWorks(data);
+      } catch (fetchError) {
+        console.error("Works fetch error:", fetchError);
+        setError("Failed to load your works.");
       } finally {
         setLoading(false);
       }
-    });
+    };
 
-    return () => unsubscribe();
+    fetchWorks();
   }, []);
 
   // =======================================
@@ -128,12 +69,10 @@ const Home = () => {
   const formatDate = (work: ClientWork) => {
     const timestamp = work.updatedAt || work.createdAt;
 
-    if (!timestamp) {
-      return "Recently";
-    }
+    if (!timestamp) return "Recently";
 
     try {
-      return timestamp.toDate().toLocaleDateString("en-IN", {
+      return timestamp.toDate().toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",
@@ -144,74 +83,138 @@ const Home = () => {
   };
 
   // =======================================
-  // Stat Cards
+  // Navigate to work details
   // =======================================
 
-  const statCards = [
+  const openWork = (work: ClientWork) => {
+    navigate(`/client/works/${work.id}`);
+  };
+
+  // =======================================
+  // Status counts
+  // =======================================
+
+  const statusCounts = useMemo(() => {
+    const counts: Record<WorkStatus, number> = {
+      sent_to_client: 0,
+      requested_to_edit: 0,
+      approved: 0,
+      rejected: 0,
+    };
+
+    works.forEach((work) => {
+      if (work.status in counts) counts[work.status] += 1;
+    });
+
+    return counts;
+  }, [works]);
+
+  const primaryStats = [
     {
-      label: "Total Works",
-      value: loading ? "..." : stats.totalWorks.toString(),
-      note: "All assigned works",
+      label: "AWAITING YOUR\nREVIEW",
+      value: loading ? "-" : statusCounts.sent_to_client.toString(),
+      accent: true,
     },
     {
-      label: "Approved",
-      value: loading ? "..." : stats.approvedWorks.toString(),
-      note: "Approved by you",
+      label: "CHANGES\nREQUESTED",
+      value: loading ? "-" : statusCounts.requested_to_edit.toString(),
+      accent: false,
     },
     {
-      label: "Pending Approval",
-      value: loading ? "..." : stats.pendingApproval.toString(),
-      note: "Awaiting your response",
+      label: "APPROVED",
+      value: loading ? "-" : statusCounts.approved.toString(),
+      accent: false,
+    },
+    {
+      label: "TOTAL WORKS",
+      value: loading ? "-" : works.length.toString(),
+      accent: false,
     },
   ];
 
   // =======================================
-  // Status Styles
+  // Works waiting on review
   // =======================================
 
-  const statusStyles: Record<WorkStatus, string> = {
-    sent_to_client: "border-amber-500/20 bg-amber-500/10 text-amber-400",
-
-    requested_to_edit: "border-blue-500/20 bg-blue-500/10 text-blue-400",
-
-    approved: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
-
-    rejected: "border-red-500/20 bg-red-500/10 text-red-400",
-  };
-
-  const statusLabel: Record<WorkStatus, string> = {
-    sent_to_client: "Pending Approval",
-
-    requested_to_edit: "Edit Requested",
-
-    approved: "Approved",
-
-    rejected: "Rejected",
-  };
+  const waitingForReview = useMemo(() => {
+    return works.filter((work) => work.status === "sent_to_client");
+  }, [works]);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 font-['Space_Grotesk',sans-serif]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
+
       {/* =================================
-          Welcome Banner
+          Hero
       ================================== */}
 
-      <div className="relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-[#8B5CF6]/10 via-white/[0.02] to-transparent p-6 sm:p-8">
-        <span className="absolute -left-px -top-px h-3 w-3 border-l-[1.5px] border-t-[1.5px] border-[#8B5CF6]" />
-
-        <span className="absolute -bottom-px -right-px h-3 w-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
-          Client Dashboard
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+          your workspace
         </p>
 
-        <h1 className="mt-2 text-2xl font-black tracking-[-0.02em] sm:text-3xl">
-          Welcome back, {loading ? "..." : clientName}
+        <h1 className="mt-3 max-w-2xl text-4xl font-light leading-[1.15] tracking-[-0.02em] text-white sm:text-[42px]">
+          Welcome back, <span className="font-semibold">CODE.</span>
         </h1>
 
-        <p className="mt-2 max-w-lg text-sm text-white/40">
-          Review your posters and reels, approve completed work, or request
-          changes from our team.
+        <p className="mt-4 max-w-lg text-sm text-white/40">
+          Everything CODE has prepared for you, and everything still waiting on
+          your decision.
         </p>
+      </div>
+
+      <div className="border-t border-white/[0.08]" />
+
+      {/* =================================
+          Primary stats
+      ================================== */}
+
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+        {primaryStats.map((stat) => (
+          <div key={stat.label}>
+            <p
+              className={`mb-2 text-3xl font-light tracking-[-0.02em] sm:text-4xl ${
+                stat.accent ? "text-[#8468FF]" : "text-white"
+              }`}
+            >
+              {stat.value}
+            </p>
+
+            <p className="whitespace-pre-line text-[10px] uppercase leading-relaxed tracking-[0.12em] text-white/40">
+              {stat.label}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* =================================
@@ -225,140 +228,71 @@ const Home = () => {
       )}
 
       {/* =================================
-          Stats
+          Waiting for your review
       ================================== */}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {statCards.map((stat) => (
-          <div
-            key={stat.label}
-            className="relative border border-white/[0.08] bg-white/[0.03] p-5 transition-colors hover:border-[#8B5CF6]/30"
-          >
-            <span className="absolute -left-px -top-px h-3 w-3 border-l-[1.5px] border-t-[1.5px] border-[#8B5CF6]" />
-
-            <span className="absolute -bottom-px -right-px h-3 w-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-              {stat.label}
-            </p>
-
-            <p className="text-3xl font-black tracking-[-0.02em] text-white">
-              {stat.value}
-            </p>
-
-            <p className="mt-1 text-[11px] text-white/30">{stat.note}</p>
-          </div>
-        ))}
+      <div>
+        <h3 className="text-2xl mt-10 font-light text-white sm:text-3xl">
+          Waiting for your review
+        </h3>
+        <p className="mt-2 text-sm text-white/40">
+          One decision at a time. Approve, or tell us what to change.
+        </p>
       </div>
 
-      {/* =================================
-          Recent Work
-      ================================== */}
-
-      <div className="border border-white/[0.08] bg-white/[0.03] p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
-            Recent Work
-          </p>
-
-          <button
-            onClick={() => navigate("/client/works")}
-            className="text-[11px] font-medium text-[#8B5CF6] hover:text-[#a78bfa]"
-          >
-            View all
-          </button>
+      {loading ? (
+        <div className="py-20 text-center">
+          <p className="text-sm text-white/30">Loading works...</p>
         </div>
-
-        {loading ? (
-          <div className="py-10 text-center">
-            <p className="text-sm text-white/30">Loading works...</p>
-          </div>
-        ) : recentWork.length === 0 ? (
-          <div className="py-10 text-center">
-            <p className="text-sm text-white/30">No works available yet.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col divide-y divide-white/[0.05]">
-            {recentWork.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => navigate("/client/works")}
-                className="flex w-full items-center justify-between gap-3 py-3 text-left first:pt-0 last:pb-0"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate text-[13px] font-medium text-white/80">
-                      {item.postName}
-                    </p>
-
-                    <span className="text-[9px] uppercase text-white/25">
-                      {item.postType}
-                    </span>
-                  </div>
-
-                  <p className="mt-0.5 text-[11px] text-white/30">
-                    Updated {formatDate(item)}
-                  </p>
-                </div>
-
+      ) : waitingForReview.length === 0 ? (
+        <div className="py-20 text-center">
+          <p className="text-sm text-white/30">
+            Nothing is waiting on your review right now.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {waitingForReview.map((work) => (
+            <div
+              key={work.id}
+              onClick={() => openWork(work)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openWork(work);
+                }
+              }}
+              className="flex cursor-pointer flex-col gap-5 border border-white/[0.08] bg-white/[0.02] p-6 transition-colors hover:border-white/20"
+            >
+              <div className="flex items-start justify-between">
                 <span
-                  className={`shrink-0 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] ${
-                    statusStyles[item.status]
+                  className={`border px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.1em] ${
+                    statusStyles[work.status]
                   }`}
                 >
-                  {statusLabel[item.status]}
+                  {statusLabel[work.status]}
                 </span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
 
-      {/* =================================
-          Additional Overview
-      ================================== */}
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-white/30">
+                  {work.postType}
+                </span>
+              </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="border border-white/[0.08] bg-white/[0.03] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-white/30">
-            Active
-          </p>
+              <div>
+                <p className="text-[15px] font-medium leading-snug text-white/90">
+                  {work.postName}
+                </p>
 
-          <p className="mt-2 text-xl font-black">
-            {loading ? "..." : stats.activeWorks}
-          </p>
+                <p className="mt-2 text-[11px] text-white/30">
+                  {work.media?.length ?? 0} files · {formatDate(work)}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <div className="border border-white/[0.08] bg-white/[0.03] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-white/30">
-            Edit Requests
-          </p>
-
-          <p className="mt-2 text-xl font-black">
-            {loading ? "..." : stats.editRequested}
-          </p>
-        </div>
-
-        <div className="border border-white/[0.08] bg-white/[0.03] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-white/30">
-            Posters
-          </p>
-
-          <p className="mt-2 text-xl font-black">
-            {loading ? "..." : stats.posters}
-          </p>
-        </div>
-
-        <div className="border border-white/[0.08] bg-white/[0.03] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-white/30">
-            Reels
-          </p>
-
-          <p className="mt-2 text-xl font-black">
-            {loading ? "..." : stats.reels}
-          </p>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

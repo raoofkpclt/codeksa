@@ -103,82 +103,74 @@ const ReusableModal = ({
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
       onMouseDown={handleBackdropClick}
     >
       <div
-        className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[#111116] shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
+        className="w-full max-w-md border border-white/10 bg-[#0c0c11] p-8"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-start gap-4">
-            <div
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl font-bold ${styles.iconBg} ${styles.iconText}`}
-            >
-              {styles.icon}
-            </div>
+        {/* Header */}
+        <div className="flex items-start gap-4">
+          <div
+            className={`flex h-12 w-12 shrink-0 items-center justify-center text-xl font-bold ${styles.iconBg} ${styles.iconText}`}
+          >
+            {styles.icon}
+          </div>
 
-            <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-semibold text-white">
-                {title}
-              </h2>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-semibold text-white">{title}</h2>
 
-              {description && (
-                <p className="mt-2 text-sm leading-6 text-white/45">
-                  {description}
-                </p>
-              )}
-            </div>
+            {description && (
+              <p className="mt-2 text-sm leading-relaxed text-white/40">
+                {description}
+              </p>
+            )}
+          </div>
 
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={loading}
+            className="shrink-0 text-white/40 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Custom Content */}
+        {children && <div className="mt-6">{children}</div>}
+
+        {/* Actions */}
+        <div className="mt-10 flex justify-end gap-3">
+          {showCancel && (
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-white/30 transition hover:bg-white/5 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+              className="border border-white/10 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white/60 transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
-              ✕
+              {cancelText}
             </button>
-          </div>
-
-          {/* Custom Content */}
-          {children && (
-            <div className="mt-5">
-              {children}
-            </div>
           )}
 
-          {/* Actions */}
-          <div className="mt-6 flex gap-3">
-            {showCancel && (
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={loading}
-                className="flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white/60 transition hover:bg-white/[0.08] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {cancelText}
-              </button>
-            )}
-
-            {onConfirm && (
-              <button
-                type="button"
-                onClick={onConfirm}
-                disabled={loading}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white transition disabled:cursor-not-allowed disabled:opacity-50 ${styles.button}`}
-              >
-                {loading ? (
-                  <>
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    {loadingText}
-                  </>
-                ) : (
-                  confirmText
-                )}
-              </button>
-            )}
-          </div>
+          {onConfirm && (
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={loading}
+              className={`flex items-center justify-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white transition disabled:cursor-not-allowed disabled:opacity-50 ${styles.button}`}
+            >
+              {loading ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  {loadingText}
+                </>
+              ) : (
+                confirmText
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>

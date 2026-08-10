@@ -22,16 +22,21 @@ const PRINCIPLES = [
   { index: "06", text: "Premium is quiet." },
 ];
 
+// const accentLine =
+//   "w-6 h-px bg-[#8468FF] inline-block";
+
 const ExploreLink = ({ label, href }: { label: string; href: string }) => (
   <a
     href={href}
-    className="hover-glow group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] text-[var(--mist)] transition-colors duration-200"
+    className="group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
   >
-    {label}
-    <span className="h-px w-10 bg-[var(--code-purple)] transition-all duration-300 group-hover:w-16 group-hover:bg-[var(--violet-glow)]" />
+    <span className="transition-transform duration-300 ease-out group-hover:translate-x-0.5">
+      {label}
+    </span>
+
+    <span className="h-px w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-16" />
   </a>
 );
-
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
     {children}
@@ -96,7 +101,7 @@ const About = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
@@ -134,7 +139,7 @@ const About = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
@@ -176,18 +181,18 @@ const About = () => {
     <div className="max-w-[900px]">
       <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
         <span className="font-light">
-          A strategic business
+          A strategic business{" "}
         </span>
        
         <span className="font-light">
-          partner, not a service
+          partner, not a service{" "}
         </span>
    
         <span className="font-bold  text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
@@ -228,18 +233,18 @@ const About = () => {
     <div className="max-w-[900px]">
       <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
         <span className="font-light">
-          Founder-led.
+          Founder-led.{" "}
         </span>
        
         <span className="font-light">
-          Specialist-enabled.
+          Specialist-enabled.{" "}
         </span>
         
         <span className="font-bold  text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
@@ -285,6 +290,7 @@ const About = () => {
         {/* Explore what we solve — divider link */}
         <div className=" border-[var(--steel)] py-16 md:py-20">
           <ExploreLink label="Explore What We Solve" href="/what-we-solve" />
+          
         </div>
 
         {/* Explore the structure */}
@@ -303,7 +309,7 @@ const About = () => {
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+   hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">work.</span>

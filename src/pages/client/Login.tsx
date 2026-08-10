@@ -4,13 +4,16 @@ import { useNavigate } from "react-router-dom";
 import ClientService from "../../service/firebaseService/clientService";
 import { Link } from "react-router-dom";
 
+const labelBase = "text-xs tracking-[0.2em] text-white/40";
+// const accentLine = "w-6 h-px bg-[#8468FF] inline-block";
+const glowSpan =
+  "font-semibold text-white transition-all duration-500 ease-out hover:text-[#8468FF] hover:scale-[1.01] hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)] hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passFocused, setPassFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -88,157 +91,122 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden p-8 bg-[#0B0B0F] font-sans [font-family:'Inter',sans-serif]">
+    <div className="relative flex items-center justify-center min-h-screen bg-black text-white overflow-x-hidden px-6 md:px-10 lg:px-16 py-16 sm:py-20 md:py-28">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        * { font-synthesis: none; }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
+
       {/* Background grid */}
       <div
         className="absolute inset-0 pointer-events-none bg-[length:40px_40px]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)",
+            "linear-gradient(rgba(132,104,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(132,104,255,0.05) 1px, transparent 1px)",
         }}
       />
 
-      {/* Purple ambient glow */}
-      <div className="absolute pointer-events-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.07)_0%,transparent_70%)]" />
-
-      {/* Card */}
       <div
-        className={`relative w-full max-w-md bg-white/[0.03] border border-white/[0.08] p-10 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`relative max-w-lg transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
           mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
-        {/* Open-corner frames — CODE brand signature */}
-        <span className="absolute -top-px -left-px w-3 h-3 border-t-[1.5px] border-l-[1.5px] border-[#8B5CF6]" />
-        <span className="absolute -top-px -right-px w-3 h-3 border-t-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-        <span className="absolute -bottom-px -left-px w-3 h-3 border-b-[1.5px] border-l-[1.5px] border-[#8B5CF6]" />
-        <span className="absolute -bottom-px -right-px w-3 h-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-
-        {/* Tag */}
-        <div className="inline-block mb-6 border border-[#8B5CF6] text-[#8B5CF6] text-[10px] font-semibold tracking-[0.15em] px-2.5 py-[3px]">
-          CLIENT ACCESS
+        {/* Logo / wordmark */}
+        <div className="flex items-center gap-2.5 mb-16">
+          <div className="w-7 h-7 flex items-center justify-center border border-white/15 text-white text-sm font-semibold font-['Space_Grotesk',sans-serif]">
+            C
+          </div>
+          <span className="text-white text-[13px] font-medium tracking-[0.08em] font-['Space_Grotesk',sans-serif]">
+            CODE HUB
+            <sup className="text-[8px] ml-0.5">™</sup>
+          </span>
         </div>
 
-        {/* Title */}
-        <h1 className="text-[28px] font-black text-white tracking-[-0.02em] uppercase leading-[1.1] mb-[0.4rem]">
-          CODE
+        {/* Tag */}
+        <p className={`${labelBase} mb-4`}>PRIVATE ENVIRONMENT</p>
+
+        {/* Headline */}
+        <h1 className="font-['Space_Grotesk',sans-serif] font-light text-[clamp(2.5rem,6vw,3.5rem)] leading-[1.05] tracking-[-0.03em] mb-6">
+          The system
           <br />
-          PORTAL
+          behind <span className={glowSpan}>growth.</span>
         </h1>
 
-        {/* Divider */}
-        <div className="h-px my-6 bg-[linear-gradient(90deg,rgba(255,255,255,0.12)_0%,transparent_100%)]" />
+        {/* Subtext */}
+        <p className="font-['Space_Grotesk',sans-serif] text-white/50 text-base leading-relaxed mb-10 max-w-sm">
+          CODE Hub&trade; is where work is shared, reviewed and approved.
+        </p>
 
         {/* Email field */}
-        <div
-          className={`mb-5 transition-all duration-500 delay-[150ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
+        <div className="mb-6">
           <label
             htmlFor="email"
-            className="block text-[10px] font-semibold tracking-[0.12em] text-white/40 uppercase mb-2"
+            className={`block ${labelBase} mb-2`}
           >
-            Email address
+            EMAIL <span className="text-[#8468FF]">*</span>
           </label>
-          <div
-            className={`relative flex items-center border transition-colors duration-200 ${
-              emailFocused
-                ? "border-[#8B5CF6] bg-[#8B5CF6]/[0.04]"
-                : "border-white/10 bg-white/[0.03]"
-            }`}
-          >
-            <svg
-              className="flex-shrink-0 ml-3 transition-[stroke] duration-200"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={emailFocused ? "#8B5CF6" : "rgba(255,255,255,0.25)"}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
-            <input
-              ref={emailRef}
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={() => setEmailFocused(true)}
-              onBlur={() => setEmailFocused(false)}
-              onKeyDown={handleEmailKeyDown}
-              placeholder="client@code.agency"
-              autoComplete="email"
-              className="flex-1 bg-transparent border-none outline-none text-white text-sm font-normal font-inherit py-3 pr-3 pl-2.5 tracking-[0.01em] placeholder:text-white/20 placeholder:font-light"
-            />
-            {emailFocused && (
-              <span className="text-[10px] text-white/20 tracking-[0.05em] bg-white/5 border border-white/10 px-1.5 py-0.5 font-mono mr-2.5 whitespace-nowrap flex-shrink-0">
-                ↵ ENTER
-              </span>
-            )}
-          </div>
+          <input
+            ref={emailRef}
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleEmailKeyDown}
+            autoComplete="email"
+            className="w-full bg-transparent border border-white/15 outline-none text-white text-sm font-normal font-['Space_Grotesk',sans-serif] py-3.5 px-4 tracking-[0.01em] focus:border-[#8468FF] transition-colors duration-200"
+          />
         </div>
 
         {/* Password field */}
-        <div
-          className={`mb-2 transition-all duration-500 delay-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
+        <div className="mb-8">
           <label
             htmlFor="password"
-            className="block text-[10px] font-semibold tracking-[0.12em] text-white/40 uppercase mb-2"
+            className={`block ${labelBase} mb-2`}
           >
-            Password
+            PASSWORD <span className="text-[#8468FF]">*</span>
           </label>
-          <div
-            className={`relative flex items-center border transition-colors duration-200 ${
-              passFocused
-                ? "border-[#8B5CF6] bg-[#8B5CF6]/[0.04]"
-                : "border-white/10 bg-white/[0.03]"
-            }`}
-          >
-            <svg
-              className="flex-shrink-0 ml-3 transition-[stroke] duration-200"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={passFocused ? "#8B5CF6" : "rgba(255,255,255,0.25)"}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <input
-              ref={passRef}
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onFocus={() => setPassFocused(true)}
-              onBlur={() => setPassFocused(false)}
-              onKeyDown={handlePassKeyDown}
-              placeholder="••••••••••••"
-              autoComplete="current-password"
-              className="flex-1 bg-transparent border-none outline-none text-white text-sm font-normal font-inherit py-3 pr-3 pl-2.5 tracking-[0.1em] placeholder:text-white/20 placeholder:font-light"
-            />
-            {passFocused && (
-              <span className="text-[10px] text-white/20 tracking-[0.05em] bg-white/5 border border-white/10 px-1.5 py-0.5 font-mono mr-2.5 whitespace-nowrap flex-shrink-0">
-                ↵ LOGIN
-              </span>
-            )}
-          </div>
+          <input
+            ref={passRef}
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handlePassKeyDown}
+            autoComplete="current-password"
+            className="w-full bg-transparent border border-white/15 outline-none text-white text-sm font-normal font-['Space_Grotesk',sans-serif] py-3.5 px-4 tracking-[0.1em] focus:border-[#8468FF] transition-colors duration-200"
+          />
         </div>
 
         {/* Error message */}
         {error && (
-          <p className="text-[11px] text-red-400 tracking-[0.05em] mt-3 flex items-center gap-1.5">
+          <p className="text-[11px] text-red-400 tracking-[0.05em] -mt-4 mb-6 flex items-center gap-1.5 font-['Space_Grotesk',sans-serif]">
             <svg
               width="13"
               height="13"
@@ -263,11 +231,11 @@ const Login = () => {
           ref={btnRef}
           onClick={handleLogin}
           disabled={loading}
-          className={`w-full mt-5 border-none text-white font-inherit text-[11px] font-bold tracking-[0.15em] uppercase py-4 flex items-center justify-center gap-2 transition-colors duration-200 ${
+          className={`w-full border-none text-white font-['Space_Grotesk',sans-serif] text-xs font-medium tracking-[0.2em] uppercase py-4 flex items-center justify-center gap-2 transition-colors duration-200 ${
             loading
-              ? "bg-[#8B5CF6]/40 cursor-not-allowed"
-              : "bg-[#8B5CF6] hover:bg-[#7c3aed] cursor-pointer"
-          } ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              ? "bg-[#8468FF]/40 cursor-not-allowed"
+              : "bg-[#8468FF] hover:bg-[#6F4BFF] cursor-pointer"
+          }`}
         >
           {loading && (
             <svg
@@ -283,20 +251,17 @@ const Login = () => {
               <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
           )}
-          {loading ? "AUTHENTICATING" : "AUTHENTICATE"}
+          {loading ? "Authenticating" : "Sign In"}
         </button>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 mt-6">
-          <div className="w-1 h-1 rounded-full bg-[#8B5CF6] flex-shrink-0" />
-        </div>
-        <p className="text-center text-sm text-white/40">
-          Don't have an account?{" "}
+        <p className={`${labelBase} mt-8`}>
+          NEED AN ACCOUNT?{" "}
           <Link
             to="/client/register"
-            className="font-semibold text-violet-500 transition hover:text-violet-400"
+            className="hover-glow text-white/70 transition-colors duration-200"
           >
-            Register
+            CREATE ONE
           </Link>
         </p>
       </div>

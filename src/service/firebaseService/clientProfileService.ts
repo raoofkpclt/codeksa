@@ -24,7 +24,7 @@ export interface ClientProfile {
   id: string;
 
   name: string;
-  companyName: string;
+  company: string;
   email: string;
   phone: string;
 
@@ -40,7 +40,7 @@ export interface ClientProfile {
 
 export interface UpdateClientProfileData {
   name: string;
-  companyName: string;
+  company: string;
   phone: string;
   address?: string;
   website?: string;
@@ -101,8 +101,8 @@ class ClientProfileService {
         data.clientName ||
         "",
 
-      companyName:
-        data.companyName ||
+      company:
+        data.company ||
         "",
 
       email:
@@ -157,8 +157,8 @@ class ClientProfileService {
       name:
         profileData.name.trim(),
 
-      companyName:
-        profileData.companyName.trim(),
+      company:
+        profileData.company.trim(),
 
       phone:
         profileData.phone.trim(),

@@ -22,6 +22,7 @@ const EditClientModal = ({
   const [formData, setFormData] = useState(() => ({
     name: client.name ?? "",
     email: client.email ?? "",
+    company: client.company ?? "",
     logo: client.logo ?? "",
     active: client.active ?? false,
     onboarding: client.onboarding ?? false,
@@ -39,27 +40,6 @@ const EditClientModal = ({
 
   const isLoading = loading || uploading;
 
-  // useEffect(() => {
-  //   if (client && isOpen) {
-  //     setFormData({
-  //       name: client.name || "",
-  //       email: client.email || "",
-  //       logo: client.logo || "",
-  //       active: client.active || false,
-  //       onboarding:
-  //         client.onboarding || false,
-  //     });
-
-  //     setLogoFile(null);
-  //     setLogoPreview("");
-  //     setError(null);
-
-  //     if (fileInputRef.current) {
-  //       fileInputRef.current.value = "";
-  //     }
-  //   }
-  // }, [client, isOpen]);
-
   useEffect(() => {
     return () => {
       if (logoPreview) {
@@ -68,7 +48,9 @@ const EditClientModal = ({
     };
   }, [logoPreview]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
@@ -167,6 +149,8 @@ const EditClientModal = ({
 
         email: formData.email.trim().toLowerCase(),
 
+        company: formData.company.trim(),
+
         logo: logoUrl,
 
         active: formData.active,
@@ -215,16 +199,18 @@ const EditClientModal = ({
       onMouseDown={handleClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111116] shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
+        className="max-h-[90vh] w-full max-w-xl overflow-y-auto border border-white/10 bg-[#0c0c11] p-8 shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
         onMouseDown={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-white/10 p-6">
+          <div className="mb-8 flex items-start justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-white">Edit Client</h2>
+              <h2 className="text-2xl font-semibold text-white">
+                Edit client
+              </h2>
 
-              <p className="mt-1 text-sm text-white/40">
+              <p className="mt-2 text-sm leading-relaxed text-white/40">
                 Update client account information and logo.
               </p>
             </div>
@@ -233,30 +219,30 @@ const EditClientModal = ({
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-white/40 transition hover:bg-white/5 hover:text-white disabled:opacity-40"
+              className="text-white/40 transition hover:text-white disabled:opacity-40"
             >
               ✕
             </button>
           </div>
 
-          {/* Form */}
-          <div className="space-y-5 p-6">
-            {/* Error */}
-            {error && (
-              <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3">
-                <p className="text-sm text-rose-400">{error}</p>
-              </div>
-            )}
+          {/* Error */}
+          {error && (
+            <div className="mb-6 border border-rose-500/20 bg-rose-500/10 px-4 py-3">
+              <p className="text-sm text-rose-400">{error}</p>
+            </div>
+          )}
 
+          {/* Fields */}
+          <div className="space-y-6">
             {/* Logo */}
             <div>
               <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                Client Logo
+                Client logo
               </label>
 
               <div className="flex items-center gap-4">
                 {/* Preview */}
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden border border-white/10 bg-white">
                   <img
                     src={displayLogo}
                     alt={formData.name || "Client logo"}
@@ -286,9 +272,9 @@ const EditClientModal = ({
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isLoading}
-                      className="rounded-xl bg-violet-600 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:opacity-50"
+                      className="bg-violet-600 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:opacity-50"
                     >
-                      {logoFile ? "Change Image" : "Choose New Logo"}
+                      {logoFile ? "Change image" : "Choose new logo"}
                     </button>
 
                     {/* Cancel Selected */}
@@ -297,9 +283,9 @@ const EditClientModal = ({
                         type="button"
                         onClick={handleRemoveSelectedLogo}
                         disabled={isLoading}
-                        className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-rose-400 transition hover:bg-rose-500/20 disabled:opacity-50"
+                        className="border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-rose-400 transition hover:bg-rose-500/20 disabled:opacity-50"
                       >
-                        Cancel Image
+                        Cancel image
                       </button>
                     )}
                   </div>
@@ -326,7 +312,7 @@ const EditClientModal = ({
             {/* Name */}
             <div>
               <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                Client Name
+                Client name <span className="text-violet-400">*</span>
               </label>
 
               <input
@@ -337,14 +323,14 @@ const EditClientModal = ({
                 placeholder="Enter client name"
                 disabled={isLoading}
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-violet-500/60 focus:bg-white/[0.06] disabled:opacity-50"
+                className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-violet-500/60 disabled:opacity-50"
               />
             </div>
 
             {/* Email */}
             <div>
               <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                Email Address
+                Email address <span className="text-violet-400">*</span>
               </label>
 
               <input
@@ -355,7 +341,24 @@ const EditClientModal = ({
                 placeholder="Enter email address"
                 disabled={isLoading}
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-violet-500/60 focus:bg-white/[0.06] disabled:opacity-50"
+                className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-violet-500/60 disabled:opacity-50"
+              />
+            </div>
+
+            {/* Company */}
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                Company
+              </label>
+
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="Enter company name"
+                disabled={isLoading}
+                className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-violet-500/60 disabled:opacity-50"
               />
             </div>
 
@@ -369,22 +372,22 @@ const EditClientModal = ({
                 type="text"
                 value={client.uid || ""}
                 disabled
-                className="w-full cursor-not-allowed rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 font-mono text-xs text-white/30 outline-none"
+                className="w-full cursor-not-allowed border border-white/5 bg-white/[0.02] px-4 py-3 font-mono text-xs text-white/30 outline-none"
               />
             </div>
 
             {/* Account Settings */}
             <div>
               <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                Account Settings
+                Account settings
               </p>
 
               <div className="space-y-3">
                 {/* Active */}
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]">
+                <label className="flex cursor-pointer items-center justify-between border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]">
                   <div>
                     <p className="text-sm font-medium text-white">
-                      Active Account
+                      Active account
                     </p>
 
                     <p className="mt-1 text-xs text-white/35">
@@ -403,10 +406,10 @@ const EditClientModal = ({
                 </label>
 
                 {/* Onboarding */}
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]">
+                <label className="flex cursor-pointer items-center justify-between border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]">
                   <div>
                     <p className="text-sm font-medium text-white">
-                      Onboarding Completed
+                      Onboarding completed
                     </p>
 
                     <p className="mt-1 text-xs text-white/35">
@@ -428,12 +431,12 @@ const EditClientModal = ({
           </div>
 
           {/* Footer */}
-          <div className="flex gap-3 border-t border-white/10 p-6">
+          <div className="mt-10 flex justify-end gap-3">
             <button
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white/60 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-40"
+              className="border border-white/10 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white/60 transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               Cancel
             </button>
@@ -441,16 +444,15 @@ const EditClientModal = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                   {uploading ? "Uploading..." : "Saving..."}
                 </>
               ) : (
-                "Save Changes"
+                "Save changes"
               )}
             </button>
           </div>

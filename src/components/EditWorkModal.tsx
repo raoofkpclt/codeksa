@@ -97,13 +97,6 @@ const EditWorkModal = ({
 
       let uploadedMedia: WorkMedia[] = [];
 
-      // if (newFiles.length > 0) {
-      //   uploadedMedia = await WorkMediaService.uploadMultipleFiles(
-      //     newFiles,
-      //     work.clientId,
-      //     work.postType,
-      //   );
-      // }
       if (
         newFiles.length > 0 &&
         (work.postType === "poster" || work.postType === "reel")
@@ -147,73 +140,91 @@ const EditWorkModal = ({
     }
   };
 
+  const handleClose = () => {
+    if (busy) return;
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111116]">
-        <div className="sticky top-0 z-10 flex items-start justify-between border-b border-white/10 bg-[#111116]/95 p-5 backdrop-blur-xl sm:p-6">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-violet-400">
-              Work Management
-            </p>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+      onMouseDown={handleClose}
+    >
+      <div
+        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto border border-white/10 bg-[#0c0c11] p-8"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <form onSubmit={handleSubmit}>
+          {/* Header */}
+          <div className="mb-8 flex items-start justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold text-white">Edit work</h2>
 
-            <h2 className="mt-2 text-xl font-semibold text-white">Edit Work</h2>
+              <p className="mt-2 text-sm leading-relaxed text-white/40">
+                Update post information and media.
+              </p>
+            </div>
 
-            <p className="mt-1 text-sm text-white/35">
-              Update post information and media.
-            </p>
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={busy}
+              className="text-white/40 transition hover:text-white disabled:opacity-40"
+            >
+              ✕
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-xl text-white/50"
-          >
-            ×
-          </button>
-        </div>
+          {/* Error */}
+          {error && (
+            <div className="mb-6 border border-rose-500/20 bg-rose-500/10 px-4 py-3">
+              <p className="text-sm text-rose-400">{error}</p>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="p-5 sm:p-6">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Client
-              </label>
+          {/* Fields */}
+          <div className="space-y-6">
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Client
+                </label>
 
-              <input
-                value={work.clientName}
-                disabled
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/50"
-              />
+                <input
+                  value={work.clientName}
+                  disabled
+                  className="w-full cursor-not-allowed border border-white/5 bg-white/[0.02] px-4 py-3 text-sm text-white/40 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Type
+                </label>
+
+                <input
+                  value={work.postType}
+                  disabled
+                  className="w-full cursor-not-allowed border border-white/5 bg-white/[0.02] px-4 py-3 text-sm capitalize text-white/40 outline-none"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Type
-              </label>
-
-              <input
-                value={work.postType}
-                disabled
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm capitalize text-white/50"
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Post Name
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                Post name <span className="text-violet-400">*</span>
               </label>
 
               <input
                 value={postName}
                 onChange={(event) => setPostName(event.target.value)}
                 disabled={busy}
-                className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
+                className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500/60 disabled:opacity-50"
               />
             </div>
 
-            <div className="sm:col-span-2">
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
                 Description
               </label>
 
@@ -222,58 +233,68 @@ const EditWorkModal = ({
                 onChange={(event) => setDescription(event.target.value)}
                 rows={4}
                 disabled={busy}
-                className="w-full resize-none rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none focus:border-violet-500/50"
+                className="w-full resize-none border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500/60 disabled:opacity-50"
               />
             </div>
 
-            <div>
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Posting Date
-              </label>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Posting date <span className="text-violet-400">*</span>
+                </label>
 
-              <input
-                type="date"
-                value={postingDate}
-                onChange={(event) => setPostingDate(event.target.value)}
-                disabled={busy}
-                className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none"
-              />
-            </div>
+                <input
+                  type="date"
+                  value={postingDate}
+                  onChange={(event) => setPostingDate(event.target.value)}
+                  disabled={busy}
+                  className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition [color-scheme:dark] focus:border-violet-500/60 disabled:opacity-50"
+                />
+              </div>
 
-            <div>
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Status
-              </label>
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                  Status
+                </label>
 
-              <select
-                value={status}
-                onChange={(event) =>
-                  setStatus(event.target.value as WorkStatus)
-                }
-                disabled={busy}
-                className="w-full rounded-xl border border-white/10 bg-[#08080c] px-4 py-3 text-sm text-white outline-none"
-              >
-                <option value="sent_to_client">Sent to Client</option>
+                <select
+                  value={status}
+                  onChange={(event) =>
+                    setStatus(event.target.value as WorkStatus)
+                  }
+                  disabled={busy}
+                  className="w-full border border-white/10 bg-transparent px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500/60 disabled:opacity-50"
+                >
+                  <option value="sent_to_client" className="bg-[#0c0c11]">
+                    Sent to Client
+                  </option>
 
-                <option value="requested_to_edit">Requested to Edit</option>
+                  <option value="requested_to_edit" className="bg-[#0c0c11]">
+                    Requested to Edit
+                  </option>
 
-                <option value="approved">Approved</option>
+                  <option value="approved" className="bg-[#0c0c11]">
+                    Approved
+                  </option>
 
-                <option value="rejected">Rejected</option>
-              </select>
+                  <option value="rejected" className="bg-[#0c0c11]">
+                    Rejected
+                  </option>
+                </select>
+              </div>
             </div>
 
             {/* Existing Media */}
-            <div className="sm:col-span-2">
-              <label className="mb-3 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Current Media
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                Current media
               </label>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {existingMedia.map((media, index) => (
                   <div
                     key={`${media.key}-${index}`}
-                    className="relative overflow-hidden rounded-xl border border-white/10 bg-black"
+                    className="relative overflow-hidden border border-white/10 bg-black"
                   >
                     {work.postType === "poster" ? (
                       <img
@@ -292,7 +313,7 @@ const EditWorkModal = ({
                     <button
                       type="button"
                       onClick={() => removeExistingMedia(index)}
-                      className="absolute right-2 top-2 rounded-lg bg-black/70 px-3 py-1.5 text-[10px] font-bold text-rose-400"
+                      className="absolute right-2 top-2 border border-rose-500/20 bg-black/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-rose-400 transition hover:bg-rose-500/20"
                     >
                       Remove
                     </button>
@@ -302,9 +323,9 @@ const EditWorkModal = ({
             </div>
 
             {/* New Media */}
-            <div className="sm:col-span-2">
-              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                Add New Media
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                Add new media
               </label>
 
               <input
@@ -313,46 +334,41 @@ const EditWorkModal = ({
                 multiple={work.postType === "poster"}
                 onChange={handleNewFiles}
                 disabled={busy}
-                className="w-full rounded-xl border border-dashed border-white/15 bg-white/[0.03] p-4 text-sm text-white/50 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-600 file:px-4 file:py-2 file:text-xs file:font-bold file:text-white"
+                className="w-full border border-dashed border-white/15 bg-white/[0.03] p-4 text-sm text-white/50 file:mr-4 file:border-0 file:bg-violet-600 file:px-4 file:py-2 file:text-[10px] file:font-bold file:uppercase file:tracking-[0.1em] file:text-white"
               />
-            </div>
 
-            {newFiles.length > 0 && (
-              <div className="sm:col-span-2 space-y-2">
-                {newFiles.map((file, index) => (
-                  <div
-                    key={`${file.name}-${index}`}
-                    className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] p-3"
-                  >
-                    <span className="truncate text-xs text-white/60">
-                      {file.name}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => removeNewFile(index)}
-                      className="text-xs text-rose-400"
+              {newFiles.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {newFiles.map((file, index) => (
+                    <div
+                      key={`${file.name}-${index}`}
+                      className="flex items-center justify-between gap-3 border border-white/10 bg-white/[0.03] p-3"
                     >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+                      <span className="truncate text-xs text-white/70">
+                        {file.name}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => removeNewFile(index)}
+                        className="border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-[10px] font-bold uppercase text-rose-400"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {error && (
-            <div className="mt-5 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
-              {error}
-            </div>
-          )}
-
-          <div className="mt-6 flex justify-end gap-3">
+          {/* Footer */}
+          <div className="mt-10 flex justify-end gap-3">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={busy}
-              className="rounded-xl border border-white/10 px-5 py-3 text-xs font-bold uppercase text-white/60"
+              className="border border-white/10 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white/60 transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               Cancel
             </button>
@@ -360,13 +376,21 @@ const EditWorkModal = ({
             <button
               type="submit"
               disabled={busy}
-              className="rounded-xl bg-violet-600 px-6 py-3 text-xs font-bold uppercase text-white disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {uploading
-                ? "Uploading..."
-                : loading
-                  ? "Saving..."
-                  : "Save Changes"}
+              {uploading ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Uploading...
+                </>
+              ) : loading ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Saving...
+                </>
+              ) : (
+                "Save changes"
+              )}
             </button>
           </div>
         </form>

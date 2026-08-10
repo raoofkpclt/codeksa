@@ -11,6 +11,7 @@ export type Client = {
   email: string;
 sector?: string;
   logo?: string;
+  company:string;
 
   active: boolean;
 
@@ -35,7 +36,7 @@ export type ClientLogin = {
 };
 
 
-export type WorkType = "poster" | "reel";
+export type WorkType ="poster" | "reel";
 
 export type WorkStatus =
   | "sent_to_client"
@@ -58,7 +59,7 @@ export interface Work {
   clientLogo?: string;
 
   postName: string;
-  postType: "poster" | "reel" | "video" | "link" | "pdf";
+  postType: "poster" | "reel" ;
 
   description: string;
   postingDate: string;
@@ -115,15 +116,39 @@ export type UploadStatus =
   | "completed"
   | "rejected";
 
+// export type ClientUpload = {
+//   id?: string;
+//   clientId: string;
+//   postType: "poster" | "reel" | "pdf" | "link";
+//   media?: UploadedMedia[];
+//   status: UploadStatus;
+//   link?:string;
+//   note?: string;
+//   caption?: string;
+//   createdAt?: Timestamp;
+//   updatedAt?: Timestamp;
+// };
+
 export type ClientUpload = {
   id?: string;
   clientId: string;
+
+  title?: string;
+    description?: string;
+
   postType: "poster" | "reel" | "pdf" | "link";
+
   media?: UploadedMedia[];
+
   status: UploadStatus;
-  link?:string;
+
+  link?: string;
+
   note?: string;
+
   caption?: string;
+
   createdAt?: Timestamp;
+
   updatedAt?: Timestamp;
 };

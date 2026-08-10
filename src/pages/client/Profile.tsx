@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -14,7 +14,7 @@ import ClientProfileService, {
 
 interface ProfileForm {
   name: string;
-  companyName: string;
+  company: string;
   email: string;
   phone: string;
   address: string;
@@ -27,7 +27,7 @@ interface ProfileForm {
 
 const defaultForm: ProfileForm = {
   name: "",
-  companyName: "",
+  company: "",
   email: "",
   phone: "",
   address: "",
@@ -35,12 +35,43 @@ const defaultForm: ProfileForm = {
 };
 
 // =========================================
+// Helpers
+// =========================================
+
+const formatMemberSince = (value: unknown) => {
+  if (!value) return "—";
+
+  try {
+    if (
+      typeof value === "object" &&
+      value !== null &&
+      "toDate" in value &&
+      typeof (value as { toDate?: unknown }).toDate === "function"
+    ) {
+      return (value as { toDate: () => Date })
+        .toDate()
+        .toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+    }
+
+    return new Date(value as string).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return "—";
+  }
+};
+
+// =========================================
 // Profile
 // =========================================
 
 const Profile = () => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   const [profile, setProfile] = useState<ClientProfile | null>(null);
 
   const [form, setForm] = useState<ProfileForm>(defaultForm);
@@ -48,8 +79,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   const [saving, setSaving] = useState(false);
-
-  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [changingPassword, setChangingPassword] = useState(false);
 
@@ -64,12 +93,6 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
 
   const [newPassword, setNewPassword] = useState("");
-
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-
-  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // =======================================
   // Fetch Profile
@@ -93,7 +116,7 @@ const Profile = () => {
         setForm({
           name: data.name || "",
 
-          companyName: data.companyName || "",
+          company: data.company|| "",
 
           email: data.email || "",
 
@@ -130,14 +153,15 @@ const Profile = () => {
       ...current,
       [name]: value,
     }));
-   
   };
 
   // =======================================
   // Save Profile
   // =======================================
 
-  const handleSaveProfile = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveProfile = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
     try {
@@ -147,20 +171,18 @@ const Profile = () => {
 
       await ClientProfileService.updateProfile({
         name: form.name,
-        companyName: form.companyName,
+        company: form.company,
         phone: form.phone,
         address: form.address,
         website: form.website,
-        
       });
-      window.location.reload();
 
       setProfile((current) =>
         current
           ? {
               ...current,
               name: form.name,
-              companyName: form.companyName,
+              companyName: form.company,
               phone: form.phone,
               address: form.address,
               website: form.website,
@@ -181,50 +203,6 @@ const Profile = () => {
   };
 
   // =======================================
-  // Profile Image
-  // =======================================
-
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-
-    if (!file) return;
-
-    try {
-      setUploadingImage(true);
-      setError("");
-      setSuccess("");
-
-      const uploaded = await ClientProfileService.uploadProfileImage(file);
-window.location.reload();
-      setProfile((current) =>
-        current
-          ? {
-              ...current,
-              profileImage: uploaded.url,
-              profileImageKey: uploaded.key,
-            }
-          : current,
-      );
-
-      setSuccess("Profile image updated successfully.");
-    } catch (error) {
-      console.error("Image upload error:", error);
-
-      setError(
-        error instanceof Error ? error.message : "Failed to upload image",
-      );
-    } finally {
-      setUploadingImage(false);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
-  // =======================================
   // Change Password
   // =======================================
 
@@ -241,13 +219,8 @@ window.location.reload();
       return;
     }
 
-    if (newPassword.length < 6) {
-      setError("New password must contain at least 6 characters.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError("New passwords do not match.");
+    if (newPassword.length < 8) {
+      setError("New password must contain at least 8 characters.");
       return;
     }
 
@@ -260,10 +233,9 @@ window.location.reload();
       setChangingPassword(true);
 
       await ClientProfileService.changePassword(currentPassword, newPassword);
-window.location.reload();
+
       setCurrentPassword("");
       setNewPassword("");
-      setConfirmPassword("");
 
       setSuccess("Password changed successfully.");
     } catch (error: unknown) {
@@ -283,28 +255,14 @@ window.location.reload();
         setError("Too many attempts. Please try again later.");
       } else {
         setError(
-          error instanceof Error ? error.message : "Failed to change password.",
+          error instanceof Error
+            ? error.message
+            : "Failed to change password.",
         );
       }
     } finally {
       setChangingPassword(false);
     }
-  };
-
-  // =======================================
-  // Initials
-  // =======================================
-
-  const getInitials = () => {
-    const value = profile?.name || profile?.companyName || "C";
-
-    return value
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((word) => word.charAt(0))
-      .join("")
-      .toUpperCase();
   };
 
   // =======================================
@@ -315,41 +273,64 @@ window.location.reload();
     return (
       <div className="mx-auto max-w-6xl">
         <div className="animate-pulse space-y-6">
-          <div className="h-40 border border-white/[0.08] bg-white/[0.03]" />
+          <div className="h-32 border border-white/[0.08] bg-white/[0.03]" />
 
-          <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-            <div className="h-80 border border-white/[0.08] bg-white/[0.03]" />
-
-            <div className="h-[500px] border border-white/[0.08] bg-white/[0.03]" />
+          <div className="grid gap-10 lg:grid-cols-2">
+            <div className="h-96 border border-white/[0.08] bg-white/[0.03]" />
+            <div className="h-96 border border-white/[0.08] bg-white/[0.03]" />
           </div>
         </div>
       </div>
     );
   }
 
+  const passwordButtonEnabled =
+    !!currentPassword && newPassword.length >= 8 && !changingPassword;
+
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 font-['Space_Grotesk',sans-serif]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        body {
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        * { font-synthesis: none; }
+      `}</style>
+
       {/* =================================
-          Header
+          Hero
       ================================== */}
 
-      <div className="relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-[#8B5CF6]/10 via-white/[0.02] to-transparent p-6 sm:p-8">
-        <span className="absolute -left-px -top-px h-3 w-3 border-l-[1.5px] border-t-[1.5px] border-[#8B5CF6]" />
-
-        <span className="absolute -bottom-px -right-px h-3 w-3 border-b-[1.5px] border-r-[1.5px] border-[#8B5CF6]" />
-
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
-          Client Portal
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+          your profile
         </p>
 
-        <h1 className="mt-2 text-2xl font-black tracking-[-0.02em] sm:text-3xl">
-          Profile Settings
+        <h1 className="mt-3 max-w-2xl text-4xl font-light leading-[1.15] tracking-[-0.02em] text-white sm:text-[42px]">
+          How you appear{" "}
+          <span className="font-bold">
+            in CODE Hub<sup className="text-[0.5em]">™</sup>.
+          </span>
         </h1>
 
-        <p className="mt-2 max-w-xl text-sm text-white/40">
-          Manage your personal details, profile image and account security.
-        </p>
+        <p className="mt-4 text-sm text-white/40">{form.email}</p>
       </div>
+
+      <div className="border-t border-white/[0.08]" />
 
       {/* =================================
           Messages
@@ -384,278 +365,125 @@ window.location.reload();
       )}
 
       {/* =================================
-          Main Profile Grid
+          Details + Access
       ================================== */}
 
-      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-        {/* ===============================
-            Profile Image Card
-        ================================ */}
+      <div className="grid gap-10 lg:grid-cols-2">
+        {/* =============== Details =============== */}
 
-        <aside className="h-fit border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.02] backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,.35)]">
-  {/* Header */}
-  <div className="border-b border-white/10 px-8 py-6">
-    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8B5CF6]">
-      PROFILE PHOTO
-    </p>
+        <div>
+          <h2 className="text-3xl font-light text-white">Details</h2>
+          <p className="mt-2 text-sm text-white/40">Name and organisation.</p>
 
-   
+          <form onSubmit={handleSaveProfile} className="mt-8 flex flex-col gap-6">
+            <div>
+              <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-white/40">
+                Full Name <span className="text-[#8468FF]">*</span>
+              </label>
 
-    
-  </div>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="w-full border border-white/[0.1] bg-transparent px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#8468FF]/50"
+              />
+            </div>
 
-  {/* Content */}
-  <div className="p-8">
-    <div className="flex flex-col items-center">
-      <div className="relative">
-        {profile?.logo ? (
-          <img
-            src={profile.logo}
-            alt="Client profile"
-            className="h-40 w-40 border-2 border-[#8B5CF6]/30 object-cover shadow-[0_0_30px_rgba(139,92,246,.15)]"
-          />
-        ) : (
-          <div className="flex h-40 w-40 items-center justify-center border-2 border-[#8B5CF6]/30 bg-[#8B5CF6]/10 text-4xl font-black text-[#8B5CF6]">
-            {getInitials()}
+            <div>
+              <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-white/40">
+                Company
+              </label>
+
+              <input
+                type="text"
+                name="companyName"
+                value={form.company}
+                onChange={handleChange}
+                className="w-full border border-white/[0.1] bg-transparent px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#8468FF]/50"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="mt-2 w-fit border border-[#8468FF] bg-[#8468FF] px-6 py-3 text-xs font-medium uppercase tracking-[0.15em] text-white transition hover:bg-[#6F4BFF] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+          </form>
+        </div>
+
+        {/* =============== Access =============== */}
+
+        <div>
+          <h2 className="text-3xl font-light text-white">Access</h2>
+          <p className="mt-2 text-sm text-white/40">
+            Change the password you use to sign in.
+          </p>
+
+          <form
+            onSubmit={handleChangePassword}
+            className="mt-8 flex flex-col gap-6"
+          >
+            <div>
+              <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-white/40">
+                Current Password <span className="text-[#8468FF]">*</span>
+              </label>
+
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
+                className="w-full border border-white/[0.1] bg-transparent px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#8468FF]/50"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[10px] font-medium uppercase tracking-[0.15em] text-white/40">
+                New Password <span className="text-[#8468FF]">*</span>
+              </label>
+
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
+                className="w-full border border-white/[0.1] bg-transparent px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#8468FF]/50"
+              />
+
+              <p className="mt-2 text-[11px] text-white/30">
+                Minimum 8 characters.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={!passwordButtonEnabled}
+              className={`w-fit border px-6 py-3 text-xs font-medium uppercase tracking-[0.15em] transition ${
+                passwordButtonEnabled
+                  ? "border-[#8468FF] text-white hover:bg-[#8468FF]/10"
+                  : "border-white/10 text-white/25"
+              }`}
+            >
+              {changingPassword ? "Updating..." : "Change Password"}
+            </button>
+          </form>
+
+          <div className="mt-10 border-t border-white/[0.08] pt-6">
+            <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-white/30">
+              Member Since
+            </p>
+            <p className="mt-2 text-sm text-white/70">
+              {formatMemberSince(
+                (profile as unknown as { createdAt?: unknown })?.createdAt,
+              )}
+            </p>
           </div>
-        )}
-
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploadingImage}
-          className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center border-2 border-[#111114] bg-[#8B5CF6] text-white transition-all duration-300 hover:bg-[#7C3AED] hover:shadow-[0_0_20px_rgba(139,92,246,.4)] disabled:opacity-50"
-          aria-label="Change profile image"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-        </button>
-      </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={handleImageChange}
-        className="hidden"
-      />
-
-      <h3 className="mt-6 text-xl font-bold text-white">
-        {profile?.name || "Client"}
-      </h3>
-
-      
-
-      <button
-        type="button"
-        onClick={() => fileInputRef.current?.click()}
-        disabled={uploadingImage}
-        className="mt-8 h-12 w-full border border-[#8B5CF6] bg-[#8B5CF6] px-6 text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:bg-[#7C3AED] hover:shadow-[0_0_25px_rgba(139,92,246,.35)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {uploadingImage ? "Uploading..." : "Upload New Photo"}
-      </button>
-
-      <p className="mt-4 text-center text-xs leading-5 text-white/30">
-        
-        Maximum file size: <span className="text-white/60">5 MB</span>
-      </p>
-    </div>
-  </div>
-</aside>
-
-        {/* ===============================
-            Edit Profile
-        ================================ */}
-
-       <section className="border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.02] backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,.35)]">
-  {/* Header */}
-  <div className="border-b border-white/10 px-8 py-6">
-    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8B5CF6]">
-      PERSONAL INFORMATION
-    </p>
-
-    <h2 className="mt-2 text-2xl font-bold text-white">
-      Profile Details
-    </h2>
-
-    <p className="mt-2 text-sm text-white/40">
-      Update your account information and keep your profile up to date.
-    </p>
-  </div>
-
-  <form onSubmit={handleSaveProfile} className="p-8">
-    <div className="grid gap-6 md:grid-cols-2">
-      {/* Full Name */}
-      <div>
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
-          Full Name
-        </label>
-
-        <input
-          type="text"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Enter your full name"
-          className="h-12 w-full border border-white/10 bg-[#17171D] px-4 text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300 focus:border-[#8B5CF6] focus:bg-[#1B1B24] focus:shadow-[0_0_20px_rgba(139,92,246,.15)]"
-        />
-      </div>
-
-      {/* Email */}
-      <div>
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
-          Email Address
-        </label>
-
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          disabled
-          className="h-12 w-full cursor-not-allowed border border-white/5 bg-[#141419] px-4 text-sm text-white/40 outline-none"
-        />
-
-        <p className="mt-2 text-xs text-white/25">
-          Email address cannot be changed.
-        </p>
-      </div>
-    </div>
-
-    {/* Footer */}
-    <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
-      <p className="text-sm text-white/35">
-        Keep your profile information accurate for better communication.
-      </p>
-
-      <button
-        type="submit"
-        disabled={saving}
-        className="h-12 border border-[#8B5CF6] bg-[#8B5CF6] px-8 text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:bg-[#7C3AED] hover:shadow-[0_0_25px_rgba(139,92,246,.35)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {saving ? "Saving..." : "Save Changes"}
-      </button>
-    </div>
-  </form>
-</section>
-      </div>
-
-      {/* =================================
-          Password Section
-      ================================== */}
-
-     <section className=" border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.02] backdrop-blur-xl shadow-xl">
-  {/* Header */}
-  <div className="border-b border-white/10 px-8 py-6">
-    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8B5CF6]">
-      Account Security
-    </p>
-
-    <h2 className="mt-2 text-2xl font-bold text-white">
-      Change Password
-    </h2>
-
-    <p className="mt-2 text-sm text-white/40">
-      Keep your account secure by updating your password regularly.
-    </p>
-  </div>
-
-  <form onSubmit={handleChangePassword} className="p-8">
-    <div className="grid gap-6 lg:grid-cols-3">
-      {/* Current Password */}
-      <div>
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
-          Current Password
-        </label>
-
-        <div className="relative">
-          <input
-            type={showCurrentPassword ? "text" : "password"}
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Enter current password"
-            autoComplete="current-password"
-            className="h-12 w-full  border border-white/10 bg-[#18181F] px-4 pr-14 text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300 focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/10"
-          />
-
-          <button
-            type="button"
-            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-[#8B5CF6] transition hover:text-[#A78BFA]"
-          >
-            {showCurrentPassword ? "Hide" : "Show"}
-          </button>
         </div>
       </div>
-
-      {/* New Password */}
-      <div>
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
-          New Password
-        </label>
-
-        <div className="relative">
-          <input
-            type={showNewPassword ? "text" : "password"}
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Enter new password"
-            autoComplete="new-password"
-            className="h-12 w-full  border border-white/10 bg-[#18181F] px-4 pr-14 text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300 focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/10"
-          />
-
-          <button
-            type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-[#8B5CF6] transition hover:text-[#A78BFA]"
-          >
-            {showNewPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-      </div>
-
-      {/* Confirm Password */}
-      <div>
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
-          Confirm Password
-        </label>
-
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm new password"
-          autoComplete="new-password"
-          className="h-12 w-full  border border-white/10 bg-[#18181F] px-4 text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300 focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/10"
-        />
-      </div>
-    </div>
-
-    <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
-      <p className="max-w-md text-sm text-white/40">
-        Your password should be at least <span className="text-white">6 characters</span> long and contain a combination of letters, numbers, and symbols for better security.
-      </p>
-
-      <button
-        type="submit"
-        disabled={changingPassword}
-        className="inline-flex h-10 items-center justify-center  bg-[#8B5CF6] px-8 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#7C3AED] hover:shadow-[0_0_25px_rgba(139,92,246,.35)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {changingPassword ? "Updating Password..." : "UPDATE PASSWORD"}
-      </button>
-    </div>
-  </form>
-</section>
     </div>
   );
 };

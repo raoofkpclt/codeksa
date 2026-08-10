@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClientUploadService from "../../service/firebaseService/clientUploadService";
 import ClientService from "../../service/firebaseService/clientService";
 import type { ClientUpload, Client } from "../../utils/types";
+import { createPortal } from "react-dom";
 
 const AdminClientUploads: React.FC = () => {
   const [uploads, setUploads] = useState<ClientUpload[]>([]);
   const [clientsById, setClientsById] = useState<Record<string, Client>>({});
   const [loading, setLoading] = useState(true);
-  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<{
     url: string;
     type: string;
@@ -19,9 +19,16 @@ const AdminClientUploads: React.FC = () => {
 
       try {
         const data = await ClientUploadService.getUploads();
-        setUploads(data);
 
-        // Resolve each unique clientId to its Client record
+        const sorted = [...data].sort((a, b) => {
+          const aTime = (a.createdAt as any)?.toMillis?.() ?? 0;
+          const bTime = (b.createdAt as any)?.toMillis?.() ?? 0;
+
+          return bTime - aTime;
+        });
+
+        setUploads(sorted);
+
         const uniqueClientIds = Array.from(
           new Set(data.map((u) => u.clientId)),
         );
@@ -46,263 +53,287 @@ const AdminClientUploads: React.FC = () => {
     loadUploads();
   }, []);
 
-  const groupedUploads = useMemo(() => {
-    const groups: Record<string, ClientUpload[]> = {};
+  const formatDate = (value: any) => {
+    if (!value) return "--";
 
-    uploads.forEach((upload) => {
-      const key = upload.clientId;
+    const date =
+      typeof value?.toDate === "function" ? value.toDate() : new Date(value);
 
-      if (!groups[key]) {
-        groups[key] = [];
+    if (Number.isNaN(date.getTime())) return "--";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const formatSize = (bytes: number | undefined) => {
+    if (!bytes) return null;
+
+    if (bytes < 1024) return `${bytes} B`;
+
+    const kb = bytes / 1024;
+    if (kb < 1024) return `${Math.round(kb)} KB`;
+
+    return `${(kb / 1024).toFixed(1)} MB`;
+  };
+
+  const getUploadKind = (upload: ClientUpload) => {
+    if (upload.media?.length) {
+      const fileType = upload.media[0].fileType;
+
+      if (fileType === "application/pdf") return "PDF";
+      if (fileType.startsWith("image/")) return "IMAGE";
+      if (fileType.startsWith("video/")) return "VIDEO";
+
+      return "FILE";
+    }
+
+    if (upload.link) return "LINK";
+
+    return "FILE";
+  };
+
+  const getUploadFileName = (upload: ClientUpload) => {
+    if (upload.media?.length) {
+      return upload.media[0].fileName || "Untitled file";
+    }
+
+    return upload.link || "Untitled submission";
+  };
+
+  const handleOpenUpload = (upload: ClientUpload) => {
+    if (upload.media?.length) {
+      const media = upload.media[0];
+
+      if (
+        media.fileType.startsWith("image/") ||
+        media.fileType.startsWith("video/") ||
+        media.fileType === "application/pdf"
+      ) {
+        setSelectedMedia({ url: media.url, type: media.fileType });
+        return;
       }
-      groups[key].push(upload);
-    });
 
-    return groups;
-  }, [uploads]);
+      window.open(media.url, "_blank");
+      return;
+    }
 
-  const clients = useMemo(() => {
-    return Object.entries(groupedUploads).map(([clientId, clientUploads]) => {
-      const client = clientsById[clientId];
-
-      return {
-        clientId,
-        name: client?.name ?? clientId,
-        logo: client?.logo ?? null,
-        count: clientUploads.length,
-      };
-    });
-  }, [groupedUploads, clientsById]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  // ---- Client picker view ----
-  if (!selectedClientId) {
-    return (
-      <div className="space-y-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {clients.map((client) => (
-            <button
-              key={client.clientId}
-              onClick={() => setSelectedClientId(client.clientId)}
-              className="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-5 transition hover:bg-white/10"
-            >
-              {client.logo ? (
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className="h-16 w-16 rounded-full object-cover"
-                />
-              ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600 text-lg font-semibold">
-                  {client.name.slice(0, 2).toUpperCase()}
-                </div>
-              )}
-
-              <div className="text-center">
-                <p className="font-semibold">{client.name}</p>
-                <p className="text-xs text-gray-400">
-                  {client.count} upload{client.count !== 1 ? "s" : ""}
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ---- Selected client's uploads view ----
-  const clientUploads = groupedUploads[selectedClientId] ?? [];
-  const clientMeta = clients.find((c) => c.clientId === selectedClientId);
+    if (upload.link) {
+      window.open(upload.link, "_blank");
+    }
+  };
 
   return (
-    <div className="space-y-10">
+    <div
+      className="min-h-screen px-6 py-10 sm:px-10 lg:px-16"
+      style={{ backgroundColor: "#08080c" }}
+    >
+      <style>{`
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
+
+        .glow-text {
+          color: var(--violet-glow);
+          text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
+        }
+
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+
+        .upload-row {
+          border-color: rgba(255,255,255,0.1);
+          transition: border-color 200ms ease, background-color 200ms ease;
+        }
+
+        .upload-row:hover {
+          border-color: rgba(132, 104, 255, 0.35);
+          background-color: rgba(132, 104, 255, 0.03);
+        }
+
+        .kind-badge {
+          border-color: var(--steel);
+          color: var(--mist);
+        }
+
+        .open-btn {
+          color: var(--slate-muted);
+          transition: color 200ms ease, text-shadow 200ms ease;
+        }
+
+        .open-btn:hover {
+          color: var(--violet-glow);
+          text-shadow: 0 0 12px rgba(155, 131, 255, 0.5);
+        }
+      `}</style>
+
       {/* Header */}
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-5">
-          <button
-            onClick={() => setSelectedClientId(null)}
-            className="flex h-11 items-center gap-2 border border-white/10 bg-[#17171D] px-5 text-sm font-medium text-white transition hover:border-[#8B5CF6]/40 hover:bg-[#1D1D25]"
-          >
-            ← Back
-          </button>
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+          Client Uploads
+        </p>
 
-          <div>
-            <h1 className="mt-2 text-3xl font-bold text-white">
-              {clientMeta?.name}
-            </h1>
+        <h1 className="mt-3 text-3xl font-light leading-tight tracking-tight text-white sm:text-4xl">
+          Material received <span className="font-semibold">from clients.</span>
+        </h1>
 
-            <p className="mt-1 text-sm text-white/40">
-              {clientUploads.length} Upload
-              {clientUploads.length !== 1 && "s"}
-            </p>
-          </div>
-        </div>
+        <p
+          className="mt-4 max-w-xl text-sm"
+          style={{ color: "var(--slate-muted)" }}
+        >
+          Everything clients have submitted — briefs, references, assets and
+          links.
+        </p>
       </div>
 
-      {/* Gallery */}
-      {/* <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3"> */}
-      <div className="columns-1 gap-6  md:columns-2 xl:columns-3 2xl:columns-4">
-        {clientUploads.map((upload) => (
-          <div
-            key={upload.id}
-            className="group mb-6 break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-[#111116] transition-all duration-500 hover:-translate-y-2 hover:border-[#8B5CF6]/40 hover:shadow-[0_20px_60px_rgba(139,92,246,.18)]"
+      {/* Divider */}
+      <div className="mt-10 h-px" style={{ backgroundColor: "var(--steel)" }} />
+
+      {/* Loading */}
+      {loading ? (
+        <div className="mt-2 space-y-0">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="h-20 w-full animate-pulse border-b"
+              style={{
+                borderColor: "var(--steel)",
+                backgroundColor: "var(--charcoal)",
+              }}
+            />
+          ))}
+        </div>
+      ) : uploads.length === 0 ? (
+        <div
+          className="mt-8 flex min-h-[300px] flex-col items-center justify-center border border-dashed"
+          style={{ borderColor: "var(--steel)" }}
+        >
+          <h3
+            className="text-base font-semibold"
+            style={{ color: "var(--code-white)" }}
           >
-            {/* Preview */}
-            <div className="relative overflow-hidden bg-[#0B0B0F]">
-              {upload.media?.length ? (
-                upload.media[0].fileType.startsWith("image/") ? (
-                  <img
-                    src={upload.media[0].url}
-                    alt=""
-                    className="w-full h-auto object-contain"
-                  />
-                ) : upload.media[0].fileType.startsWith("video/") ? (
-                  <video
-                    src={upload.media[0].url}
-                    className="w-full h-auto"
-                    controls
-                    muted
-                    preload="metadata"
-                  />
-                ) : upload.media[0].fileType === "application/pdf" ? (
-                  <div className="flex min-h-[260px] flex-col items-center justify-center gap-4 bg-[#1A1A22] p-6">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="70"
-                      height="70"
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                      className="text-red-500"
-                    >
-                      <path d="M4.603 14.087c..." />
-                    </svg>
+            No uploads yet
+          </h3>
 
-                    <p className="text-white font-semibold">PDF Document</p>
+          <p className="mt-2 text-sm" style={{ color: "var(--slate-muted)" }}>
+            Client submissions will appear here.
+          </p>
+        </div>
+      ) : (
+        /* List */
+        <div className="mt-2">
+          {uploads.map((upload) => {
+            const kind = getUploadKind(upload);
+            const size = formatSize(upload.media?.[0]?.size);
+            const client = clientsById[upload.clientId];
+            const clientName = client?.name ?? upload.clientId;
 
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() =>
-                          setSelectedMedia({
-                            url: upload.media![0].url,
-                            type: "application/pdf",
-                          })
-                        }
-                        className="rounded-lg bg-violet-600 px-4 py-2 text-white"
-                      >
-                        Read PDF
-                      </button>
+            return (
+              <div
+                key={upload.id}
+                className="upload-row flex flex-col gap-4 border-b px-2 py-7 sm:flex-row sm:items-start sm:justify-between"
+              >
+                <div className="min-w-0">
+                  <h3
+                    className="text-lg font-light"
+                    style={{ color: "var(--code-white)" }}
+                  >
+                    {upload.title ? (
+                      <>
+                        {upload.title}
+                        <span style={{ color: "var(--steel)" }}>
+                          {" "}
+                          &middot;{" "}
+                        </span>
+                        <span
+                          className="font-light"
+                          style={{ color: "var(--mist)" }}
+                        >
+                          {getUploadFileName(upload)}
+                        </span>
+                      </>
+                    ) : (
+                      getUploadFileName(upload)
+                    )}
+                  </h3>
 
-                      <button
-                        onClick={() =>
-                          window.open(upload.media![0].url, "_blank")
-                        }
-                        className="rounded-lg border border-white/20 px-4 py-2 text-white"
-                      >
-                        Open
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex h-64 items-center justify-center text-white/40">
-                    Unsupported File
-                  </div>
-                )
-              ) : upload.link ? (
-                <div className="flex h-64 flex-col items-center justify-center gap-4 p-6 text-center">
-                  <p className="break-all text-sm text-blue-400">
-                    {upload.link}
+                  <p
+                    className="mt-2 text-sm"
+                    style={{ color: "var(--slate-muted)" }}
+                  >
+                    {clientName} &middot; {formatDate(upload.createdAt)}
+                    {size ? ` \u00b7 ${size}` : ""}
                   </p>
 
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => window.open(upload.link, "_blank")}
-                      className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+                  {upload.description && (
+                    <p
+                      className="mt-3 max-w-2xl text-sm"
+                      style={{ color: "var(--mist)" }}
                     >
-                      Open Link
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        if (upload.link) {
-                          window.open(upload.link, "_blank");
-                        }
-                      }}
-                      className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white hover:bg-white/10"
-                    >
-                      Copy Link
-                    </button>
-                  </div>
+                      {upload.description}
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <div className="flex h-64 items-center justify-center text-white/40">
-                  No Media
-                </div>
-              )}
 
-              {/* Show View button only for media */}
-              {upload.media?.length ? (
-                <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="flex shrink-0 items-center gap-3">
+                  <span className="kind-badge border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em]">
+                    {kind}
+                  </span>
+
                   <button
-                    onClick={() =>
-                      setSelectedMedia({
-                        url: upload.media![0].url,
-                        type: upload.media![0].fileType,
-                      })
-                    }
-                    className="rounded-lg bg-violet-600 px-5 py-2 text-sm font-semibold text-white"
+                    onClick={() => handleOpenUpload(upload)}
+                    className="open-btn flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em]"
                   >
-                    View Full
+                    <span>↓</span> Open
                   </button>
                 </div>
-              ) : null}
-            </div>
-          </div>
-        ))}
-      </div>
-      {selectedMedia && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-6">
-          <button
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Fullscreen media viewer */}
+      {selectedMedia &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] backdrop-blur-sm"
+            style={{ backgroundColor: "rgba(8,8,12,0.95)" }}
             onClick={() => setSelectedMedia(null)}
-            className="absolute right-6 top-6 text-4xl text-white"
           >
-            ×
-          </button>
-
-          {/* {selectedMedia.type.startsWith("image/") ? (
-            <img
-              src={selectedMedia.url}
-              alt=""
-              className="max-h-[90vh] max-w-[90vw] object-contain"
-            />
-          ) : (
-            <video
-              src={selectedMedia.url}
-              controls
-              autoPlay
-              className="max-h-[90vh] max-w-[90vw]"
-            />
-          )} */}
-
-          {selectedMedia && (
-            <div
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm"
+            <button
               onClick={() => setSelectedMedia(null)}
+              className="hover-glow absolute right-6 top-6 z-[10000] rounded-full p-3 text-3xl"
+              style={{
+                backgroundColor: "rgba(0,0,0,0.6)",
+                color: "var(--code-white)",
+              }}
             >
-              {/* Close */}
-              <button
-                onClick={() => setSelectedMedia(null)}
-                className="absolute right-6 top-6 z-[10000] rounded-full bg-black/60 p-3 text-3xl text-white hover:bg-black"
-              >
-                ×
-              </button>
+              ×
+            </button>
 
-              {/* Prevent closing when clicking content */}
+            {selectedMedia.type === "application/pdf" ? (
+              <iframe
+                src={selectedMedia.url}
+                title="PDF Viewer"
+                className="h-full w-full"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
               <div
-                className="relative flex h-[95vh] w-[95vw] items-center justify-center"
+                className="relative mx-auto flex h-[95vh] w-[95vw] items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
                 {selectedMedia.type.startsWith("image/") ? (
@@ -318,28 +349,12 @@ const AdminClientUploads: React.FC = () => {
                     autoPlay
                     className="max-h-full max-w-full"
                   />
-                ) : selectedMedia.type === "application/pdf" ? (
-                  <iframe
-                    src={selectedMedia.url}
-                    title="PDF Viewer"
-                    className="h-full w-full rounded-lg bg-white"
-                  />
                 ) : null}
               </div>
-            </div>
-          )}
-
-          {/* <a
-            href={selectedMedia.url}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-8 rounded-lg bg-violet-600 px-6 py-3 font-semibold text-white"
-          >
-            Download
-          </a> */}
-        </div>
-      )}
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

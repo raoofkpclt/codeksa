@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+
 import PublicHome from "./pages/user/Home";
 import About from "./pages/user/About";
 import WhatWeSolve from "./pages/user/WhatWeSolve";
@@ -47,6 +48,9 @@ import Hospitality from "./pages/user/Hospitality";
 
 
 import ScrollToTop from "./routes/ScrollTop";
+import NotFound from "./components/user/NotFound";
+import WorkDetails from "./pages/client/WorkDetails";
+import Profile from "./pages/admin/Profile";
 
 // =========================================
 // App
@@ -78,6 +82,7 @@ function App() {
         <Route path="/clients" element={<Client />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/clientWorks/:clientId" element={<PublicClientWorks />} />
+        <Route path="*" element={<NotFound/>} />
         
 
         {/* =================================
@@ -113,11 +118,13 @@ function App() {
           {/* /client/works */}
 
           <Route path="works" element={<ClientWorks />} />
+          <Route path="works/:workId" element={<WorkDetails />} />
           <Route path="clientUploads" element={<ClientUploads  />} />
 
           {/* /client/profile */}
 
           <Route path="profile" element={<ClientProfile />} />
+           <Route path="*" element={<Navigate to="/client/home" replace />} />
         </Route>
 
         {/* =================================
@@ -149,14 +156,17 @@ function App() {
           <Route path="/admin/clients" element={<ClientManagement />} />
 
           <Route path="/admin/work" element={<WorkManagement />} />
+          {/* <Route path="/admin/works/:workId" element={<AdminWorkDetails />} /> */}
           <Route path="/admin/clientUploads" element={<AdminClientUploads />} />
+          <Route path="/admin/profile" element={<Profile />} />
         </Route>
 
         {/* =================================
             Optional 404 Redirect
         ================================== */}
+        <Route path="/admin/*" element={<Navigate to="/admin/home" replace />} />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        
       </Routes>
       
     </BrowserRouter>

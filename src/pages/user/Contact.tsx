@@ -148,7 +148,7 @@ const StartAConversation: React.FC = () => {
       <section className="border-t border-white/10">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3">
           <div className="px-6 md:px-10 lg:px-16 py-10 md:border-r border-white/10">
-            <span className="w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block mb-4" />
+            <span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />
             <p className={labelBase}>EMAIL</p>
             <a
               href="mailto:info@codeksaofficial.com"
@@ -159,8 +159,7 @@ const StartAConversation: React.FC = () => {
           </div>
 
           <div className="px-6 md:px-10 lg:px-16 py-10 md:border-r border-white/10">
-            <span className="w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block mb-4" />
-            <p className={labelBase}>WHATSAPP</p>
+<span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />            <p className={labelBase}>WHATSAPP</p>
             <a
               href="https://wa.me/966555922650"
               target="_blank"
@@ -172,8 +171,7 @@ const StartAConversation: React.FC = () => {
           </div>
 
           <div className="px-6 md:px-10 lg:px-16 py-10">
-            <span className="w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 inline-block mb-4" />
-            <p className={labelBase}>CALL</p>
+<span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />            <p className={labelBase}>CALL</p>
             <a
               href="tel:+966555922650"
               className="mt-3 block text-lg md:text-xl hover:text-white/70 transition-colors"
@@ -230,7 +228,7 @@ const StartAConversation: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
               <div>
                 <label className={labelBase} htmlFor="name">
-                  NAME <span className="text-fuchsia-400">*</span>
+                  NAME <span className="text-purple-400">*</span>
                 </label>
                 <input
                   id="name"
@@ -243,7 +241,7 @@ const StartAConversation: React.FC = () => {
 
               <div>
                 <label className={labelBase} htmlFor="company">
-                  COMPANY <span className="text-fuchsia-400">*</span>
+                  COMPANY <span className="text-purple-400">*</span>
                 </label>
                 <input
                   id="company"
@@ -268,7 +266,7 @@ const StartAConversation: React.FC = () => {
 
               <div>
                 <label className={labelBase} htmlFor="businessEmail">
-                  BUSINESS EMAIL <span className="text-fuchsia-400">*</span>
+                  BUSINESS EMAIL <span className="text-purple-400">*</span>
                 </label>
                 <input
                   id="businessEmail"
@@ -388,7 +386,7 @@ const StartAConversation: React.FC = () => {
 
             <div>
               <label className={labelBase} htmlFor="businessChallenge">
-                BUSINESS CHALLENGE <span className="text-fuchsia-400">*</span>
+                BUSINESS CHALLENGE <span className="text-purple-400">*</span>
               </label>
               <textarea
                 id="businessChallenge"
@@ -418,8 +416,7 @@ const StartAConversation: React.FC = () => {
               className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/80 hover:text-white transition-colors group"
             >
               SEND ENQUIRY
-              <span className="w-8 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 group-hover:w-12 transition-all" />
-            </button>
+<span className="w-8 h-px bg-[#8468FF] group-hover:w-12 transition-all duration-300 ease-out" />            </button>
           </form>
         </div>
       </section>

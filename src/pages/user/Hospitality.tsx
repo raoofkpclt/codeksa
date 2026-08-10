@@ -3,6 +3,11 @@ import NavbarNew from "../../components/user/NavbarNew";
 import Footer from "../../components/user/Footer";
 import Conversation from "../../components/user/Conversation";
 
+
+const accentLine =
+  "w-6 h-px bg-[#8468FF] inline-block";
+
+  
 const relevantFor = [
   "Restaurants",
   "Cafés",
@@ -195,7 +200,7 @@ const Hospitality: React.FC = () => {
   >
     <span>Discuss Your Hospitality Business</span>
 
-    <span className="h-px w-10 bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all duration-300 group-hover:w-16" />
+  <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
   </a>
 </div>
       </section>

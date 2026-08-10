@@ -19,7 +19,8 @@ import Conversation from "../../components/user/Conversation";
  * ---------------------------------------------------------
  */
 
-
+const accentLine =
+  "w-6 h-px bg-[#8468FF] inline-block";
 
 const CAPABILITIES = [
   {
@@ -432,14 +433,14 @@ const StrategyGrowth: React.FC = () => {
               className="group inline-flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.24em] text-white transition-opacity hover:opacity-70"
             >
               Discuss your growth direction
-              <span className="h-px w-7 bg-white transition-all duration-200 group-hover:w-10" />
+              <span className={`${accentLine} group-hover:w-10 transition-all`} />
             </a>
             <a
               href="/engagements"
               className="group inline-flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.24em] text-white transition-opacity hover:opacity-70"
             >
               Explore our engagements
-              <span className="h-px w-7 bg-white transition-all duration-200 group-hover:w-10" />
+              <span className={`${accentLine} group-hover:w-10 transition-all`} />
             </a>
           </div>
         </section>

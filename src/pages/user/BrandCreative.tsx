@@ -126,6 +126,10 @@ function AccordionRow({ item, isOpen, onToggle }:AccordionRowProps) {
   );
 }
 
+
+const accentLine =
+  "w-6 h-px bg-[#8468FF] inline-block";
+
 const BrandCreative:React.FC = () => {
   const [openIndex, setOpenIndex] = useState(2);
 
@@ -403,8 +407,7 @@ const BrandCreative:React.FC = () => {
   >
     <span>Discuss your brand</span>
 
-    <span className="h-px w-10 bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all duration-300 group-hover:w-16" />
-  </a>
+ <span className={`${accentLine} group-hover:w-10 transition-all`} />  </a>
 
   <a
     href="/engagements"
@@ -412,8 +415,7 @@ const BrandCreative:React.FC = () => {
   >
     <span>Explore our engagements</span>
 
-    <span className="h-px w-10 bg-white/30 transition-all duration-300 group-hover:w-16 group-hover:bg-gradient-to-r group-hover:from-fuchsia-400 group-hover:to-violet-500" />
-  </a>
+ <span className={`${accentLine} group-hover:w-10 transition-all`} />  </a>
 </div>
         </section>
         <Conversation/>

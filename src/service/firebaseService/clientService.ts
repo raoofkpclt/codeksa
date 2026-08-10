@@ -100,6 +100,7 @@ async register(
   name: string,
   email: string,
   password: string,
+  company:string,
   logo = ""
 ): Promise<void> {
   const secondaryApp = initializeApp(
@@ -128,6 +129,7 @@ async register(
         email: email
           .trim()
           .toLowerCase(),
+          company:company.trim(),
 
         // S3 URL saved in Firestore
         logo: logo.trim(),
