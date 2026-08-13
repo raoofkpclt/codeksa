@@ -11,6 +11,20 @@ import Conversation from "../../components/user/Conversation";
      - Same CSS custom properties (charcoal / steel / mist / code-purple / violet-glow)
      - Same breadcrumb, eyebrow, ExploreLink, and glow-text treatment
      - Shared <Conversation /> closing section + <Footer />
+
+   RESPONSIVE PASS (content/colors/type-scale untouched):
+     - Three headings used text-[clamp(72px,10vw,60px)] — a min bigger
+       than the max, which is invalid, so they were frozen at 72px on
+       every screen. Fixed to text-[clamp(32px,10vw,72px)], so they now
+       scale down on small screens but still land on the exact same
+       72px at desktop widths.
+     - Hero and closing-CTA clamps had their minimum lowered so they
+       scale all the way down on phones instead of floor-ing out at the
+       desktop-sized minimum; the max (their current desktop size) is
+       unchanged.
+     - Vertical spacing (py- / mt- / mb- / gap-) now steps down at the
+       base breakpoint; every existing md:/lg: value is untouched, so
+       tablet and desktop layout is pixel-identical to before.
 ------------------------------------------------------------------- */
 
 const PRINCIPLES = [
@@ -38,7 +52,7 @@ const ExploreLink = ({ label, href }: { label: string; href: string }) => (
   </a>
 );
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
-  <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
+  <span className="mb-5 md:mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
     {children}
   </span>
 );
@@ -80,9 +94,9 @@ const About = () => {
 
       <NavbarNew />
 
-      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
+      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-20 md:px-16 md:pb-32">
         {/* Breadcrumb */}
-        <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
+        <div className="mb-6 md:mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
           <a href="/" className="hover-glow uppercase transition-colors duration-200">
             Home
           </a>
@@ -92,7 +106,7 @@ const About = () => {
 
         {/* Hero */}
         <Eyebrow>About Code</Eyebrow>
-       <h1 className="max-w-[2000px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,180px)] font-light leading-[0.88] tracking-[-0.08em] text-[var(--code-white)]">
+       <h1 className="max-w-[2000px] font-['Space_Grotesk',sans-serif] text-[clamp(44px,11vw,180px)] font-light leading-[0.88] tracking-[-0.08em] text-[var(--code-white)]">
   <span className="font-light">
     Built for structured
   </span>
@@ -108,7 +122,7 @@ const About = () => {
     growth.
   </span>
 </h1>
-        <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
+        <p className="mt-6 md:mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
           CODE is a Business Growth &amp; Marketing Operations company
           headquartered in Jeddah, Saudi Arabia. We help businesses move
           beyond disconnected activity by connecting strategy, brand, digital
@@ -117,8 +131,8 @@ const About = () => {
         </p>
 
         {/* Why CODE exists */}
-       <div className="mt-20 border-t border-[var(--steel)] py-16 md:py-24">
-  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+       <div className="mt-12 md:mt-20 border-t border-[var(--steel)] py-12 md:py-24">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 lg:gap-24">
     {/* Left (Empty) */}
     <div className="flex">
       <Eyebrow>Why Code Exists</Eyebrow>
@@ -126,7 +140,7 @@ const About = () => {
 
     {/* Right */}
     <div className="max-w-[900px]">
-      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(32px,10vw,72px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
         <span className="font-light">
           Most businesses do{" "}
         </span>
@@ -147,7 +161,7 @@ const About = () => {
         </span>
       </h2>
 
-      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+      <div className="mt-8 md:mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
         <p>A campaign may be active without being aligned.</p>
 
         <p>A brand may be visible without being understood.</p>
@@ -170,8 +184,8 @@ const About = () => {
 </div>
 
         {/* What CODE is */}
-       <div className="border-t border-[var(--steel)] py-16 md:py-24">
-  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+       <div className="border-t border-[var(--steel)] py-12 md:py-24">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 lg:gap-24">
     {/* Left */}
     <div className="flex">
       <Eyebrow>What Code Is</Eyebrow>
@@ -179,7 +193,7 @@ const About = () => {
 
     {/* Right */}
     <div className="max-w-[900px]">
-      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(32px,10vw,72px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
         <span className="font-light">
           A strategic business{" "}
         </span>
@@ -200,7 +214,7 @@ const About = () => {
         </span>
       </h2>
 
-      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+      <div className="mt-8 md:mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
         <p>
           CODE is not positioned as a social media agency, design studio,
           production house, branding agency, website company or media-buying
@@ -222,8 +236,8 @@ const About = () => {
 </div>
 
         {/* How CODE works */}
-        <div className="border-t border-[var(--steel)] py-16 md:py-24">
-  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+        <div className="border-t border-[var(--steel)] py-12 md:py-24">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 lg:gap-24">
     {/* Left */}
     <div className="flex">
       <Eyebrow>How Code Works</Eyebrow>
@@ -231,7 +245,7 @@ const About = () => {
 
     {/* Right */}
     <div className="max-w-[900px]">
-      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+      <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(32px,10vw,72px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
         <span className="font-light">
           Founder-led.{" "}
         </span>
@@ -252,7 +266,7 @@ const About = () => {
         </span>
       </h2>
 
-      <div className="mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
+      <div className="mt-8 md:mt-12 max-w-[680px] space-y-6 font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.5] text-[var(--mist)]">
         <p>
           CODE combines strategic direction, structured delivery and selected
           specialist capability according to each engagement.
@@ -268,13 +282,13 @@ const About = () => {
   </div>
 </div>
         {/* Principles */}
-        <div className="border-t border-[var(--steel)] py-16 md:py-24">
+        <div className="border-t border-[var(--steel)] py-12 md:py-24">
           <Eyebrow>Principles</Eyebrow>
           <div>
             {PRINCIPLES.map((p) => (
               <div
                 key={p.index}
-                className="flex items-baseline gap-8 border-t border-[var(--steel)] py-10 first:border-t-0 md:py-14"
+                className="flex items-baseline gap-4 md:gap-8 border-t border-[var(--steel)] py-8 first:border-t-0 md:py-14"
               >
                 <span className="font-['Space_Grotesk',sans-serif] text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
                   {p.index}
@@ -288,14 +302,14 @@ const About = () => {
         </div>
 
         {/* Explore what we solve — divider link */}
-        <div className=" border-[var(--steel)] py-16 md:py-20">
+        <div className=" border-[var(--steel)] py-10 md:py-20">
           <ExploreLink label="Explore What We Solve" href="/what-we-solve" />
           
         </div>
 
         {/* Explore the structure */}
-        <div className="border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,120px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+        <div className="border-[var(--steel)] pt-12 md:pt-24">
+          <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(36px,10vw,120px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
   <span className="font-light">
     Explore the
   </span>
@@ -319,7 +333,7 @@ const About = () => {
             Every engagement begins with clarifying the business requirement,
             the required outcome and the right place to begin.
           </p>
-          <div className="mt-10">
+          <div className="mt-6 md:mt-10">
             <ExploreLink
               label="Start a Conversation"
               href="/start-a-conversation"

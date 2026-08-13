@@ -217,7 +217,7 @@ const WhatWeSolve: React.FC = () => {
 
         {/* Page-specific closing statement */}
         <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.08em] text-[var(--code-white)]">
+          <h2 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.999] tracking-[-0.08em] text-[var(--code-white)]">
   Start with the pathway closest to your current business{" "}
   <span className="font-bold  text-white
     transition-all

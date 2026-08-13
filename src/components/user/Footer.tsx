@@ -48,7 +48,7 @@ const NAVIGATE = [
   { label: "Works", href: "/works" },
   { label: "Clients", href: "/clients" },
   { label: "Industries", href: "/industries" },
-  { label: "Start a Conversation", href: "/start-a-conversation" },
+  { label: "Start a Conversation", href: "/contact" },
 ];
 
 const BUSINESS_AREAS = [
@@ -62,15 +62,15 @@ const BUSINESS_AREAS = [
 ];
 
 const MORE = [
-  { label: "Selected Work", href: "/case-studies" },
-  { label: "Insights", href: "/insights" },
+  { label: "Selected Work", href: "/works" },
+  { label: "Insights", href: "/" },
 ];
 
 const LEGAL = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Terms & Conditions", href: "/terms" },
-  { label: "Cookies Policy", href: "/cookies-policy" },
-  { label: "Accessibility", href: "/accessibility" },
+  { label: "Privacy Policy", href: "/" },
+  { label: "Terms & Conditions", href: "/" },
+  { label: "Cookies Policy", href: "/" },
+  { label: "Accessibility", href: "/" },
 ];
 
 const FooterLink = ({ label, href }: { label: string; href: string }) => (
@@ -186,9 +186,9 @@ const Footer: React.FC = () => {
             </div>
             <div>
               <ColumnHeading>Legal</ColumnHeading>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 ">
                 {LEGAL.map((l) => (
-                  <FooterLink key={l.href} {...l} />
+                  <FooterLink key={""} {...l} />
                 ))}
               </div>
             </div>

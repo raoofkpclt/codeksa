@@ -143,10 +143,10 @@ const Engagement: React.FC = () => {
       `}</style>
       <NavbarNew />
 
-      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
+      <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-[110px] sm:pt-[140px] md:pt-[168px] pb-16 sm:pb-24 md:pb-32 md:px-16">
         {/* Hero */}
 
-        <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
+        <div className="mb-6 sm:mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] tracking-[0.24em] text-[var(--slate-muted)] flex-wrap">
           <a
             href="/"
             className="hover-glow uppercase transition-colors duration-200"
@@ -157,10 +157,10 @@ const Engagement: React.FC = () => {
           <span className="uppercase text-[var(--code-white)]">Engagement</span>
         </div>
 
-        <p className="text-xs tracking-[0.3em] text-white/50 mb-10">
+        <p className="text-xs tracking-[0.3em] text-white/50 mb-6 sm:mb-10">
           ENGAGEMENT
         </p>
-        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(40px,10vw,160px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">Different levels of engagement.</span>
           <br />
           <span
@@ -176,7 +176,7 @@ const Engagement: React.FC = () => {
             One standard.
           </span>
         </h1>
-        <p className="mt-10 text-lg md:text-xl text-white/60 max-w-2xl">
+        <p className="mt-6 sm:mt-10 text-base sm:text-lg md:text-xl text-white/60 max-w-2xl">
           Every business requires a different level of strategic support. CODE
           engagements are scoped around business requirements, not generic
           packages.
@@ -188,16 +188,16 @@ const Engagement: React.FC = () => {
         {tiers.map((tier, i) => (
           <div
             key={tier.number}
-            className={`px-6 md:px-16 py-20 grid grid-cols-1 md:grid-cols-3 gap-10 ${
+            className={`px-4 sm:px-6 md:px-16 py-12 sm:py-16 md:py-20 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 ${
               i !== tiers.length - 1 ? "border-b border-white/10" : ""
             }`}
           >
             <div>
-              <p className="text-xs tracking-[0.3em] text-white/40 mb-6">
+              <p className="text-xs tracking-[0.3em] text-white/40 mb-4 sm:mb-6">
                 {tier.number}
               </p>
               <h2
-                className="text-4xl md:text-5xl font-bold mb-6  text-white
+                className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6  text-white
     transition-all
     duration-500
     ease-out
@@ -208,7 +208,7 @@ const Engagement: React.FC = () => {
               >
                 {tier.title}
               </h2>
-              <p className="text-white/60 mb-10">{tier.tagline}</p>
+              <p className="text-white/60 mb-6 sm:mb-10">{tier.tagline}</p>
 
               <p className="text-xs tracking-[0.3em] text-white/40 mb-3">
                 BEST FOR
@@ -217,7 +217,7 @@ const Engagement: React.FC = () => {
             </div>
 
             <div>
-              <p className="text-xs tracking-[0.3em] text-white/40 mb-6">
+              <p className="text-xs tracking-[0.3em] text-white/40 mb-4 sm:mb-6">
                 ADDRESSES
               </p>
               <ul className="space-y-3">
@@ -230,7 +230,7 @@ const Engagement: React.FC = () => {
             </div>
 
             <div>
-              <p className="text-xs tracking-[0.3em] text-white/40 mb-6">
+              <p className="text-xs tracking-[0.3em] text-white/40 mb-4 sm:mb-6">
                 MAY INCLUDE
               </p>
               <ul className="space-y-3">
@@ -246,8 +246,8 @@ const Engagement: React.FC = () => {
       </section>
 
       {/* Identify the level statement */}
-      <section className="px-6 md:px-16 py-32 border-b border-white/10">
-        <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+      <section className="px-4 sm:px-6 md:px-16 py-16 sm:py-24 md:py-32 border-b border-white/10">
+        <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[clamp(36px,10vw,130px)] font-light leading-[1.05] sm:leading-[0.999] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)]">
           <span className="font-light">Identify the level of </span>
 
           <span className="font-light">engagement most useful </span>
@@ -269,7 +269,7 @@ const Engagement: React.FC = () => {
             </span>
           </span>
         </h2>
-        <p className="mt-10 text-lg md:text-xl text-white/60 max-w-2xl">
+        <p className="mt-6 sm:mt-10 text-base sm:text-lg md:text-xl text-white/60 max-w-2xl">
           Each model is scoped around the business requirement, not a fixed
           package.
         </p>

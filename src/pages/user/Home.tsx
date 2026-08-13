@@ -365,8 +365,8 @@ const Home: React.FC = () => {
               key={item.index}
               className={`
                 px-0 md:px-14 py-10 sm:py-14 md:py-16
-                border border-white/10
-                ${i % 2 === 0 ? "md:border-r md:pl-0" : ""}
+                 
+                ${i % 2 === 0 ? "md:pl-0" : ""}
                 ${i === 0 ? "md:pl-0" : ""}
               `}
             >
@@ -414,11 +414,11 @@ const Home: React.FC = () => {
               key={item.index}
               className={`
                 px-6 md:px-10 py-10 sm:py-12 md:py-14
-                border border-white/10
-                ${i % 2 === 0 ? "sm:border-r sm:border-white/10" : ""}
+               
+                ${i % 2 === 0 ? "" : ""}
                 ${
                   i !== engagements.length - 1
-                    ? "md:border-r md:border-white/10"
+                    ? " md:border-white/10"
                     : ""
                 }
               `}
@@ -426,7 +426,14 @@ const Home: React.FC = () => {
               <span className="text-xs tracking-[0.2em] text-white/40">
                 {item.index}
               </span>
-              <h3 className="mt-4 sm:mt-6 mb-3 sm:mb-4 text-xl sm:text-2xl font-semibold">
+              <h3 className="mt-4 sm:mt-6 mb-3 sm:mb-4 text-xl sm:text-2xl font-semibold   text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8468FF]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
                 {item.title}
               </h3>
               <p className="text-white/50 leading-relaxed text-sm sm:text-base">
