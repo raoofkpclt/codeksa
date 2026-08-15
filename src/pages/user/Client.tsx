@@ -83,24 +83,24 @@ const ClientCard = ({ client }: { client: Client }) => {
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-white/[0.03] text-4xl font-light text-white/30">
+          <div className="w-full h-full flex items-center justify-center bg-white/[0.03] text-2xl sm:text-3xl md:text-4xl font-light text-white/30">
             {initialsOf(client.name)}
           </div>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        <div className="absolute bottom-0 left-0 right-0 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 px-6 py-6">
+        <div className="absolute bottom-0 left-0 right-0 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 px-4 py-4 sm:px-5 sm:py-5 md:px-6 md:py-6">
           {client.sector && (
-            <p className="text-xs tracking-[0.2em] text-white/50 mb-2">
+            <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/50 mb-1.5 sm:mb-2">
               {client.sector.toUpperCase()}
             </p>
           )}
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg md:text-xl font-light text-white">
+            <h3 className="text-sm sm:text-lg md:text-xl font-light text-white truncate">
               {client.name}
             </h3>
-            <span className="text-violet-400 text-lg transition-transform duration-300 group-hover:translate-x-1">
+            <span className="text-violet-400 text-base sm:text-lg shrink-0 transition-transform duration-300 group-hover:translate-x-1">
               &rarr;
             </span>
           </div>
@@ -160,7 +160,7 @@ const ClientsPage: React.FC = () => {
       : clients.filter((c) => c.sector === activeSector)
 
   return (
-    <div className="bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -195,9 +195,9 @@ const ClientsPage: React.FC = () => {
       <NavbarNew />
 
       {/* Hero */}
-      <section className="px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
+      <section className="px-5 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-16 md:px-10 md:pt-40 md:pb-20 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 mb-16 md:mb-24">
+          <div className="flex flex-wrap items-center gap-3 text-[10px] sm:text-xs tracking-[0.2em] text-white/40 mb-8 sm:mb-12 md:mb-24">
             <a href="/" className="hover-glow uppercase transition-colors duration-200">
             <span>HOME</span>
             </a>
@@ -207,9 +207,9 @@ const ClientsPage: React.FC = () => {
             <span className="text-white/70">CLIENTS</span>
           </div>
 
-          <p className="text-xs tracking-[0.3em] text-white/40 mb-6">CLIENTS</p>
+          <p className="text-xs tracking-[0.3em] text-white/40 mb-5 sm:mb-6">CLIENTS</p>
 
-          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[44px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Organisations inside{" "}
   </span>
@@ -226,7 +226,7 @@ const ClientsPage: React.FC = () => {
   </span>
 </h1>
 
-          <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+          <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-sm leading-relaxed sm:text-base md:text-lg">
             Select any organisation to view the engagement: the problem, the
             system built and the result.
           </p>
@@ -234,15 +234,15 @@ const ClientsPage: React.FC = () => {
       </section>
 
       {/* Sector filter + grid */}
-      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-24 md:py-32">
+      <section className="border-t border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
           {sectors.length > 1 && !loading && !errorMsg && (
-            <Reveal className="flex flex-wrap gap-x-8 gap-y-4 mb-16">
+            <Reveal className="flex flex-wrap gap-x-6 gap-y-3 mb-10 sm:gap-x-8 sm:gap-y-4 sm:mb-12 md:mb-16">
               {sectors.map((s) => (
                 <button
                   key={s}
                   onClick={() => setActiveSector(s)}
-                  className={`text-xs tracking-[0.2em] transition-colors pb-2 border-b ${
+                  className={`text-[10px] sm:text-xs tracking-[0.2em] transition-colors pb-2 border-b ${
                     activeSector === s
                       ? 'text-white border-violet-400'
                       : 'text-white/40 border-transparent hover:text-white/70'
@@ -278,7 +278,7 @@ const ClientsPage: React.FC = () => {
           )}
 
           {!errorMsg && !loading && filtered.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {filtered.map((client, i) => (
                 <Reveal key={client.id} delay={(i % 8) * 40}>
                   <ClientCard client={client} />

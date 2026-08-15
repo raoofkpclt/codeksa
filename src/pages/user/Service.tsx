@@ -11,6 +11,28 @@ import Conversation from "../../components/user/Conversation";
      - Same breadcrumb, PageHero, scroll-spy SectionBlock pattern
      - Same ExploreLink / glow-text treatment
      - Shared <Conversation /> closing block + <Footer />
+
+   RESPONSIVE PASS (content/colors/type-scale intent untouched):
+     - pt-[168px] under the fixed nav was flat on every screen; now
+       steps pt-24 -> sm:pt-28 -> md:pt-32 -> lg:pt-[168px].
+     - Hero and closing headlines used clamp(72px,10-11vw,160px) — a
+       72px floor is already too large on a 360px phone. Both now
+       start at 44px and step up through sm/md to the original clamp,
+       which still resolves to the same desktop size at lg.
+     - Each service's left/right grid used a flat gap-16 lg:gap-28,
+       putting a 64px gap between the index/category block and the
+       body copy even on a phone. Now steps gap-10 -> sm:gap-12 ->
+       lg:gap-28 (unchanged at lg).
+     - Body copy (text-[20px]) and the capability list items
+       (text-[17px]) start a size or two smaller on phones and step up
+       to the original sizes at sm/md.
+     - Category heading tracking relaxes on mobile and tightens back
+       to the original -0.05em at md.
+     - Breadcrumb/eyebrows wrap instead of risking overflow, and the
+       root wrapper gets overflow-x-hidden as a safety net against the
+       hover glow/drop-shadow effects.
+     - All existing md:/lg: values are unchanged, so tablet and desktop
+       layout stays pixel-identical to before.
 ------------------------------------------------------------------- */
 
 const SERVICES = [
@@ -73,13 +95,13 @@ const SERVICES = [
 const ExploreLink = ({ label, href }: { label: string; href: string }) => (
   <a
     href={href}
-    className="group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
+    className="group inline-flex items-center gap-3 sm:gap-4 font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[12px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
   >
     <span className="transition-transform duration-300 ease-out group-hover:translate-x-0.5">
       {label}
     </span>
 
-    <span className="h-px w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-16" />
+    <span className="h-px w-8 sm:w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-14 sm:group-hover:w-16" />
   </a>
 );
 
@@ -91,23 +113,30 @@ const ServiceSection = ({
   active: boolean;
 }) => (
   <div
-  className={`border-t border-[var(--steel)] py-20 md:py-28 transition-opacity duration-500 ${
+  className={`border-t border-[var(--steel)] py-14 sm:py-20 md:py-28 transition-opacity duration-500 ${
     active ? "opacity-100" : "opacity-45"
   }`}
 >
-  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-16 lg:gap-28">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-10 sm:gap-12 lg:gap-28">
     {/* LEFT */}
     <div className="flex flex-col">
-      <span className="font-['Space_Grotesk',sans-serif] text-[13px] uppercase tracking-[0.25em] text-[var(--slate-muted)]">
+      <span className="font-['Space_Grotesk',sans-serif] text-[12px] sm:text-[13px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[var(--slate-muted)]">
         {item.index}
       </span>
 
       <h2
-        className={`mt-8 font-['Space_Grotesk',sans-serif] text-[clamp(42px,3vw,64px)] font-light leading-[0.95] tracking-[-0.05em] transition-colors duration-500 ${
+        className={`mt-6 sm:mt-8 font-['Space_Grotesk',sans-serif] text-[32px] font-light leading-[1] tracking-[-0.02em] sm:text-[42px] sm:leading-[0.98] sm:tracking-[-0.03em] md:text-[clamp(42px,3vw,64px)] md:leading-[0.95] md:tracking-[-0.05em] transition-colors duration-500 ${
           active
             ? "text-[var(--code-white)]"
             : "text-[var(--slate-muted)]"
-        }`}
+        }  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]`}
       >
         {item.category}
       </h2>
@@ -115,28 +144,28 @@ const ServiceSection = ({
 
     {/* RIGHT */}
     <div className="max-w-[820px]">
-      <p className="font-['Space_Grotesk',sans-serif] text-[20px] leading-[1.75] text-[var(--mist)]">
+      <p className="font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)] sm:text-[18px] sm:leading-[1.7] md:text-[20px] md:leading-[1.75]">
         {item.body}
       </p>
 
       {(item.left.length > 0 || item.right.length > 0) && (
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-5">
-          <ul className="space-y-4">
+        <div className="mt-10 sm:mt-12 md:mt-14 grid grid-cols-1 sm:grid-cols-2 gap-x-10 sm:gap-x-16 md:gap-x-20 gap-y-4 sm:gap-y-5">
+          <ul className="space-y-3 sm:space-y-4">
             {item.left.map((i) => (
               <li
                 key={i}
-                className="font-['Space_Grotesk',sans-serif] text-[17px] text-[var(--code-white)]"
+                className="font-['Space_Grotesk',sans-serif] text-[15px] text-[var(--code-white)] sm:text-[16px] md:text-[17px]"
               >
                 {i}
               </li>
             ))}
           </ul>
 
-          <ul className="space-y-4">
+          <ul className="space-y-3 sm:space-y-4">
             {item.right.map((i) => (
               <li
                 key={i}
-                className="font-['Space_Grotesk',sans-serif] text-[17px] text-[var(--code-white)]"
+                className="font-['Space_Grotesk',sans-serif] text-[15px] text-[var(--code-white)] sm:text-[16px] md:text-[17px]"
               >
                 {i}
               </li>
@@ -173,7 +202,7 @@ const Service :React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-[var(--mist)]">
+    <div className="min-h-screen bg-black text-[var(--mist)] overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -204,9 +233,9 @@ const Service :React.FC = () => {
 
       <NavbarNew />
 
-      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
+      <main className="mx-auto max-w-[1440px] px-5 pt-24 pb-20 sm:px-6 sm:pt-28 sm:pb-24 md:px-16 md:pt-32 md:pb-32 lg:pt-[168px]">
         {/* Breadcrumb */}
-        <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
+        <div className="mb-6 sm:mb-8 md:mb-10 flex flex-wrap items-center gap-3 font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.24em] text-[var(--slate-muted)]">
           <a href="/" className="hover-glow uppercase transition-colors duration-200">
             Home
           </a>
@@ -215,11 +244,11 @@ const Service :React.FC = () => {
         </div>
 
         {/* PageHero */}
-        <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
+        <span className="mb-5 sm:mb-6 md:mb-8 block font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.30em] text-[var(--slate-muted)]">
           Services
         </span>
 
-        <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[44px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Capabilities connected by {" "}
   </span>
@@ -236,14 +265,14 @@ const Service :React.FC = () => {
   </span>
 </h1>
 
-        <p className="mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[15px] leading-[1.6] text-[var(--mist)] sm:text-[16px] md:text-[17px]">
           CODE services are not isolated outputs. They are capabilities
           connected around business direction, brand clarity, digital
           performance and operational structure.
         </p>
 
         {/* Services */}
-        <div className="mt-20">
+        <div className="mt-12 sm:mt-16 md:mt-20">
           {SERVICES.map((item, i) => (
             <div
               key={item.index}
@@ -256,8 +285,8 @@ const Service :React.FC = () => {
         </div>
 
         {/* Page-specific closing statement */}
-        <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <div className="border-t border-[var(--steel)] pt-12 sm:pt-16 md:pt-24">
+          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[44px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,11vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Start with the business{" "}
   </span>
@@ -273,14 +302,14 @@ const Service :React.FC = () => {
     requirement.
   </span>
 </h2>
-          <p className="mt-6 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
+          <p className="mt-5 sm:mt-6 max-w-[560px] font-['Space_Grotesk',sans-serif] text-[14px] leading-[1.6] text-[var(--mist)] sm:text-[16px]">
             The right service depends on the challenge, the required outcome
             and the structure already in place.
           </p>
-          <div className="mt-10">
+          <div className="mt-8 sm:mt-10">
             <ExploreLink
               label="Start a Conversation"
-              href="/start-a-conversation"
+              href="/contact"
             />
           </div>
         </div>

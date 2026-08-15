@@ -208,7 +208,7 @@ const Home: React.FC = () => {
           </p>
           <div className="mt-10 md:mt-14 flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-x-10 gap-y-6">
             <Link
-              to="/start-a-conversation"
+              to="/contact"
               className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/80 hover:text-white transition-colors group"
             >
               START A CONVERSATION

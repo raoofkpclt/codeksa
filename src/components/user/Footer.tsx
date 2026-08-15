@@ -52,12 +52,21 @@ const NAVIGATE = [
 ];
 
 const BUSINESS_AREAS = [
-  { label: "Strategy & Growth", href: "/what-we-solve/strategic-direction" },
-  { label: "Brand & Creative", href: "/what-we-solve/brand-clarity" },
-  { label: "Digital & Performance", href: "/what-we-solve/digital-presence" },
+  {
+    label: "Strategy & Growth",
+    href: "/strategy-growth",
+  },
+  {
+    label: "Brand & Creative",
+    href: "/brand-creative",
+  },
+  {
+    label: "Digital & Performance",
+    href: "/digital-performance",
+  },
   {
     label: "Marketing Operations & Systems",
-    href: "/what-we-solve/marketing-operations",
+    href: "/marketing-operations-systems",
   },
 ];
 

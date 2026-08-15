@@ -57,8 +57,95 @@ const fieldBase =
 
 const labelBase = 'text-xs tracking-[0.2em] text-white/40'
 
+const WHATSAPP_URL = 'https://wa.me/966555922650'
+const PHONE_TEL = 'tel:+966555922650'
+const PHONE_DISPLAY = '+966 55 592 2650'
+
+/* ---------------------------------------------------------
+   ContactChoiceModal — lets the visitor pick WhatsApp or a
+   phone call before leaving the site
+--------------------------------------------------------- */
+const ContactChoiceModal = ({
+  open,
+  onClose,
+}: {
+  open: boolean
+  onClose: () => void
+}) => {
+  if (!open) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-5 sm:px-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-choice-title"
+    >
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      <div className="relative w-full max-w-sm bg-[var(--graphite)] border border-white/10 px-6 py-8 sm:px-8 sm:py-10">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 text-white/40 hover:text-white transition-colors text-xl leading-none"
+        >
+          &times;
+        </button>
+
+        <p className={labelBase}>CONTACT</p>
+        <h3
+          id="contact-choice-title"
+          className="mt-4 text-2xl sm:text-3xl font-light text-white"
+        >
+          How should we talk?
+        </h3>
+        <p className="mt-2 text-sm text-white/50 leading-relaxed">
+          Choose WhatsApp or a phone call — same number either way.
+        </p>
+
+        <div className="mt-8 space-y-3">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="flex items-center justify-between border border-white/15 px-5 py-4 text-white hover:border-white/40 hover:bg-white/[0.03] transition-colors"
+          >
+            <span>
+              <span className="block text-xs tracking-[0.2em] text-white/40 mb-1">
+                WHATSAPP
+              </span>
+              <span className="block text-base sm:text-lg">{PHONE_DISPLAY}</span>
+            </span>
+            <span className="text-violet-400 text-lg">&rarr;</span>
+          </a>
+
+          <a
+            href={PHONE_TEL}
+            onClick={onClose}
+            className="flex items-center justify-between border border-white/15 px-5 py-4 text-white hover:border-white/40 hover:bg-white/[0.03] transition-colors"
+          >
+            <span>
+              <span className="block text-xs tracking-[0.2em] text-white/40 mb-1">
+                CALL
+              </span>
+              <span className="block text-base sm:text-lg">{PHONE_DISPLAY}</span>
+            </span>
+            <span className="text-violet-400 text-lg">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const StartAConversation: React.FC = () => {
   const [form, setForm] = useState<FormState>(initialState)
+  const [contactModalOpen, setContactModalOpen] = useState(false)
 
   const handleChange =
     (field: keyof FormState) =>
@@ -73,7 +160,7 @@ const StartAConversation: React.FC = () => {
   }
 
   return (
-    <div className="bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -108,19 +195,19 @@ const StartAConversation: React.FC = () => {
       <NavbarNew />
 
       {/* Hero */}
-      <section className="px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
+      <section className="px-5 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-16 md:px-10 md:pt-40 md:pb-20 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 mb-16 md:mb-24">
+          <div className="flex flex-wrap items-center gap-3 text-[10px] sm:text-xs tracking-[0.2em] text-white/40 mb-8 sm:mb-12 md:mb-24">
             <span>HOME</span>
             <span>/</span>
             <span className="text-white/70">START A CONVERSATION</span>
           </div>
 
-          <p className="text-xs tracking-[0.3em] text-white/40 mb-6">
+          <p className="text-xs tracking-[0.3em] text-white/40 mb-5 sm:mb-6">
             START A CONVERSATION
           </p>
 
-          <h1 className="max-w-[1050px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+          <h1 className="max-w-[1050px] font-['Space_Grotesk',sans-serif] text-[40px] font-light leading-[1.05] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Let&rsquo;s clarify what your
   </span>
@@ -137,7 +224,7 @@ const StartAConversation: React.FC = () => {
   </span>
 </h1>
 
-          <p className="mt-10 max-w-[700px] text-white/50 text-lg leading-relaxed">
+          <p className="mt-6 sm:mt-8 md:mt-10 max-w-[700px] text-white/50 text-sm leading-relaxed sm:text-base md:text-lg">
             Start with a conversation about the challenge, the required outcome
             and the right place to begin.
           </p>
@@ -146,62 +233,58 @@ const StartAConversation: React.FC = () => {
 
       {/* Quick contact row */}
       <section className="border-t border-white/10">
-        <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3">
-          <div className="px-6 md:px-10 lg:px-16 py-10 md:border-r border-white/10">
+        <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2">
+          <div className="px-5 py-8 sm:px-6 sm:py-10 md:border-r md:px-10 lg:px-16 border-white/10">
             <span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />
             <p className={labelBase}>EMAIL</p>
             <a
               href="mailto:info@codeksaofficial.com"
-              className="mt-3 block text-lg md:text-xl hover:text-white/70 transition-colors"
+              className="mt-3 block text-base break-words hover:text-white/70 transition-colors sm:text-lg md:text-xl"
             >
               info@codeksaofficial.com
             </a>
           </div>
 
-          <div className="px-6 md:px-10 lg:px-16 py-10 md:border-r border-white/10">
-<span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />            <p className={labelBase}>WHATSAPP</p>
-            <a
-              href="https://wa.me/966555922650"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 block text-lg md:text-xl hover:text-white/70 transition-colors"
+          <div className="px-5 py-8 sm:px-6 sm:py-10 md:px-10 lg:px-16">
+            <span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />
+            <p className={labelBase}>WHATSAPP / CALL</p>
+            <button
+              type="button"
+              onClick={() => setContactModalOpen(true)}
+              className="mt-3 flex items-center gap-3 text-base hover:text-white/70 transition-colors sm:text-lg md:text-xl"
             >
-              +966 55 592 2650
-            </a>
-          </div>
-
-          <div className="px-6 md:px-10 lg:px-16 py-10">
-<span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />            <p className={labelBase}>CALL</p>
-            <a
-              href="tel:+966555922650"
-              className="mt-3 block text-lg md:text-xl hover:text-white/70 transition-colors"
-            >
-              +966 55 592 2650
-            </a>
+              {PHONE_DISPLAY}
+              <span className="text-violet-400 text-base sm:text-lg">&rarr;</span>
+            </button>
           </div>
         </div>
       </section>
 
+      <ContactChoiceModal
+        open={contactModalOpen}
+        onClose={() => setContactModalOpen(false)}
+      />
+
       {/* Contact info + Form */}
-      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-24 md:py-32">
-        <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,320px)_1fr] gap-16 md:gap-24">
+      <section className="border-t border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32 lg:px-16">
+        <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,320px)_1fr] gap-10 sm:gap-12 md:gap-24">
           {/* Left: static contact card */}
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-10 md:space-y-12">
             <div>
               <p className={labelBase}>CONTACT</p>
             </div>
 
             <div>
               <p className="text-xs tracking-[0.2em] text-white/40 mb-3">CODE</p>
-              <p className="text-lg">Client Enquiries</p>
-              <p className="text-white/50">Saudi Arabia &middot; MENA</p>
+              <p className="text-base sm:text-lg">Client Enquiries</p>
+              <p className="text-white/50 text-sm sm:text-base">Saudi Arabia &middot; MENA</p>
             </div>
 
             <div>
               <p className="text-xs tracking-[0.2em] text-white/40 mb-3">EMAIL</p>
               <a
                 href="mailto:info@codeksaofficial.com"
-                className="text-lg hover:text-white/70 transition-colors"
+                className="text-base sm:text-lg hover:text-white/70 transition-colors break-words"
               >
                 info@codeksaofficial.com
               </a>
@@ -211,21 +294,20 @@ const StartAConversation: React.FC = () => {
               <p className="text-xs tracking-[0.2em] text-white/40 mb-3">
                 PHONE / WHATSAPP
               </p>
-              <p className="text-lg">+966 55 592 2650</p>
-              <a
-                href="https://wa.me/966555922650"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/50 hover:text-white/80 transition-colors"
+              <p className="text-base sm:text-lg">{PHONE_DISPLAY}</p>
+              <button
+                type="button"
+                onClick={() => setContactModalOpen(true)}
+                className="text-white/50 hover:text-white/80 transition-colors text-sm sm:text-base"
               >
-                Message on WhatsApp
-              </a>
+                WhatsApp or call &rarr;
+              </button>
             </div>
           </div>
 
           {/* Right: form */}
-          <form onSubmit={handleSubmit} className="space-y-14">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+          <form onSubmit={handleSubmit} className="space-y-10 sm:space-y-12 md:space-y-14">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 sm:gap-y-10">
               <div>
                 <label className={labelBase} htmlFor="name">
                   NAME <span className="text-purple-400">*</span>

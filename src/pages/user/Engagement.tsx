@@ -109,7 +109,7 @@ const tiers: EngagementTier[] = [
 
 const Engagement: React.FC = () => {
   return (
-    <div className="bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -222,7 +222,7 @@ const Engagement: React.FC = () => {
               </p>
               <ul className="space-y-3">
                 {tier.addresses.map((item) => (
-                  <li key={item} className="text-white/80">
+                  <li key={item} className="text-white/80 break-words">
                     — {item}
                   </li>
                 ))}
@@ -235,7 +235,7 @@ const Engagement: React.FC = () => {
               </p>
               <ul className="space-y-3">
                 {tier.mayInclude.map((item) => (
-                  <li key={item} className="text-white/80">
+                  <li key={item} className="text-white/80 break-words">
                     — {item}
                   </li>
                 ))}

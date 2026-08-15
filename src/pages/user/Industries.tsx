@@ -79,7 +79,7 @@ const industries: Industry[] = [
 
 const Industries: React.FC = () => {
   return (
-    <div className="bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -115,9 +115,9 @@ const Industries: React.FC = () => {
       <NavbarNew />
 
       {/* Hero */}
-      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
+      <main className="mx-auto max-w-[1440px] px-5 pt-24 pb-20 sm:px-6 sm:pt-28 sm:pb-24 md:px-16 md:pt-32 md:pb-32 lg:pt-[168px]">
         {/* Breadcrumb */}
-        <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
+        <div className="mb-6 sm:mb-8 md:mb-10 flex flex-wrap items-center gap-3 font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.24em] text-[var(--slate-muted)]">
           <a
             href="/"
             className="hover-glow uppercase transition-colors duration-200"
@@ -128,12 +128,12 @@ const Industries: React.FC = () => {
           <span className="uppercase text-[var(--code-white)]">Industries</span>
         </div>
 
-        <p className="text-xs tracking-[0.3em] text-white/40 mb-6">
+        <p className="text-xs tracking-[0.3em] text-white/40 mb-5 sm:mb-6">
           INDUSTRIES
         </p>
 
-        <h1 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
-          <span className="font-light">The scope changes.</span>
+        <h1 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[44px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
+          <span className="font-light">The scope changes. </span>
 
           <span className="font-bold  text-white
     transition-all
@@ -145,33 +145,40 @@ const Industries: React.FC = () => {
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">The standard does not.</span>
         </h1>
 
-        <p className="mt-10 max-w-[700px] text-white/50 text-lg leading-relaxed">
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-[700px] text-white/50 text-sm leading-relaxed sm:text-base md:text-lg">
           CODE adapts its systems to the realities of each market, audience and
           business model.
         </p>
       </main>
 
       {/* Industries grid */}
-      <section className="border-t border-white/10">
+      <section className="">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3">
           {industries.map((industry, i) => (
             <div
               key={industry.index}
               className={`
-                px-6 md:px-10 lg:px-14 py-16 md:py-20
-                border-b border-white/10
-                ${(i + 1) % 3 !== 0 ? "md:border-r md:border-white/10" : ""}
+                px-5 sm:px-8 md:px-10 lg:px-14 py-12 sm:py-16 md:py-20
+                
+                ${(i + 1) % 3 !== 0 ? "" : ""}
               `}
             >
               <span className="text-xs tracking-[0.2em] text-white/40">
                 {industry.index}
               </span>
 
-              <h2 className="mt-8 mb-6 text-3xl md:text-[2.2rem] font-light leading-tight">
+              <h2 className="mt-6 mb-4 text-2xl leading-tight font-light sm:mt-8 sm:mb-6 sm:text-3xl md:text-[2.2rem]  text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">
                 {industry.title}
               </h2>
 
-              <p className="text-white/50 leading-relaxed max-w-xs">
+              <p className="text-white/50 leading-relaxed max-w-xs text-[15px] sm:text-base">
                 {industry.description}
               </p>
 
@@ -179,7 +186,7 @@ const Industries: React.FC = () => {
   industry.title === "Hospitality") && (
   <Link
     to={`/${industry.title.toLowerCase().replace(/\s+/g, "-")}`}
-    className="mt-10 inline-flex items-center gap-3 text-xs tracking-[0.2em] text-white/70 transition-colors group hover:text-white"
+    className="mt-8 sm:mt-10 inline-flex items-center gap-3 text-[11px] sm:text-xs tracking-[0.2em] text-white/70 transition-colors group hover:text-white"
   >
     EXPLORE
     <span className="w-6 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 transition-all group-hover:w-10" />
@@ -191,9 +198,9 @@ const Industries: React.FC = () => {
       </section>
 
       {/* Discuss your market */}
-      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-24 md:py-36">
+      <section className="border-t border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-36 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
-          <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+          <h2 className="max-w-[1200px] font-['Space_Grotesk',sans-serif] text-[40px] font-light leading-[1.05] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,130px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Discuss how CODE&rsquo;s{" "}
   </span>
@@ -214,16 +221,16 @@ const Industries: React.FC = () => {
   </span>
 </h2>
 
-          <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+          <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-sm leading-relaxed sm:text-base md:text-lg">
             Each industry brings a different set of customer expectations,
             decision drivers and competitive realities. CODE adapts the system
             accordingly.
           </p>
 
-          <button className="mt-14 flex items-center gap-3 text-xs tracking-[0.2em] text-white/70 hover:text-white transition-colors group">
+          <a href="/contact" className="mt-8 sm:mt-10 md:mt-14 flex flex-wrap items-center gap-3 text-[11px] sm:text-xs tracking-[0.2em] text-white/70 hover:text-white transition-colors group text-left">
             DISCUSS YOUR INDUSTRY CONTEXT
             <span className="w-8 h-px bg-gradient-to-r from-fuchsia-400 to-violet-500 group-hover:w-12 transition-all" />
-          </button>
+          </a>
         </div>
       </section>
 

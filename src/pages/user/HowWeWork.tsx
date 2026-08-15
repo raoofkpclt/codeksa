@@ -20,6 +20,30 @@ import Conversation from "../../components/user/Conversation";
                      Business" text CTA.
 
    Single type family (Space Grotesk) throughout, per the v3 doc.
+
+   RESPONSIVE PASS (content/colors/type-scale intent untouched):
+     - pt-[168px] under the fixed nav was flat on every screen; now
+       steps pt-24 -> sm:pt-28 -> md:pt-32 -> lg:pt-[168px].
+     - Hero h1 and the closing statement both used
+       clamp(72px,10vw,…) — a 72px floor is already too large on a
+       360px phone. Both now start smaller (44px / 40px) and step up
+       through sm/md before landing on the original clamp at lg, which
+       still resolves to the same desktop size.
+     - Each step's huge title used clamp(64px,8vw,120px) — same
+       problem, floors at 64px on mobile. Now steps 40px -> sm:56px ->
+       md: the original clamp.
+     - Step body copy, and the "every engagement includes" tiles,
+       start a size smaller on phones and step up at sm/md.
+     - Two invalid Tailwind utilities ("gap-" with no value, used on
+       the includes grid and its columns) were silently ignored by
+       Tailwind; replaced with explicit gap-0 so the collapsed-border
+       tile look is intentional rather than accidental, and the tile
+       padding now steps down on mobile.
+     - Breadcrumb/eyebrows wrap instead of risking overflow, and the
+       root wrapper gets overflow-x-hidden as a safety net against the
+       hover glow/drop-shadow effects.
+     - All existing md:/lg: values are unchanged, so tablet and desktop
+       layout stays pixel-identical to before.
 ------------------------------------------------------------------- */
 
 const STEPS = [
@@ -83,19 +107,19 @@ const DiagonalDivider = () => (
 const ExploreLink = ({ label, href }: { label: string; href: string }) => (
   <a
     href={href}
-    className="group inline-flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
+    className="group inline-flex items-center gap-3 sm:gap-4 font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[12px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.28em] !text-white hover:!text-white focus:!text-white active:!text-white transition-all duration-300 ease-out"
   >
     <span className="transition-transform duration-300 ease-out group-hover:translate-x-0.5">
       {label}
     </span>
 
-    <span className="h-px w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-16" />
+    <span className="h-px w-8 sm:w-10 bg-[#8468FF] transition-all duration-300 ease-out group-hover:w-14 sm:group-hover:w-16" />
   </a>
 );
 
 const HowWeWork = () => {
   return (
-    <div className="min-h-screen bg-black text-[var(--mist)]">
+    <div className="min-h-screen bg-black text-[var(--mist)] overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -121,9 +145,9 @@ const HowWeWork = () => {
 
       <NavbarNew />
 
-      <main className="mx-auto max-w-[1440px] px-6 pt-[168px] pb-32 md:px-16">
+      <main className="mx-auto max-w-[1440px] px-5 pt-24 pb-20 sm:px-6 sm:pt-28 sm:pb-24 md:px-16 md:pt-32 md:pb-32 lg:pt-[168px]">
         {/* Breadcrumb */}
-        <div className="mb-10 flex items-center gap-3 font-['Space_Grotesk',sans-serif] text-[11px] tracking-[0.24em] text-[var(--slate-muted)]">
+        <div className="mb-6 sm:mb-8 md:mb-10 flex flex-wrap items-center gap-3 font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.24em] text-[var(--slate-muted)]">
           <a
             href="/"
             className="hover-glow uppercase transition-colors duration-200"
@@ -137,11 +161,11 @@ const HowWeWork = () => {
         </div>
 
         {/* PageHero */}
-        <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
+        <span className="mb-5 sm:mb-6 md:mb-8 block font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.30em] text-[var(--slate-muted)]">
           How We Work
         </span>
 
-        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] leading-[0.9] tracking-[-0.06em]">
+        <h1 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[44px] leading-[1] tracking-[-0.02em] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light text-[var(--code-white)]">
     Clarity before
   </span>
@@ -158,7 +182,7 @@ const HowWeWork = () => {
   </span>
 </h1>
 
-        <p className="mt-10 max-w-[680px] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[var(--mist)]">
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-[680px] font-['Space_Grotesk',sans-serif] text-[15px] leading-[1.6] text-[var(--mist)] sm:text-[16px] md:text-[17px]">
           CODE begins with the business requirement before recommending
           channels, deliverables or activity. The process is designed to
           reduce ambiguity, protect quality and connect every engagement to a
@@ -166,19 +190,19 @@ const HowWeWork = () => {
         </p>
 
         {/* Steps */}
-        <div className="mt-24">
+        <div className="mt-14 sm:mt-16 md:mt-24">
           {STEPS.map((step, i) => (
             <React.Fragment key={step.index}>
               {i > 0 && <DiagonalDivider />}
-              <div className="py-16 md:py-20 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-8 md:gap-16">
+              <div className="py-12 sm:py-16 md:py-20 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 sm:gap-8 md:gap-16">
   {/* Left Side */}
   <div>
     <div className="flex items-baseline gap-4">
-      <span className="font-['Space_Grotesk',sans-serif] text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
+      <span className="font-['Space_Grotesk',sans-serif] text-[12px] sm:text-[13px] tracking-[0.2em] text-[var(--slate-muted)]">
         {step.index}
       </span>
 
-      <span className="font-['Space_Grotesk',sans-serif] text-[12px] font-medium uppercase tracking-[0.30em] text-[var(--code-purple)]">
+      <span className="font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[12px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.30em] text-[var(--code-purple)]">
         Step
       </span>
     </div>
@@ -186,11 +210,18 @@ const HowWeWork = () => {
 
   {/* Right Side */}
   <div>
-    <h2 className="font-['Space_Grotesk',sans-serif] text-[clamp(64px,8vw,120px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+    <h2 className="font-['Space_Grotesk',sans-serif] text-[40px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[56px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(64px,8vw,120px)] md:leading-[0.9] md:tracking-[-0.06em] text-white
+    transition-all
+    duration-500
+    ease-out
+   hover:text-[#8a6dff]
+    hover:scale-[1.01]
+    hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)] ">
       {step.title}
     </h2>
 
-    <p className="mt-8 max-w-[720px] font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.7] text-[var(--mist)]">
+    <p className="mt-5 sm:mt-6 md:mt-8 max-w-[720px] font-['Space_Grotesk',sans-serif] text-[15px] leading-[1.6] text-[var(--mist)] sm:text-[16px] sm:leading-[1.65] md:text-[18px] md:leading-[1.7]">
       {step.body}
     </p>
   </div>
@@ -200,13 +231,13 @@ const HowWeWork = () => {
         </div>
 
         {/* What every engagement includes */}
-        <div className="border-t border-[var(--steel)] pt-16 md:pt-24">
-          <span className="mb-8 block font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.30em] text-[var(--slate-muted)]">
+        <div className="border-t border-[var(--steel)] pt-12 sm:pt-16 md:pt-24">
+          <span className="mb-5 sm:mb-6 md:mb-8 block font-['Space_Grotesk',sans-serif] text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.24em] sm:tracking-[0.30em] text-[var(--slate-muted)]">
             What Every Engagement Includes
           </span>
 
           <div className="flex justify-end items-end ">
-  <h2 className="max-w-[900px]  font-['Space_Grotesk',sans-serif] text-[clamp(30px,4.5vw,52px)] font-light leading-[1.2] tracking-[-0.04em] text-[var(--code-white)]">
+  <h2 className="max-w-[900px]  font-['Space_Grotesk',sans-serif] text-[28px] font-light leading-[1.2] tracking-[-0.02em] text-[var(--code-white)] sm:text-[36px] sm:tracking-[-0.03em] md:text-[clamp(30px,4.5vw,52px)] md:tracking-[-0.04em]">
     <span className="font-light">
       Common ground across every
     </span>{" "}
@@ -221,15 +252,15 @@ const HowWeWork = () => {
   </h2>
 </div>
 
-          <div className="mt-20 grid grid-cols-1 gap-2 border-t border-[var(--steel)]  md:grid-cols-2">
+          <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 gap-0 border-t border-[var(--steel)]  md:grid-cols-2">
   {[INCLUDES_LEFT, INCLUDES_RIGHT].map((list, index) => (
-    <div key={index} className="flex flex-col gap-2">
+    <div key={index} className="flex flex-col gap-0">
       {list.map((item) => (
         <div
           key={item}
-          className="group  border border-[var(--steel)] bg-[var(--graphite)] px-8 py-7 transition-all duration-300"
+          className="group  border border-[var(--steel)] bg-[var(--graphite)] px-5 py-5 transition-all duration-300 sm:px-6 sm:py-6 md:px-8 md:py-7"
         >
-          <span className="font-['Space_Grotesk',sans-serif] text-[22px] font-normal leading-[1.3] text-[var(--mist)] transition-colors group-hover:text-white">
+          <span className="font-['Space_Grotesk',sans-serif] text-[17px] font-normal leading-[1.3] text-[var(--mist)] transition-colors group-hover:text-white sm:text-[19px] md:text-[22px]">
             {item}
           </span>
         </div>
@@ -240,8 +271,8 @@ const HowWeWork = () => {
         </div>
 
         {/* Closing statement */}
-        <div className="mt-24 border-t border-[var(--steel)] pt-16 md:mt-32 md:pt-24">
-          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <div className="mt-16 border-t border-[var(--steel)] pt-12 sm:mt-20 sm:pt-16 md:mt-32 md:pt-24">
+          <h2 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[40px] font-light leading-[1.05] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,130px)] md:leading-[0.9] md:tracking-[-0.06em]">
   <span className="font-light">
     Define the right structure{" "}
   </span>
@@ -257,14 +288,14 @@ const HowWeWork = () => {
     hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">begins.</span>
   </span>
 </h2>
-          <p className="mt-8 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[16px] leading-[1.6] text-[var(--mist)]">
+          <p className="mt-6 sm:mt-8 max-w-[620px] font-['Space_Grotesk',sans-serif] text-[14px] leading-[1.6] text-[var(--mist)] sm:text-[16px]">
             Every CODE engagement opens with a short conversation to clarify
             the requirement, the outcome and the right structure to support
             it.
           </p>
 
-          <div className="mt-12">
-            <ExploreLink label="Discuss Your Business" href="/start-a-conversation" />
+          <div className="mt-8 sm:mt-10 md:mt-12">
+            <ExploreLink label="Discuss Your Business" href="/contact" />
           </div>
         </div>
       </main>

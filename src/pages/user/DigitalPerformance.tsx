@@ -94,7 +94,7 @@ const pathways = [
   },
 ];
 
-//  <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
+//  <span className={`${accentLine} group-hover:w-10 transition-all`} />
 const accentLine =
   "w-6 h-px bg-[#8468FF] inline-block";
 
@@ -106,7 +106,7 @@ const DigitalPerformance: React.FC = () => {
   };
 
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -122,9 +122,13 @@ const DigitalPerformance: React.FC = () => {
           --violet-glow: #9B83FF;
         }
 
+        html {
+          overflow-x: hidden;
+        }
+
         body {
-  font-family: 'Space Grotesk', sans-serif;
-}
+          font-family: 'Space Grotesk', sans-serif;
+        }
 
         * { font-synthesis: none; }
 
@@ -141,8 +145,8 @@ const DigitalPerformance: React.FC = () => {
       <NavbarNew />
 
       {/* Breadcrumb */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-16 pt-40 pb-10">
-        <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 uppercase">
+      <div className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pt-24 sm:pt-32 md:pt-40 pb-6 sm:pb-10">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs tracking-[0.2em] text-white/40 uppercase">
           <span>Home</span>
           <span className="text-white/20">/</span>
           <span>What We Solve</span>
@@ -152,70 +156,74 @@ const DigitalPerformance: React.FC = () => {
       </div>
 
       {/* Hero */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 pb-32">
-        <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-6">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pb-16 sm:pb-24 md:pb-32">
+        <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
           03&nbsp;&nbsp;&nbsp;
           <span className="text-indigo-300/80">Digital & Performance</span>
         </div>
-        <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <h1 className="max-w-full md:max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(40px,10vw,160px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
           <span className="font-light ">Presence with </span>
 
-          <span className="font-bold text-white
+          <span
+            className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">purpose.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+          >
+            purpose.
+          </span>
         </h1>
-        <p className="mt-24 max-w-xl text-white/50 text-lg leading-relaxed">
+        <p className="mt-8 sm:mt-14 md:mt-24 max-w-xl text-white/50 text-base sm:text-lg leading-relaxed">
           We connect digital experience, visibility and performance to
           measurable business outcomes.
         </p>
       </section>
 
       {/* The Business Challenge */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 md:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-24">
           <div className="text-xs tracking-[0.2em] text-white/40 uppercase h-fit">
             The Business Challenge
           </div>
-          <div className="max-w-3xl space-y-10">
-            <p className="text-2xl md:text-3xl leading-snug text-white">
+          <div className="max-w-3xl space-y-6 sm:space-y-8 md:space-y-10">
+            <p className="text-xl sm:text-2xl md:text-3xl leading-snug text-white">
               A digital presence is valuable only when customers can find it,
               understand it and act on it. Disconnected websites, search
               activity, advertising and analytics make performance harder to
               understand and improve.
             </p>
-            <p className="text-white/50 text-lg leading-relaxed">
-              CODE brings digital touchpoints together around a clearer customer
-              journey and measurable commercial purpose.
+            <p className="text-white/50 text-base sm:text-lg leading-relaxed">
+              CODE brings digital touchpoints together around a clearer
+              customer journey and measurable commercial purpose.
             </p>
           </div>
         </div>
       </section>
 
       {/* How CODE Helps */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 md:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-24">
           <div className="text-xs tracking-[0.2em] text-white/40 uppercase h-fit">
             How CODE Helps
           </div>
-          <p className="max-w-3xl text-2xl md:text-3xl leading-snug text-white/70">
+          <p className="max-w-3xl text-xl sm:text-2xl md:text-3xl leading-snug text-white/70">
             We treat digital as a connected system —{" "}
             <span className="text-white font-medium">
-              where experience, discovery and measurement work together to move
-              customers with intent rather than compete for their attention in
-              isolation.
+              where experience, discovery and measurement work together to
+              move customers with intent rather than compete for their
+              attention in isolation.
             </span>
           </p>
         </div>
       </section>
 
       {/* Capabilities */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid min-h-[380px] md:grid-cols-[280px_1fr] gap-10 md:gap-16">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid min-h-0 md:min-h-[280px] grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-16">
           {/* Left */}
           <div className="flex items-start">
             <p className="font-['Space_Grotesk',sans-serif] text-xs uppercase tracking-[0.2em] text-white/40">
@@ -224,46 +232,50 @@ const DigitalPerformance: React.FC = () => {
           </div>
 
           {/* Right */}
-          <div className="flex item">
-            <h2 className="max-w-[1100px]  font-['Space_Grotesk',sans-serif] text-[clamp(52px,2vw,30px)] font-light leading-[0.999] tracking-[0.06em] text-white">
+          <div className="flex items-start">
+            <h2 className="max-w-full md:max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(28px,5vw,52px)] font-light leading-[1.1] sm:leading-[0.999] tracking-[-0.02em] sm:tracking-[0.02em] text-white break-words">
               <span className="font-light">The disciplines </span>
 
-              <span className="font-bold text-white
+              <span
+                className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">this pathway connects.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+              >
+                this pathway connects.
+              </span>
             </h2>
           </div>
         </div>
 
-        <div className="border-t border-white/10">
+        <div className="mt-8 sm:mt-10 md:mt-0 border-t border-white/10">
           {capabilities.map((cap, index) => {
             const isOpen = openIndex === index;
             return (
               <div key={cap.number} className="border-b border-white/10">
                 <button
                   onClick={() => toggle(index)}
-                  className={`w-full flex items-center gap-8 py-10 text-left transition-colors duration-300 ${
+                  className={`w-full flex items-center gap-4 sm:gap-6 md:gap-8 py-6 sm:py-8 md:py-10 text-left transition-colors duration-300 ${
                     isOpen ? "text-white" : "text-white/40 hover:text-white/70"
                   }`}
                 >
-                  <span className="text-sm tracking-widest w-8 shrink-0">
+                  <span className="text-xs sm:text-sm tracking-widest w-6 sm:w-8 shrink-0">
                     {cap.number}
                   </span>
                   <span
-                    className={`flex-1 font-light transition-all duration-300 ${
+                    className={`flex-1 font-light transition-all duration-300 break-words ${
                       isOpen
-                        ? "text-4xl md:text-6xl text-white"
-                        : "text-2xl md:text-4xl"
+                        ? "text-2xl sm:text-4xl md:text-6xl text-white"
+                        : "text-lg sm:text-2xl md:text-4xl"
                     }`}
                   >
                     {cap.title}
                   </span>
-                  <span className="text-2xl w-8 text-right shrink-0 font-light">
+                  <span className="text-xl sm:text-2xl w-6 sm:w-8 text-right shrink-0 font-light">
                     {isOpen ? "×" : "+"}
                   </span>
                 </button>
@@ -275,7 +287,7 @@ const DigitalPerformance: React.FC = () => {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="max-w-2xl text-white/50 text-lg leading-relaxed pl-16 pb-10">
+                    <p className="max-w-2xl text-white/50 text-sm sm:text-base md:text-lg leading-relaxed pl-10 sm:pl-14 md:pl-16 pr-2 pb-6 sm:pb-8 md:pb-10">
                       {cap.description}
                     </p>
                   </div>
@@ -287,25 +299,29 @@ const DigitalPerformance: React.FC = () => {
       </section>
 
       {/* Connected Outcomes */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[320px_1fr] gap-12 md:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8 sm:gap-10 md:gap-24">
           {/* Left */}
           <div>
-            <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-6">
+            <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
               Connected Outcomes
             </div>
 
-            <h2 className="mt-6 font-serif-display text-[32px] leading-tight sm:text-[42px]">
+            <h2 className="mt-4 sm:mt-6 font-serif-display text-[24px] leading-tight sm:text-[32px] md:text-[42px]">
               {" "}
               What clients tend to{" "}
-              <span className="font-semibold text-white
+              <span
+                className="font-semibold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">gain.</span>{" "}
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+              >
+                gain.
+              </span>{" "}
             </h2>
           </div>
 
@@ -315,13 +331,13 @@ const DigitalPerformance: React.FC = () => {
               {outcomes.map((outcome) => (
                 <div
                   key={outcome.number}
-                  className="flex items-center gap-8 py-10 border-b border-white/10"
+                  className="flex items-center gap-4 sm:gap-6 md:gap-8 py-6 sm:py-8 md:py-10 border-b border-white/10"
                 >
-                  <span className="w-8 shrink-0 font-['Space_Grotesk',sans-serif] text-sm tracking-[0.2em] text-white/40">
+                  <span className="w-6 sm:w-8 shrink-0 font-['Space_Grotesk',sans-serif] text-xs sm:text-sm tracking-[0.2em] text-white/40">
                     {outcome.number}
                   </span>
 
-                  <span className="font-['Space_Grotesk',sans-serif] text-[28px] md:text-[42px] font-light leading-[1.1] text-white/80">
+                  <span className="font-['Space_Grotesk',sans-serif] text-[19px] sm:text-[28px] md:text-[42px] font-light leading-[1.15] sm:leading-[1.1] text-white/80">
                     {outcome.title}
                   </span>
                 </div>
@@ -332,32 +348,37 @@ const DigitalPerformance: React.FC = () => {
       </section>
 
       {/* Related Industries */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 md:gap-16">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-16">
           <div>
-            <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-6">
+            <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
               Related Industries
             </div>
-            <h2 className="max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(50px,2vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+            <h2 className="max-w-full md:max-w-[900px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,7vw,90px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
               <span className="font-light">Where this </span>
 
               <span className="font-light">
-                pathway <span className="font-bold text-white
+                pathway{" "}
+                <span
+                  className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">applies.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+                >
+                  applies.
+                </span>
               </span>
             </h2>
           </div>
-          <div className="flex flex-wrap gap-x-12 gap-y-6 content-start">
+          <div className="flex flex-wrap gap-x-6 sm:gap-x-8 md:gap-x-12 gap-y-4 sm:gap-y-6 content-start">
             {industries.map((industry) => (
               <span
                 key={industry}
-                className="text-xl md:text-2xl font-light text-white/60 hover:text-white transition-colors cursor-default"
+                className="text-lg sm:text-xl md:text-2xl font-light text-white/60 hover:text-white transition-colors cursor-default"
               >
                 {industry}
               </span>
@@ -367,8 +388,8 @@ const DigitalPerformance: React.FC = () => {
       </section>
 
       {/* Continue Through the System */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 pt-28 pb-32 md:pb-48 border-t border-white/10">
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-12 lg:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pt-14 sm:pt-20 md:pt-28 pb-20 sm:pb-28 md:pb-48 border-t border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 sm:gap-10 lg:gap-24">
           {/* Left */}
           <div className="flex items-start">
             <div className="font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.3em] text-white/40">
@@ -377,36 +398,40 @@ const DigitalPerformance: React.FC = () => {
           </div>
 
           {/* Right */}
-          <div className="flex items-end justify-end">
-            <h2 className="max-w-[1400px]  font-['Space_Grotesk',sans-serif] text-[clamp(50px,10vw,60px)] font-light leading-[0.9] tracking-[-0.06em] text-white">
-              <span className="font-light">Other pathways.</span>
+          <div className="flex items-start lg:items-end justify-start lg:justify-end">
+            <h2 className="max-w-full lg:max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,8vw,64px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-white break-words">
+              <span className="font-light">Other pathways. </span>
 
-              <span className="font-bold text-white
+              <span
+                className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">Same system.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+              >
+                Same system.
+              </span>
             </h2>
           </div>
         </div>
 
-        <div className="border-t mt-34 border-white/10">
+        <div className="border-t mt-10 sm:mt-16 md:mt-24 border-white/10">
           {pathways.map((pathway) => (
             <a
               key={pathway.number}
               href={pathway.href}
-              className="flex items-center gap-8 py-10 border-b border-white/10 group"
+              className="flex items-center gap-4 sm:gap-6 md:gap-8 py-6 sm:py-8 md:py-10 border-b border-white/10 group"
             >
-              <span className="text-sm tracking-widest text-white/40 w-8 shrink-0">
+              <span className="text-xs sm:text-sm tracking-widest text-white/40 w-6 sm:w-8 shrink-0">
                 {pathway.number}
               </span>
-              <span className="flex-1 text-3xl md:text-5xl font-light text-white/70 group-hover:text-white transition-colors">
+              <span className="flex-1 text-xl sm:text-3xl md:text-5xl font-light text-white/70 group-hover:text-white transition-colors break-words">
                 {pathway.title}
               </span>
-              <span className="text-2xl text-white/40 group-hover:text-white group-hover:translate-x-2 transition-all">
+              <span className="text-xl sm:text-2xl shrink-0 text-white/40 group-hover:text-white group-hover:translate-x-2 transition-all">
                 →
               </span>
             </a>
@@ -415,59 +440,58 @@ const DigitalPerformance: React.FC = () => {
       </section>
 
       {/* Closing Statement */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-32 border-t border-white/10">
-        <h2 className="max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
-  <span className="font-light">
-    Connect digital{" "}
-  </span>
- 
-  <span className="font-light">
-    presence to the{" "}
-  </span>
-  
-  <span className="font-light">
-    journey customers{" "}
-  </span>
- 
-  <span className="font-light">
-    actually <span className="font-bold text-white
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-16 sm:py-24 md:py-32 border-t border-white/10">
+        <h2 className="max-w-full md:max-w-[1100px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,10vw,130px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
+          <span className="font-light">Connect digital </span>
+
+          <span className="font-light">presence to the </span>
+
+          <span className="font-light">journey customers </span>
+
+          <span className="font-light">
+            actually{" "}
+            <span
+              className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8a6dff]
+    hover:text-[#8a6dff]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">take.</span>
-  </span>
-</h2>
-        <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
-          Experience, discovery and measurement designed to work together, not
-          compete for attention.
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+            >
+              take.
+            </span>
+          </span>
+        </h2>
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-base sm:text-lg leading-relaxed">
+          Experience, discovery and measurement designed to work together,
+          not compete for attention.
         </p>
 
-        <div className="mt-20 flex flex-wrap items-center gap-10 md:gap-16">
-  <a
-    href="/what-we-solve/start-a-conversation"
-    className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[13px] font-medium uppercase tracking-[0.3em] text-white transition-colors"
-  >
-    <span>Discuss Your Digital Performance</span>
+        <div className="mt-12 sm:mt-16 md:mt-20 flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-6 sm:gap-10 md:gap-16">
+          <a
+            href="/contact"
+            className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[13px] font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white transition-colors"
+          >
+            <span>Discuss Your Digital Performance</span>
 
- <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
-  </a>
+            <span className={`${accentLine} group-hover:w-10 transition-all`} />
+          </a>
 
-  <a
-    href="/engagements"
-    className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[13px] font-medium uppercase tracking-[0.3em] text-white/50 transition-colors hover:text-white"
-  >
-    <span>Explore Our Engagements</span>
+          <a
+            href="/engagements"
+            className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[13px] font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/50 transition-colors hover:text-white"
+          >
+            <span>Explore Our Engagements</span>
 
- <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
-  </a>
-</div>
+            <span className={`${accentLine} group-hover:w-10 transition-all`} />
+          </a>
+        </div>
       </section>
 
       {/* Start a Conversation */}
-      <Conversation/>
+      <Conversation />
 
       <Footer />
     </div>

@@ -215,7 +215,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-[#08080c] px-6 py-10 sm:px-10 lg:px-16 font-['Space_Grotesk',sans-serif]">
+      <div className="min-h-screen bg-[#08080c] px-4 py-8 sm:px-6 sm:py-10 md:px-10 lg:px-16 font-['Space_Grotesk',sans-serif] overflow-x-hidden">
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -231,6 +231,10 @@ const Home = () => {
             --violet-glow: #9B83FF;
           }
 
+          html {
+            overflow-x: hidden;
+          }
+
           body {
             font-family: 'Space Grotesk', sans-serif;
           }
@@ -239,7 +243,7 @@ const Home = () => {
         `}</style>
 
         {error && (
-          <div className="mb-8 border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
+          <div className="mb-6 sm:mb-8 border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
             {error}
           </div>
         )}
@@ -248,17 +252,17 @@ const Home = () => {
             Hero
         ================================== */}
 
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-5 sm:gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
+            <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em] text-[#8468FF]">
               Operating Overview
             </p>
 
-            <h1 className="mt-3 text-3xl md:text-4xl font-light leading-tight tracking-tight text-white">
+            <h1 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-light leading-tight tracking-tight text-white break-words">
               The system <span className="font-semibold">in motion.</span>
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm text-white/40">
+            <p className="mt-3 sm:mt-4 max-w-xl text-sm text-white/40">
               Every client, every piece of work and every decision waiting on
               a response — held in one structure.
             </p>
@@ -267,30 +271,30 @@ const Home = () => {
           <button
             type="button"
             onClick={() => setIsAddWorkOpen(true)}
-            className="h-fit shrink-0 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-violet-500"
+            className="h-fit w-full sm:w-auto shrink-0 bg-violet-600 px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-violet-500"
           >
             Add New Work
           </button>
         </div>
 
         {/* Divider */}
-        <div className="mt-10 h-px bg-white/10" />
+        <div className="mt-8 sm:mt-10 h-px bg-white/10" />
 
         {/* =================================
             Stats row
         ================================== */}
 
-        <div className="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6 lg:gap-8">
           {stats.map((stat) => (
-            <div key={stat.label}>
+            <div key={stat.label} className="min-w-0">
               <p
-                className={`mb-3 text-5xl font-light tracking-[-0.02em] ${
+                className={`mb-2 sm:mb-3 text-3xl sm:text-4xl lg:text-5xl font-light tracking-[-0.02em] truncate ${
                   stat.accent ? "text-violet-400" : "text-white"
                 }`}
               >
                 {stat.value}
               </p>
-              <p className="text-[10px] font-bold uppercase leading-relaxed tracking-[0.14em] text-white/35">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase leading-relaxed tracking-[0.1em] sm:tracking-[0.14em] text-white/35">
                 {stat.label}
               </p>
             </div>
@@ -301,10 +305,10 @@ const Home = () => {
             Requires attention
         ================================== */}
 
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-light text-white sm:text-3xl">
+              <h2 className="text-xl sm:text-2xl font-light text-white sm:text-3xl">
                 Requires attention
               </h2>
               <p className="mt-2 max-w-xl text-sm text-white/40">
@@ -320,7 +324,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4">
+          <div className="mt-6 sm:mt-8 flex flex-col gap-4">
             {loading ? (
               <p className="text-[13px] text-white/30">Loading...</p>
             ) : requiresAttention.length === 0 ? (
@@ -333,10 +337,10 @@ const Home = () => {
                   key={work.id}
                   to="/admin/work"
                   state={{ workId: work.id }}
-                  className="flex flex-col gap-3 border border-white/[0.06] bg-white/[0.02] p-6 transition hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-3 border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6 transition hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div>
-                    <p className="text-[15px] font-medium text-white/90">
+                  <div className="min-w-0">
+                    <p className="truncate text-[14px] sm:text-[15px] font-medium text-white/90">
                       {work.postName}
                     </p>
                     <p className="mt-1.5 text-[12px] text-white/35">
@@ -358,13 +362,13 @@ const Home = () => {
             Recent activity + Latest uploads
         ================================== */}
 
-        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <div className="mt-8 sm:mt-10 grid grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-2">
           {/* =============== Recent activity =============== */}
 
           <div>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-light text-white">
+                <h2 className="text-xl sm:text-2xl font-light text-white">
                   Recent activity
                 </h2>
                 <p className="mt-2 text-sm text-white/40">
@@ -373,7 +377,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex flex-col">
+            <div className="mt-5 sm:mt-6 flex flex-col">
               {loading ? (
                 <p className="py-4 text-[13px] text-white/30">Loading...</p>
               ) : recentActivity.length === 0 ? (
@@ -388,7 +392,7 @@ const Home = () => {
                     state={{ workId: work.id }}
                     className="border-b border-white/[0.06] py-5 transition hover:bg-white/[0.02]"
                   >
-                    <p className="text-[15px] font-medium leading-snug text-white/90">
+                    <p className="text-[14px] sm:text-[15px] font-medium leading-snug text-white/90 break-words">
                       {work.postName} —{" "}
                       <span className="text-white/60">
                         {STATUS_LABELS[work.status]}
@@ -410,7 +414,7 @@ const Home = () => {
           <div>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-light text-white">
+                <h2 className="text-xl sm:text-2xl font-light text-white">
                   Latest client uploads
                 </h2>
                 <p className="mt-2 text-sm text-white/40">
@@ -426,7 +430,7 @@ const Home = () => {
               </Link>
             </div>
 
-            <div className="mt-6 flex flex-col">
+            <div className="mt-5 sm:mt-6 flex flex-col">
               {loading ? (
                 <p className="py-4 text-[13px] text-white/30">Loading...</p>
               ) : latestUploads.length === 0 ? (
@@ -455,10 +459,10 @@ const Home = () => {
                   return (
                     <div
                       key={upload.id}
-                      className="flex items-center justify-between gap-4 border-b border-white/[0.06] py-5"
+                      className="flex items-center justify-between gap-3 sm:gap-4 border-b border-white/[0.06] py-5"
                     >
                       <div className="min-w-0">
-                        <p className="truncate text-[15px] font-medium text-white/90">
+                        <p className="truncate text-[14px] sm:text-[15px] font-medium text-white/90">
                           {titleLine}
                         </p>
                         <p className="mt-1.5 text-[11px] text-white/35">
@@ -473,7 +477,7 @@ const Home = () => {
                         </p>
                       </div>
 
-                      <span className="shrink-0 border border-white/10 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/50">
+                      <span className="shrink-0 border border-white/10 px-2.5 sm:px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/50">
                         {badgeLabel}
                       </span>
                     </div>

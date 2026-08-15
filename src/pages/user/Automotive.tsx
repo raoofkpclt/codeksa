@@ -27,13 +27,13 @@ const systemParts = [
   "Performance reporting",
 ];
 
-//  <span className={`${accentLine} group-hover:w-10 transition-all`} /> 
+//  <span className={`${accentLine} group-hover:w-10 transition-all`} />
 const accentLine =
   "w-6 h-px bg-[#8468FF] inline-block";
 
 const Automotive: React.FC = () => {
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -49,9 +49,13 @@ const Automotive: React.FC = () => {
           --violet-glow: #9B83FF;
         }
 
+        html {
+          overflow-x: hidden;
+        }
+
         body {
-  font-family: 'Space Grotesk', sans-serif;
-}
+          font-family: 'Space Grotesk', sans-serif;
+        }
 
         * { font-synthesis: none; }
 
@@ -69,18 +73,18 @@ const Automotive: React.FC = () => {
 
       {/* Breadcrumb */}
 
-      <div className="max-w-[1600px] mx-auto px-6 md:px-16 pt-40 pb-10">
-        <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 uppercase">
+      <div className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pt-24 sm:pt-32 md:pt-40 pb-6 sm:pb-10">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs tracking-[0.2em] text-white/40 uppercase">
           <a
             href="/"
-            className="hover-glow uppercase transition-colors duration-200"
+            className="hover-glow uppercase transition-colors duration-200 flex items-center gap-2 sm:gap-3"
           >
             <span>Home</span>
             <span className="text-white/20">/</span>
           </a>
           <a
             href="/industries"
-            className="hover-glow uppercase transition-colors duration-200"
+            className="hover-glow uppercase transition-colors duration-200 flex items-center gap-2 sm:gap-3"
           >
             <span>Industries</span>
             <span className="text-white/20">/</span>
@@ -91,41 +95,45 @@ const Automotive: React.FC = () => {
       </div>
 
       {/* Hero */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 pb-32">
-        <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-6">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pb-14 sm:pb-20 md:pb-32">
+        <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
           Automotive
         </div>
-        <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,11vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+        <h1 className="max-w-full md:max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(36px,11vw,160px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
           <span className="font-light">Automotive,</span>
           <br />
-          <span className="font-bold text-white
+          <span
+            className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8468FF]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">structured.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+          >
+            structured.
+          </span>
         </h1>
-        <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-base sm:text-lg leading-relaxed">
           Automotive businesses are often judged before the customer calls,
           visits or books.
         </p>
       </section>
 
       {/* The Business Challenge */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 md:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-24">
           <div className="text-xs tracking-[0.2em] text-white/40 uppercase h-fit">
             The Business Challenge
           </div>
-          <div className="max-w-3xl space-y-10">
-            <p className="text-2xl md:text-3xl leading-snug text-white">
+          <div className="max-w-3xl space-y-6 sm:space-y-8 md:space-y-10">
+            <p className="text-xl sm:text-2xl md:text-3xl leading-snug text-white">
               A customer may compare vehicle presentation, reviews, response
               routes, pricing clarity, location information and overall
               professionalism within seconds.
             </p>
-            <p className="text-white/50 text-lg leading-relaxed">
+            <p className="text-white/50 text-base sm:text-lg leading-relaxed">
               CODE helps automotive businesses strengthen the system behind
               visibility, trust and customer action.
             </p>
@@ -134,16 +142,16 @@ const Automotive: React.FC = () => {
       </section>
 
       {/* Relevant For */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 md:gap-24">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 sm:gap-8 md:gap-24">
           <div className="text-xs tracking-[0.2em] text-white/40 uppercase h-fit">
             Relevant For
           </div>
-          <div className="flex flex-wrap gap-x-16 gap-y-8">
+          <div className="flex flex-wrap gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-5 md:gap-x-16 md:gap-y-8">
             {relevantFor.map((item) => (
               <span
                 key={item}
-                className="text-2xl md:text-4xl font-light text-white/70 hover:text-white transition-colors cursor-default"
+                className="text-lg sm:text-2xl md:text-4xl font-light text-white/70 hover:text-white transition-colors cursor-default"
               >
                 {item}
               </span>
@@ -153,8 +161,8 @@ const Automotive: React.FC = () => {
       </section>
 
       {/* What CODE May Connect */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-28 border-t border-white/10">
-        <div className="grid min-h-[150px] grid-cols-1 lg:grid-cols-[420px_1fr] gap-16">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-14 sm:py-16 md:py-28 border-t border-white/10">
+        <div className="grid min-h-0 sm:min-h-[150px] grid-cols-1 lg:grid-cols-[420px_1fr] gap-6 sm:gap-8 md:gap-16">
           {/* Left */}
           <div className="flex items-start">
             <p className="font-['Space_Grotesk',sans-serif] text-[11px] font-medium uppercase tracking-[0.3em] text-white/40">
@@ -163,28 +171,32 @@ const Automotive: React.FC = () => {
           </div>
 
           {/* Right */}
-          <div className="flex items-end justify-end">
-            <h2 className="text-4xl md:text-6xl font-light">
+          <div className="flex items-start lg:items-end justify-start lg:justify-end">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-light leading-tight break-words">
               {" "}
               The parts that make{" "}
-              <span className="font-semibold text-white
+              <span
+                className="font-semibold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8468FF]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">the system.</span>{" "}
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+              >
+                the system.
+              </span>{" "}
             </h2>
           </div>
         </div>
-        <div className="grid pt-24 text-center md:grid-cols-3  border-white/10">
+        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10 sm:pt-12 md:pt-24 text-center border-white/10">
           {systemParts.map((part) => (
             <div
               key={part}
-              className="py-10 md:py-16 px-2 border-b md:border-r border-white/10 last:border-r-0"
+              className="border-t py-8 sm:py-10 md:py-16 px-2 border-b sm:border-r md:border-r border-white/10 sm:[&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0"
             >
-              <span className="text-s md:text-2xl font-light text-white/70">
+              <span className="text-base sm:text-lg md:text-2xl font-light text-white/70">
                 {part}
               </span>
             </div>
@@ -193,34 +205,39 @@ const Automotive: React.FC = () => {
       </section>
 
       {/* Closing Statement */}
-      <section className="max-w-[1600px] mx-auto px-6 md:px-16 py-32 border-t border-white/10">
-        <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,130px)] font-light leading-[0.999] tracking-[-0.06em] text-[var(--code-white)]">
+      <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 py-16 sm:py-20 md:py-32 border-t border-white/10">
+        <h2 className="max-w-full md:max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(32px,10vw,130px)] font-light leading-[1.05] sm:leading-[0.999] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
           <span className="font-light">
             Strengthen the system behind visibility, trust and{" "}
-            <span className="font-bold text-white
+            <span
+              className="font-bold text-white
     transition-all
     duration-500
     ease-out
-   hover:text-[#8468FF]
+    hover:text-[#8468FF]
     hover:scale-[1.01]
     hover:drop-shadow-[0_0_10px_rgba(184,166,255,0.45)]
-    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]">customer action.</span>
+    hover:drop-shadow-[0_0_24px_rgba(167,139,250,0.45)]"
+            >
+              customer action.
+            </span>
           </span>
         </h2>
-        <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+        <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-base sm:text-lg leading-relaxed">
           From Google Business Profile to enquiry pathways, CODE connects the
           moments that shape an automotive customer&rsquo;s decision.
         </p>
 
-        <div className="mt-20 flex flex-wrap items-center gap-10">
-  <a
-    href="/what-we-solve/start-a-conversation"
-    className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[13px] font-medium uppercase tracking-[0.3em] text-white transition-colors"
-  >
-    <span>Discuss Your Automotive Business</span>
+        <div className="mt-10 sm:mt-12 md:mt-20 flex flex-wrap items-center gap-6 sm:gap-10">
+          <a
+            href="/contact"
+            className="group flex items-center gap-4 font-['Space_Grotesk',sans-serif] text-[11px] sm:text-[13px] font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white transition-colors"
+          >
+            <span>Discuss Your Automotive Business</span>
 
-<span className={`${accentLine} group-hover:w-10 transition-all`} />   </a>
-</div>
+            <span className={`${accentLine} group-hover:w-10 transition-all`} />{" "}
+          </a>
+        </div>
       </section>
 
       {/* Start a Conversation */}

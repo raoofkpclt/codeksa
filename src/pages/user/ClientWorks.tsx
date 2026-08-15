@@ -105,7 +105,7 @@ const WorkCard = ({ work }: { work: Work & { id: string } }) => {
   const isVideo = cover?.fileType?.startsWith('video/')
 
   return (
-    <div className="group mb-6 break-inside-avoid cursor-default">
+    <div className="group mb-4 sm:mb-6 break-inside-avoid cursor-default">
       <div className="relative overflow-hidden border border-white/10 group-hover:border-white/30 transition-colors">
         {cover && !imgFailed ? (
           isVideo ? (
@@ -133,15 +133,15 @@ const WorkCard = ({ work }: { work: Work & { id: string } }) => {
         )}
 
         {work.postType && (
-          <span className="absolute top-4 left-4 text-xs tracking-[0.2em] text-white/70 bg-black/60 border border-white/10 px-3 py-1">
+          <span className="absolute top-3 left-3 sm:top-4 sm:left-4 text-[10px] sm:text-xs tracking-[0.2em] text-white/70 bg-black/60 border border-white/10 px-2.5 py-1 sm:px-3">
             {work.postType.toUpperCase()}
           </span>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        <div className="absolute bottom-0 left-0 right-0 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 px-5 py-5">
-          <h3 className="text-lg font-light text-white truncate">
+        <div className="absolute bottom-0 left-0 right-0 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 px-4 py-4 sm:px-5 sm:py-5">
+          <h3 className="text-base sm:text-lg font-light text-white truncate">
             {work.postName}
           </h3>
           {work.postingDate && (
@@ -156,7 +156,7 @@ const WorkCard = ({ work }: { work: Work & { id: string } }) => {
 }
 
 const CardSkeleton = () => (
-  <div className="mb-6 break-inside-avoid aspect-[4/5] border border-white/10 bg-white/[0.02] animate-pulse" />
+  <div className="mb-4 sm:mb-6 break-inside-avoid aspect-[4/5] border border-white/10 bg-white/[0.02] animate-pulse" />
 )
 
 const ClientWorks: React.FC = () => {
@@ -229,7 +229,7 @@ useEffect(() => {
       : works.filter((w: any) => w.postType === activeType)
 
   return (
-    <div className="bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -264,9 +264,9 @@ useEffect(() => {
       <NavbarNew />
 
       {/* Hero */}
-      <section className="px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
+      <section className="px-5 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-16 md:px-10 md:pt-40 md:pb-20 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-3 text-xs tracking-[0.2em] text-white/40 mb-16 md:mb-24">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-xs tracking-[0.2em] text-white/40 mb-8 sm:mb-12 md:mb-24">
             <Link to="/" className="hover-glow uppercase transition-colors duration-200">
               HOME
             </Link>
@@ -275,29 +275,29 @@ useEffect(() => {
               CLIENTS
             </Link>
             <span>/</span>
-            <span className="text-white/70">
-              {loading ? '...' : client?.name.toUpperCase()}
+            <span className="min-w-0 max-w-[60vw] truncate text-white/70 sm:max-w-none">
+              {loading ? '...' : client?.name?.toUpperCase()}
             </span>
           </div>
 
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-3 mb-5 sm:gap-4 sm:mb-6">
             {!loading && clientLogo ? (
               <img
                 src={clientLogo}
                 alt={clientName}
-                className="w-10 h-10 object-contain shrink-0"
+                className="w-8 h-8 object-contain shrink-0 sm:w-10 sm:h-10"
               />
             ) : !loading ? (
-              <span className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-xs font-light text-white/60 shrink-0">
+              <span className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-[10px] sm:text-xs font-light text-white/60 shrink-0 sm:w-10 sm:h-10">
                 {initialsOf(clientName)}
               </span>
             ) : null}
-            <p className="text-xs tracking-[0.3em] text-white/40">
-              {loading ? client?.name.toUpperCase() : client?.name.toUpperCase()}
+            <p className="text-[11px] tracking-[0.24em] text-white/40 sm:text-xs sm:tracking-[0.3em]">
+              {loading ? '' : client?.name?.toUpperCase()}
             </p>
           </div>
 
-          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(72px,10vw,160px)] font-light leading-[0.9] tracking-[-0.06em] text-[var(--code-white)]">
+          <h1 className="max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[44px] font-light leading-[1] tracking-[-0.02em] text-[var(--code-white)] sm:text-[64px] sm:leading-[0.95] sm:tracking-[-0.04em] md:text-[clamp(72px,10vw,160px)] md:leading-[0.9] md:tracking-[-0.06em]">
   {loading ? (
     "Loading engagement."
   ) : (
@@ -316,14 +316,14 @@ useEffect(() => {
   )}
 </h1>
 
-          <p className="mt-10 max-w-xl text-white/50 text-lg leading-relaxed">
+          <p className="mt-6 sm:mt-8 md:mt-10 max-w-xl text-white/50 text-sm leading-relaxed sm:text-base md:text-lg">
             Every piece of work delivered for this engagement: the format,
             the date and the outcome shipped.
           </p>
 
           <Link
             to="/clients"
-            className="mt-10 inline-flex items-center gap-3 text-xs tracking-[0.2em] text-white/50 hover:text-white/80 transition-colors group"
+            className="mt-8 sm:mt-10 inline-flex items-center gap-3 text-[10px] sm:text-xs tracking-[0.2em] text-white/50 hover:text-white/80 transition-colors group"
           >
             <span className="group-hover:-translate-x-1 transition-transform">&larr;</span>
             BACK TO CLIENTS
@@ -332,15 +332,15 @@ useEffect(() => {
       </section>
 
       {/* Type filter + grid */}
-      <section className="border-t border-white/10 px-6 md:px-10 lg:px-16 py-24 md:py-32">
+      <section className="border-t border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32 lg:px-16">
         <div className="max-w-[1600px] mx-auto">
           {types.length > 1 && !loading && !errorMsg && (
-            <Reveal className="flex flex-wrap gap-x-8 gap-y-4 mb-16">
+            <Reveal className="flex flex-wrap gap-x-6 gap-y-3 mb-10 sm:gap-x-8 sm:gap-y-4 sm:mb-12 md:mb-16">
               {types.map((t) => (
                 <button
                   key={t}
                   onClick={() => setActiveType(t)}
-                  className={`text-xs tracking-[0.2em] transition-colors pb-2 border-b ${
+                  className={`text-[10px] sm:text-xs tracking-[0.2em] transition-colors pb-2 border-b ${
                     activeType === t
                       ? 'text-white border-violet-400'
                       : 'text-white/40 border-transparent hover:text-white/70'
@@ -359,7 +359,7 @@ useEffect(() => {
           )}
 
           {!errorMsg && loading && (
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <CardSkeleton key={i} />
               ))}
@@ -375,7 +375,7 @@ useEffect(() => {
           )}
 
           {!errorMsg && !loading && filtered.length > 0 && (
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6">
               {filtered.map((work, i) => (
                 <Reveal key={work.id} delay={(i % 6) * 40}>
                   <WorkCard work={work} />
