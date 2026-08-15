@@ -206,25 +206,25 @@ const WorkManagement = () => {
     }
   };
 
-  const handleEditWork = async (updatedData: Partial<Work>) => {
-    if (!modal.work?.id) return;
+  // const handleEditWork = async (updatedData: Partial<Work>) => {
+  //   if (!modal.work?.id) return;
 
-    try {
-      setEditLoading(true);
+  //   try {
+  //     setEditLoading(true);
 
-      await WorkService.editWork(modal.work.id, updatedData);
+  //     await WorkService.editWork(modal.work.id, updatedData);
 
-      await refreshWorks();
+  //     await refreshWorks();
 
-      resetModal();
-    } catch (error) {
-      console.error("Failed to edit work:", error);
+  //     resetModal();
+  //   } catch (error) {
+  //     console.error("Failed to edit work:", error);
 
-      throw error;
-    } finally {
-      setEditLoading(false);
-    }
-  };
+  //     throw error;
+  //   } finally {
+  //     setEditLoading(false);
+  //   }
+  // };
 
   const handleDeleteWork = async () => {
     const work = modal.work;
@@ -280,22 +280,78 @@ const WorkManagement = () => {
     }
   };
 
-  const handleSendToClientAgain = async (work: Work) => {
-    if (!work.id) return;
+  // const handleSendToClientAgain = async (work: Work) => {
+  //   if (!work.id) return;
 
-    try {
-      setStatusLoadingId(work.id);
+  //   try {
+  //     setStatusLoadingId(work.id);
 
-      await WorkService.editWork(work.id, { status: "sent_to_client" });
+  //     await WorkService.editWork(work.id, { status: "sent_to_client" });
 
-      await refreshWorks();
-    } catch (error) {
-      console.error("Failed to resend work to client:", error);
-    } finally {
-      setStatusLoadingId(null);
-    }
-  };
+  //     await refreshWorks();
+  //   } catch (error) {
+  //     console.error("Failed to resend work to client:", error);
+  //   } finally {
+  //     setStatusLoadingId(null);
+  //   }
+  // };
 
+//   const handleSendToClientAgain = async (work: Work) => {
+//   if (!work.id) return;
+
+//   try {
+//     setStatusLoadingId(work.id);
+
+//     await WorkService.updateStatus(work.id, "sent_to_client", "Admin");
+
+//     await refreshWorks();
+//   } catch (error) {
+//     console.error("Failed to resend work to client:", error);
+//   } finally {
+//     setStatusLoadingId(null);
+//   }
+// };
+
+
+
+const handleEditWork = async (updatedData: Partial<Work>) => {
+  if (!modal.work?.id) return;
+
+  try {
+    setEditLoading(true);
+
+    await WorkService.editWork(modal.work.id, updatedData, "Admin");
+
+    await refreshWorks();
+
+    resetModal();
+  } catch (error) {
+    console.error("Failed to edit work:", error);
+    throw error;
+  } finally {
+    setEditLoading(false);
+  }
+};
+
+const handleSendToClientAgain = async (work: Work) => {
+  if (!work.id) return;
+
+  try {
+    setStatusLoadingId(work.id);
+
+    await WorkService.editWork(
+      work.id,
+      { status: "sent_to_client" },
+      "Admin",
+    );
+
+    await refreshWorks();
+  } catch (error) {
+    console.error("Failed to resend work to client:", error);
+  } finally {
+    setStatusLoadingId(null);
+  }
+};
   const filteredWorks = useMemo(() => {
     const searchValue = search.trim().toLowerCase();
 

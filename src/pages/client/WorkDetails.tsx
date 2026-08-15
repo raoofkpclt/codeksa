@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import ClientWorkService, {
   type ClientWork,
+  type DecisionEntry,
   type WorkStatus,
 } from "../../service/firebaseService/clientWorkService";
 
@@ -30,39 +31,27 @@ type ActionType = "approve" | "edit" | "reject";
 // Timestamp helpers
 // =========================================
 
-const toMillis = (value: unknown): number => {
-  if (!value) return 0;
+const formatDateTime = (value: string) => {
+  if (!value) return "--";
 
-  if (
-    typeof value === "object" &&
-    value !== null &&
-    "toMillis" in value &&
-    typeof (value as { toMillis?: unknown }).toMillis === "function"
-  ) {
-    return (value as { toMillis: () => number }).toMillis();
-  }
+  const t = new Date(value).getTime();
 
-  if (typeof value === "string" || typeof value === "number") {
-    const t = new Date(value).getTime();
-    return Number.isNaN(t) ? 0 : t;
-  }
+  if (Number.isNaN(t)) return "--";
 
-  return 0;
-};
+  const d = new Date(t);
 
-const formatDateTime = (millis: number) => {
-  if (!millis) return "--";
-  const d = new Date(millis);
   const date = d.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
+
   const time = d.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
+
   return `${date}, ${time}`;
 };
 
@@ -77,18 +66,6 @@ const formatDate = (dateString: string) => {
   } catch {
     return dateString;
   }
-};
-
-// =========================================
-// Decision history entry
-// =========================================
-
-type HistoryEntry = {
-  id: string;
-  status: WorkStatus;
-  actor: string;
-  time: number;
-  note?: string;
 };
 
 const WorkDetails = () => {
@@ -145,38 +122,13 @@ const WorkDetails = () => {
   }, [workId]);
 
   // =========================================
-  // Derived decision history
+  // Real decision history (stored on the work doc,
+  // written by both admin and client actions)
   // =========================================
 
-  const history = useMemo<HistoryEntry[]>(() => {
-    if (!work) return [];
-
-    const entries: HistoryEntry[] = [];
-
-    if (work.createdAt) {
-      entries.push({
-        id: "created",
-        status: "sent_to_client",
-        actor: "CODE",
-        time: toMillis(work.createdAt),
-      });
-    }
-
-    if (work.status !== "sent_to_client" && work.updatedAt) {
-      entries.push({
-        id: "decision",
-        status: work.status,
-        actor: "Client",
-        time: toMillis(work.updatedAt),
-        note:
-          work.status === "requested_to_edit"
-            ? work.editRequestNote
-            : undefined,
-      });
-    }
-
-    return entries.sort((a, b) => b.time - a.time);
-  }, [work]);
+  const history: DecisionEntry[] = [...(work?.decisionHistory ?? [])].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 
   // =========================================
   // Open / close the confirmation modal
@@ -223,24 +175,13 @@ const WorkDetails = () => {
         await ClientWorkService.rejectWork(work.id);
       }
 
-      const newStatus: WorkStatus =
-        pendingAction === "approve"
-          ? "approved"
-          : pendingAction === "edit"
-            ? "requested_to_edit"
-            : "rejected";
+      // Re-fetch so decisionHistory (written server-side via arrayUnion)
+      // comes back in sync instead of guessing the shape locally.
+      const refreshed = await ClientWorkService.getWorkById(work.id);
 
-      setWork((current) =>
-        current
-          ? {
-              ...current,
-              status: newStatus,
-              ...(pendingAction === "edit"
-                ? { editRequestNote: editRequestNote.trim() }
-                : {}),
-            }
-          : current,
-      );
+      if (refreshed) {
+        setWork(refreshed);
+      }
 
       setEditRequestNote("");
       setPendingAction(null);
@@ -519,14 +460,6 @@ const WorkDetails = () => {
                     >
                       Request changes
                     </button>
-
-                    {/* <button
-                      type="button"
-                      onClick={() => openAction("reject")}
-                      className="border border-red-500/20 bg-red-500/5 px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-red-400 transition hover:bg-red-500/10"
-                    >
-                      Reject
-                    </button> */}
                   </div>
                 </div>
               )}
@@ -557,9 +490,9 @@ const WorkDetails = () => {
                   </p>
                 </div>
               ) : (
-                history.map((entry) => (
+                history.map((entry, index) => (
                   <div
-                    key={entry.id}
+                    key={`${entry.status}-${entry.date}-${index}`}
                     className="flex flex-col gap-2 border-t border-white/[0.08] py-5 sm:flex-row sm:items-center sm:gap-4"
                   >
                     <span
@@ -571,12 +504,12 @@ const WorkDetails = () => {
                     </span>
 
                     <p className="text-sm text-white/50">
-                      {entry.actor} · {formatDateTime(entry.time)}
+                      {entry.actor} · {formatDateTime(entry.date)}
                     </p>
 
                     {entry.note && (
                       <p className="text-sm text-white/40 sm:ml-auto sm:max-w-md">
-                        “{entry.note}”
+                        "{entry.note}"
                       </p>
                     )}
                   </div>

@@ -51,6 +51,11 @@ export interface WorkMedia {
   fileType: string;
   size: number;
 }
+export type DecisionEntry = {
+  status: WorkStatus;
+  actor?: string;
+  date: string; // ISO string
+};
 
 export interface Work {
   id: string;
@@ -69,6 +74,7 @@ export interface Work {
   active: boolean;
   isDisplay: boolean;
   editRequestNote?:string;
+  decisionHistory?: DecisionEntry[];
 
   status:
     | "sent_to_client"
