@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import emailjs from '@emailjs/browser'
 import NavbarNew from '../../components/user/NavbarNew'
 import Footer from '../../components/user/Footer'
 import Conversation from '../../components/user/Conversation'
@@ -62,11 +61,9 @@ const WHATSAPP_URL = 'https://wa.me/966555922650'
 const PHONE_TEL = 'tel:+966555922650'
 const PHONE_DISPLAY = '+966 55 592 2650'
 
-// From your EmailJS dashboard (dashboard.emailjs.com) — sends every
-// submission straight to whatever inbox your EmailJS service points to.
-const EMAILJS_SERVICE_ID = 'service_dcquaqo'
-const EMAILJS_TEMPLATE_ID = 'template_rn53zyf'
-const EMAILJS_PUBLIC_KEY = 'urNmRjYaYle3QpZ9Q' // Account > General in the EmailJS dashboard
+// Free key from https://web3forms.com — sends every submission straight to
+// your inbox with no backend required. Swap this for your real key.
+const WEB3FORMS_ACCESS_KEY = 'c0c38dd0-fd44-4fbd-a8a7-47c5dcdf7b50'
 // const ENQUIRY_RECEIVING_EMAIL = 'info@codeksaofficial.com'
 const ENQUIRY_RECEIVING_EMAIL = 'codeksaofficila@gmail.com'
 
@@ -168,19 +165,30 @@ const StartAConversation: React.FC = () => {
     setStatus('sending')
 
     try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          ...form,
-          // Common EmailJS template variable for the "Reply To" field
-          reply_to: form.businessEmail,
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        { publicKey: EMAILJS_PUBLIC_KEY }
-      )
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New enquiry from ${form.name} — ${form.company}`,
+          from_name: form.name,
+          // Replies to this email go straight back to the visitor
+          replyto: form.businessEmail,
+          ...form,
+        }),
+      })
 
-      setStatus('success')
-      setForm(initialState)
+      const result = await res.json()
+
+      if (result.success) {
+        setStatus('success')
+        setForm(initialState)
+      } else {
+        setStatus('error')
+      }
     } catch (err) {
       setStatus('error')
     }
