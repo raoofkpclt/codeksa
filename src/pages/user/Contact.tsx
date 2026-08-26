@@ -4,6 +4,17 @@ import NavbarNew from '../../components/user/NavbarNew'
 import Footer from '../../components/user/Footer'
 import Conversation from '../../components/user/Conversation'
 
+
+const referralOptions = [
+  'Google Search',
+  'Social Media',
+  'LinkedIn',
+  'Referral',
+  'Event / Conference',
+  'Other',
+]
+
+
 const industryOptions = [
   'Automotive',
   'Hospitality',
@@ -34,6 +45,7 @@ interface FormState {
   relevantPathway: string
   preferredEngagement: string
   preferredContactMethod: string
+  howDidYouKnow: string
   businessChallenge: string
   shortMessage: string
 }
@@ -49,6 +61,7 @@ const initialState: FormState = {
   relevantPathway: '',
   preferredEngagement: '',
   preferredContactMethod: '',
+  howDidYouKnow: '',
   businessChallenge: '',
   shortMessage: '',
 }
@@ -64,11 +77,12 @@ const PHONE_DISPLAY = '+966 55 592 2650'
 
 // From your EmailJS dashboard (dashboard.emailjs.com) — sends every
 // submission straight to whatever inbox your EmailJS service points to.
-const EMAILJS_SERVICE_ID = 'service_dcquaqo'
-const EMAILJS_TEMPLATE_ID = 'template_rn53zyf'
-const EMAILJS_PUBLIC_KEY = 'urNmRjYaYle3QpZ9Q' // Account > General in the EmailJS dashboard
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const ENQUIRY_RECEIVING_EMAIL = import.meta.env.VITE_ENQUIRY_RECEIVING_EMAIL;
 // const ENQUIRY_RECEIVING_EMAIL = 'info@codeksaofficial.com'
-const ENQUIRY_RECEIVING_EMAIL = 'codeksaofficila@gmail.com'
+// const ENQUIRY_RECEIVING_EMAIL = 'codeksaofficila@gmail.com'
 
 /* ---------------------------------------------------------
    ContactChoiceModal — lets the visitor pick WhatsApp or a
@@ -95,7 +109,7 @@ const ContactChoiceModal = ({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-sm bg-[var(--graphite)] border border-white/10 px-6 py-8 sm:px-8 sm:py-10">
+      <div className="relative w-full max-w-sm bg-black border border-white/10 px-6 py-8 sm:px-8 sm:py-10">
         <button
           type="button"
           onClick={onClose}
@@ -156,6 +170,19 @@ const StartAConversation: React.FC = () => {
   const [form, setForm] = useState<FormState>(initialState)
   const [contactModalOpen, setContactModalOpen] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+
+
+  const autoResizeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  e.target.style.height = 'auto'
+  e.target.style.height = `${e.target.scrollHeight}px`
+}
+
+const handleTextareaChange =
+  (field: keyof FormState) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleChange(field)(e)
+    autoResizeTextarea(e)
+  }
+
 
   const handleChange =
     (field: keyof FormState) =>
@@ -492,32 +519,67 @@ const StartAConversation: React.FC = () => {
                 </select>
               </div>
             </div>
+            <div>
+  <label className={labelBase} htmlFor="howDidYouKnow">
+    HOW DID YOU KNOW ABOUT US
+  </label>
+  <select
+    id="howDidYouKnow"
+    value={form.howDidYouKnow}
+    onChange={handleChange('howDidYouKnow')}
+    className={`${fieldBase} mt-3 appearance-none cursor-pointer`}
+  >
+    <option value="" disabled>
+      Select...
+    </option>
+    {referralOptions.map((option) => (
+      <option key={option} value={option} className="bg-black">
+        {option}
+      </option>
+    ))}
+  </select>
+</div>
 
             <div>
               <label className={labelBase} htmlFor="businessChallenge">
                 BUSINESS CHALLENGE <span className="text-purple-400">*</span>
               </label>
-              <textarea
+              {/* <textarea
                 id="businessChallenge"
                 required
                 rows={4}
                 value={form.businessChallenge}
                 onChange={handleChange('businessChallenge')}
                 className={`${fieldBase} mt-3 resize-y`}
-              />
+              /> */}
+              <textarea
+  id="businessChallenge"
+  required
+  rows={1}
+  value={form.businessChallenge}
+  onChange={handleTextareaChange('businessChallenge')}
+  className={`${fieldBase} mt-3 overflow-hidden`}
+/>
             </div>
 
             <div>
               <label className={labelBase} htmlFor="shortMessage">
                 SHORT MESSAGE
               </label>
-              <textarea
+              {/* <textarea
                 id="shortMessage"
                 rows={4}
                 value={form.shortMessage}
                 onChange={handleChange('shortMessage')}
                 className={`${fieldBase} mt-3 resize-y`}
-              />
+              /> */}
+              <textarea
+  id="shortMessage"
+  rows={1}
+  value={form.shortMessage}
+  onChange={handleTextareaChange('shortMessage')}
+  className={`${fieldBase} mt-3 overflow-hidden`}
+/>
             </div>
 
             <div>
