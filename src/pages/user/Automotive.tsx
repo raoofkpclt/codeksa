@@ -190,11 +190,11 @@ const Automotive: React.FC = () => {
             </h2>
           </div>
         </div>
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10 sm:pt-12 md:pt-24 text-center border-white/10">
+        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10 sm:pt-12 md:pt-24 text-center">
           {systemParts.map((part) => (
             <div
               key={part}
-              className="border-t py-8 sm:py-10 md:py-16 px-2 border-b sm:border-r md:border-r border-white/10 sm:[&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0"
+              className=" py-8 sm:py-10 md:py-16 px-2  "
             >
               <span className="text-base sm:text-lg md:text-2xl font-light text-white/70">
                 {part}

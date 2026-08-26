@@ -138,7 +138,7 @@ const BrandCreative: React.FC = () => {
 
       <NavbarNew />
 
-      <div className="min-h-screen bg-[#0a0a0b] text-white font-inter selection:bg-violet-300 selection:text-black overflow-x-hidden">
+      <div className="min-h-screen bg-black text-white font-inter selection:bg-violet-300 selection:text-black overflow-x-hidden">
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -195,7 +195,7 @@ const BrandCreative: React.FC = () => {
           <section className="pb-16 sm:pb-28 md:pb-40 pt-10 sm:pt-16 md:pt-24">
             <div className="flex items-center gap-3 mb-6 sm:mb-10">
               <span className="text-sm text-neutral-500 tabular-nums">02</span>
-              <span className="text-sm tracking-[0.2em] text-indigo-300 uppercase">
+              <span className="text-sm tracking-[0.2em] text-[var(--code-purple)] uppercase">
                 Brand & Creative
               </span>
             </div>

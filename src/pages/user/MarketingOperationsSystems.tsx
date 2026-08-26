@@ -175,7 +175,7 @@ const MarketingOperationsSystems: React.FC = () => {
       <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pb-16 sm:pb-24 md:pb-32">
         <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
           04&nbsp;&nbsp;&nbsp;
-          <span className="text-indigo-300/80">
+          <span className="text-[var(--code-purple)]">
             Marketing Operations & Systems
           </span>
         </div>

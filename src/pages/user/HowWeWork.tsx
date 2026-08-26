@@ -252,13 +252,13 @@ const HowWeWork = () => {
   </h2>
 </div>
 
-          <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 gap-0 border-t border-[var(--steel)]  md:grid-cols-2">
+          <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 gap-0   md:grid-cols-2">
   {[INCLUDES_LEFT, INCLUDES_RIGHT].map((list, index) => (
     <div key={index} className="flex flex-col gap-0">
       {list.map((item) => (
         <div
           key={item}
-          className="group  border border-[var(--steel)] bg-[var(--graphite)] px-5 py-5 transition-all duration-300 sm:px-6 sm:py-6 md:px-8 md:py-7"
+          className="group   bg-[var()] px-5 py-5 transition-all duration-300 sm:px-6 sm:py-6 md:px-8 md:py-7"
         >
           <span className="font-['Space_Grotesk',sans-serif] text-[17px] font-normal leading-[1.3] text-[var(--mist)] transition-colors group-hover:text-white sm:text-[19px] md:text-[22px]">
             {item}

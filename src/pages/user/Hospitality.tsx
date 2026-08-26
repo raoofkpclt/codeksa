@@ -171,11 +171,11 @@ const Hospitality: React.FC = () => {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 border-l border-t border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
           {systemParts.map((part) => (
             <div
               key={part}
-              className="border-r border-b border-white/10 px-6 sm:px-8 py-8 sm:py-10 md:py-12 flex items-center justify-center text-center transition-colors duration-300 hover:bg-white/[0.02]"
+              className=" px-6 sm:px-8 py-8 sm:py-10 md:py-12 flex items-center justify-center text-center transition-colors duration-300 hover:bg-white/[0.02]"
             >
               <span className="font-['Space_Grotesk',sans-serif] text-center text-base sm:text-xl md:text-[28px] font-light tracking-[-0.02em] sm:tracking-[-0.03em] text-white/80">
                 {part}

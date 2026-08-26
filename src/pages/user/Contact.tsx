@@ -259,9 +259,9 @@ const StartAConversation: React.FC = () => {
       </section>
 
       {/* Quick contact row */}
-      <section className="border-t border-white/10">
+      <section className="">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2">
-          <div className="px-5 py-8 sm:px-6 sm:py-10 md:border-r md:px-10 lg:px-16 border-white/10">
+          <div className="px-5 py-8 sm:px-6 sm:py-10  md:px-10 lg:px-16 border-white/10">
             <span className="inline-block w-6 h-px bg-[#8468FF] mb-4" />
             <p className={labelBase}>EMAIL</p>
             <a
@@ -293,7 +293,7 @@ const StartAConversation: React.FC = () => {
       />
 
       {/* Contact info + Form */}
-      <section className="border-t border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32 lg:px-16">
+      <section className=" border-white/10 px-5 py-16 sm:px-6 sm:py-24 md:px-10 md:py-32 lg:px-16">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,320px)_1fr] gap-10 sm:gap-12 md:gap-24">
           {/* Left: static contact card */}
           <div className="space-y-8 sm:space-y-10 md:space-y-12">

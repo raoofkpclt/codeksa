@@ -159,7 +159,7 @@ const DigitalPerformance: React.FC = () => {
       <section className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-16 pb-16 sm:pb-24 md:pb-32">
         <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4 sm:mb-6">
           03&nbsp;&nbsp;&nbsp;
-          <span className="text-indigo-300/80">Digital & Performance</span>
+          <span className="text-[var(--code-purple)]  ">Digital & Performance</span>
         </div>
         <h1 className="max-w-full md:max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(40px,10vw,160px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">
           <span className="font-light ">Presence with </span>

@@ -550,9 +550,9 @@ const Home: React.FC = () => {
               key={item.title}
               className={`
                 px-6 md:px-10 lg:px-14 py-10 sm:py-14 md:py-16
-                border border-white/10
-                ${i % 2 === 0 ? "sm:border-r sm:border-white/10" : ""}
-                ${(i + 1) % 3 !== 0 ? "md:border-r md:border-white/10" : ""}
+                
+                ${i % 2 === 0 ? "" : ""}
+                ${(i + 1) % 3 !== 0 ? "" : ""}
               `}
             >
               <span className="text-xs tracking-[0.2em] text-white/40">

@@ -100,7 +100,7 @@ const StrategyGrowth: React.FC = () => {
     <>
       <NavbarNew />
 
-      <div className="min-h-screen bg-[#0a0a0b] text-white font-inter selection:bg-violet-300 selection:text-black overflow-x-hidden">
+      <div className="min-h-screen bg-black text-white font-inter selection:bg-violet-300 selection:text-black overflow-x-hidden">
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
@@ -157,7 +157,7 @@ const StrategyGrowth: React.FC = () => {
           <section className="pb-16 pt-10 sm:pb-24 sm:pt-16 md:pb-28 md:pt-24">
             <div className="flex items-center gap-3 text-[12px] sm:text-[13px] tracking-[0.2em] sm:tracking-[0.25em]">
               <span className="text-neutral-500">01</span>
-              <span className="text-violet-300">STRATEGY &amp; GROWTH</span>
+              <span className="text-[var(--code-purple)]">STRATEGY &amp; GROWTH</span>
             </div>
 
             <h1 className="max-w-full md:max-w-[1400px] font-['Space_Grotesk',sans-serif] text-[clamp(40px,10vw,160px)] font-light leading-[0.95] sm:leading-[0.9] tracking-[-0.04em] sm:tracking-[-0.06em] text-[var(--code-white)] break-words">

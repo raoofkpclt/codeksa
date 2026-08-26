@@ -318,11 +318,11 @@ const About = () => {
         <div className="border-[var(--steel)] pt-10 sm:pt-12 md:pt-24">
           <h2 className="max-w-[1500px] font-['Space_Grotesk',sans-serif] text-[clamp(36px,10vw,120px)] font-light leading-[1.05] tracking-[-0.02em] text-[var(--code-white)] sm:leading-[1] sm:tracking-[-0.04em] md:leading-[0.999] md:tracking-[-0.06em]">
   <span className="font-light">
-    Explore the
+    Explore the{" "}
   </span>
   
   <span className="font-light">
-    structure behind
+    structure behind{" "}
   </span>
  
   <span className="font-light">
