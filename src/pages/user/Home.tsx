@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import NavbarNew from "../../components/user/NavbarNew";
 import Footer from "../../components/user/Footer";
 import Conversation from "../../components/user/Conversation";
-import { Helmet } from "react-helmet-async";
 
 interface Pathway {
   index: string;
@@ -177,23 +176,6 @@ const Home: React.FC = () => {
           text-shadow: 0 0 22px rgba(155, 131, 255, 0.55);
         }
       `}</style>
-
-       <Helmet>
-        <title>
-          CODE KSA | Digital Marketing Agency in Saudi Arabia
-        </title>
-
-        <meta
-          name="description"
-          content="CODE KSA is a digital marketing and business growth agency in Saudi Arabia helping businesses grow through strategy, performance marketing, digital solutions and creative execution."
-        />
-
-        <meta
-          name="keywords"
-          content="digital marketing agency Saudi Arabia, digital marketing Jeddah, performance marketing Saudi Arabia, CODE KSA"
-        />
-      </Helmet>
-      
       <NavbarNew />
 
       {/* Hero */}

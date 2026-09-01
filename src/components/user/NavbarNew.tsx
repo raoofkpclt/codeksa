@@ -13,45 +13,13 @@ import React, { useEffect, useState } from "react";
 
 const ACTIVE_LOGO = "/logo/backgroundless-2.png";
 
-type Language = "en" | "ar";
-
-// Shared across every page that renders this navbar, so a language
-// choice made on one page is still in effect after navigating.
-const LANGUAGE_STORAGE_KEY = "code-language";
-
-// const LINKS = [
-//   { label: "What We Solve", href: "/what-we-solve" },
-//   { label: "How We Work", href: "/how-we-work" },
-//   { label: "Engagements", href: "/engagements" },
-//   { label: "Services", href: "/services" },
-//   { label: "Industries", href: "/industries" },
-// ];
-
-const TRANSLATIONS = {
-  en: {
-    links: [
-      { label: "What We Solve", href: "/what-we-solve" },
-      { label: "How We Work", href: "/how-we-work" },
-      { label: "Engagements", href: "/engagements" },
-      { label: "Services", href: "/services" },
-      { label: "Industries", href: "/industries" },
-    ],
-    startConversation: "Start a Conversation",
-    switchLanguage: "العربية",
-  },
-
-  ar: {
-    links: [
-      { label: "ما الذي نحلّه", href: "/what-we-solve" },
-      { label: "كيف نعمل", href: "/how-we-work" },
-      { label: "أنواع التعاون", href: "/engagements" },
-      { label: "الخدمات", href: "/services" },
-      { label: "القطاعات", href: "/industries" },
-    ],
-    startConversation: "ابدأ محادثة",
-    switchLanguage: "English",
-  },
-};
+const LINKS = [
+  { label: "What We Solve", href: "/what-we-solve" },
+  { label: "How We Work", href: "/how-we-work" },
+  { label: "Engagements", href: "/engagements" },
+  { label: "Services", href: "/services" },
+  { label: "Industries", href: "/industries" },
+];
 
 const Logo = () => (
   <a
@@ -65,8 +33,7 @@ const Logo = () => (
       className="h-15 w-auto object-contain lg:h-15"
       onError={(e) => {
         (e.currentTarget as HTMLImageElement).style.display = "none";
-        const fallback = e.currentTarget
-          .nextElementSibling as HTMLElement | null;
+        const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
         if (fallback) fallback.classList.remove("hidden");
       }}
     />
@@ -103,46 +70,25 @@ const NavLink = ({
   );
 };
 
-// const StartConversationLink = ({
-//   onClick,
-//   className = "",
-// }: {
-//   onClick?: () => void;
-//   className?: string;
-// }) => (
-//   <a
-//     href="/contact"
-//     onClick={onClick}
-//     className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em]  ${className}`}
-//   >
-//     Start a Conversation
-//   </a>
-// );
 const StartConversationLink = ({
   onClick,
-  language,
   className = "",
 }: {
   onClick?: () => void;
-  language: Language;
   className?: string;
 }) => (
   <a
     href="/contact"
     onClick={onClick}
-    className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em] ${className}`}
+    className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em]  ${className}`}
   >
-    {TRANSLATIONS[language].startConversation}
+    Start a Conversation
   </a>
 );
 
 const NavbarNew = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<"en" | "ar">("en");
-
-  const content = TRANSLATIONS[language];
-  const dir = language === "ar" ? "rtl" : "ltr";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -157,24 +103,6 @@ const NavbarNew = () => {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
-
-  // Pick up a language already chosen on another page, so navigating
-  // here doesn't silently reset the site back to English.
-  useEffect(() => {
-    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (saved === "en" || saved === "ar") {
-      setLanguage(saved);
-    }
-  }, []);
-
-  // Whenever the language changes, save it for the next page and flip
-  // the whole document to RTL for Arabic. No layout classes change —
-  // Flexbox mirrors `flex`/`gap`/`items-*` automatically under dir="rtl".
-  useEffect(() => {
-    document.documentElement.dir = dir;
-    document.documentElement.lang = language;
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-  }, [language, dir]);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -201,13 +129,9 @@ const NavbarNew = () => {
           color: var(--violet-glow) !important;
           text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
         }
-
-
       `}</style>
 
       <header
-        dir={dir}
-        lang={language}
         className={`fixed inset-x-0 top-0 z-50 border-b bg-black transition-colors duration-300 ${
           scrolled ? "border-white/10" : "border-white/[0.06]"
         }`}
@@ -216,33 +140,14 @@ const NavbarNew = () => {
           <Logo />
 
           {/* Desktop nav */}
-          {/* <div className="hidden items-center gap-10 lg:flex">
+          <div className="hidden items-center gap-10 lg:flex">
             {LINKS.map((l) => (
               <NavLink key={l.href} href={l.href}>
                 {l.label}
               </NavLink>
             ))}
-          </div> */}
-          <div className="hidden items-center gap-10 lg:flex">
-            {content.links.map((link) => (
-              <NavLink key={link.href} href={link.href}>
-                {link.label}
-              </NavLink>
-            ))}
-          </div>
-
-          <div className="hidden items-center gap-8 lg:flex">
-            <button
-              type="button"
-              onClick={() =>
-                setLanguage((prev) => (prev === "en" ? "ar" : "en"))
-              }
-              className="hover-glow font-['Space_Grotesk',sans-serif] text-[14.5px] font-normal text-[var(--mist)] transition-colors duration-200"
-            >
-              {language === "en" ? "العربية" : "English"}
-            </button>
-
-            <StartConversationLink language={language} />
+          </div>        <div className="hidden lg:block">
+            <StartConversationLink />
           </div>
 
           {/* Mobile trigger */}
@@ -269,14 +174,12 @@ const NavbarNew = () => {
 
       {/* Mobile full-screen sheet */}
       <div
-        dir={dir}
-        lang={language}
         className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 lg:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
         <div className="flex h-full flex-col justify-center gap-8 px-8">
-          {/* {LINKS.map((l, i) => (
+          {LINKS.map((l, i) => (
             <div
               key={l.href}
               className={`transition-all duration-300 ${
@@ -290,31 +193,8 @@ const NavbarNew = () => {
                 {l.label}
               </NavLink>
             </div>
-          ))} */}
-
-{content.links.map((link, index) => (
-            <div
-              key={link.href}
-              className={`transition-all duration-300 ${
-                menuOpen
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-3 opacity-0"
-              }`}
-              style={{
-                transitionDelay: `${index * 45}ms`,
-              }}
-            >
-              <NavLink
-                href={link.href}
-                onClick={closeMenu}
-                large
-              >
-                {link.label}
-              </NavLink>
-            </div>
           ))}
-
-          {/* <div
+          <div
             className={`border-t border-white/10 pt-6 transition-all duration-300 ${
               menuOpen
                 ? "translate-y-0 opacity-100"
@@ -323,32 +203,6 @@ const NavbarNew = () => {
             style={{ transitionDelay: `${LINKS.length * 45}ms` }}
           >
             <StartConversationLink onClick={closeMenu} />
-          </div> */}
-          {/* Desktop nav */}
-
-
-          {/* <div className="hidden items-center gap-10 lg:flex">
-            {LINKS.map((l) => (
-              <NavLink key={l.href} href={l.href}>
-                {l.label}
-              </NavLink>
-            ))}
-          </div> */}
-
-          {/* Desktop language + conversation */}
-          <div className="hidden items-center gap-8 lg:flex">
-            <button
-              type="button"
-              onClick={() =>
-                setLanguage((prev) => (prev === "en" ? "ar" : "en"))
-              }
-              className="hover-glow font-['Space_Grotesk',sans-serif] text-[14.5px] font-normal text-[var(--mist)] transition-colors duration-200"
-            >
-              {language === "en" ? "العربية" : "English"}
-            </button>
-
-            <StartConversationLink language={language}
-                onClick={closeMenu} />
           </div>
         </div>
       </div>
