@@ -3,7 +3,6 @@ import NavbarNew from "../../components/user/NavbarNew";
 import Footer from "../../components/user/Footer";
 import Conversation from "../../components/user/Conversation";
 
-/* ------------------------------------------------------------------
 
 
 type Language = "en" | "ar";
