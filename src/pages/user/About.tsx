@@ -1,27 +1,12 @@
 import React, { useEffect, useState } from "react";
-import NavbarNew, { LANGUAGE_EVENT } from "../../components/user/NavbarNew";
+import NavbarNew from "../../components/user/NavbarNew";
 import Footer from "../../components/user/Footer";
 import Conversation from "../../components/user/Conversation";
 
 /* ------------------------------------------------------------------
-   CODE — About  (/about)  — BILINGUAL (EN / AR)
 
-   Follows the same language pattern used on Home.tsx:
-     - Language state read from localStorage("code-language")
-     - Kept in sync via the LANGUAGE_EVENT custom event dispatched by
-       NavbarNew (so switching language anywhere updates this page too)
-     - dir="rtl"/"ltr" + lang applied on the root wrapper
-     - Arabic uses 'Alexandria', English keeps 'Space Grotesk'
-     - All copy lives in the COPY object below (en / ar), the JSX only
-       ever reads from `t`.
-
-   Visual system, spacing and responsive rules are unchanged from the
-   original About.tsx — only the hard-coded English strings were
-   extracted into COPY and a language switch was wired in.
-------------------------------------------------------------------- */
 
 type Language = "en" | "ar";
-const LANGUAGE_STORAGE_KEY = "code-language";
 
 interface Principle {
   index: string;

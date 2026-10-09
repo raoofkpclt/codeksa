@@ -34,7 +34,7 @@ const COPY: Record<Language, ConversationCopy> = {
   ar: {
     label: "ابدأ الحديث معنا",
     headingLine1: "لنحدّد ما يحتاجه عملك ",
-    headingLine2: "في الخطوة القادمة.", bold: true ,
+    headingLine2: "في الخطوة القادمة." ,
     paragraph:
       "ابدأ بحديث حول التحدي، والنتيجة المطلوبة، والنقطة الصحيحة للانطلاق.",
     cta: "",

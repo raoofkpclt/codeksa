@@ -13,7 +13,6 @@ import Industries from "./pages/user/Industries";
 import StrategyGrowth from "./pages/user/StrategyGrowth";
 
 // import PublicLanguageLoader from "./routes/PublicLanguageLoader";
-import PublicLayout from "./routes/PublicLayout";
 
 // =========================================
 // Admin
