@@ -11,15 +11,43 @@ import React, { useEffect, useState } from "react";
    which Tailwind has no utility for, stays inline).
 ------------------------------------------------------------------- */
 
+
+// *other* tabs, not this one.
+export const LANGUAGE_EVENT = "code-language-change";
+
 const ACTIVE_LOGO = "/logo/backgroundless-2.png";
 
-const LINKS = [
-  { label: "What We Solve", href: "/what-we-solve" },
-  { label: "How We Work", href: "/how-we-work" },
-  { label: "Engagements", href: "/engagements" },
-  { label: "Services", href: "/services" },
-  { label: "Industries", href: "/industries" },
-];
+type Language = "en" | "ar";
+
+const LANGUAGE_STORAGE_KEY = "code-language";
+
+
+
+const TRANSLATIONS = {
+  en: {
+    links: [
+      { label: "What We Solve", href: "/what-we-solve" },
+      { label: "How We Work", href: "/how-we-work" },
+      { label: "Engagements", href: "/engagements" },
+      { label: "Services", href: "/services" },
+      { label: "Industries", href: "/industries" },
+    ],
+    startConversation: "Start a Conversation",
+    switchLanguage: "العربية",
+  },
+
+  ar: {
+    links: [
+      { label: "خدماتنا", href: "/what-we-solve" },
+      { label: "طريقة عملنا", href: "/how-we-work" },
+      { label: "نماذج التعاقد", href: "/engagements" },
+      { label: "الخدمات", href: "/services" },
+      { label: "القطاعات", href: "/industries" },
+    ],
+    startConversation: "ابدأ الحديث معنا",
+    switchLanguage: "English",
+  },
+};
 
 const Logo = () => (
   <a
@@ -33,7 +61,8 @@ const Logo = () => (
       className="h-15 w-auto object-contain lg:h-15"
       onError={(e) => {
         (e.currentTarget as HTMLImageElement).style.display = "none";
-        const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+        const fallback = e.currentTarget
+          .nextElementSibling as HTMLElement | null;
         if (fallback) fallback.classList.remove("hidden");
       }}
     />
@@ -43,16 +72,44 @@ const Logo = () => (
   </a>
 );
 
+// const NavLink = ({
+//   href,
+//   children,
+//   onClick,
+//   large = false,
+// }: {
+//   href: string;
+//   children: React.ReactNode;
+//   onClick?: () => void;
+//   large?: boolean;
+// }) => {
+//   const isActive =
+//     typeof window !== "undefined" && window.location.pathname === href;
+
+//   return (
+//     <a
+//       href={href}
+//       onClick={onClick}
+//       className={`hover-glow relative font-['Space_Grotesk',sans-serif] font-normal transition-colors duration-200 ${
+//         large ? "text-[28px]" : "text-[14.5px]"
+//       } ${isActive ? "text-[var(--code-white)]" : "text-[var(--mist)]"}`}
+//     >
+//       {children}
+//     </a>
+//   );
+// };
 const NavLink = ({
   href,
   children,
   onClick,
   large = false,
+  language,
 }: {
   href: string;
   children: React.ReactNode;
   onClick?: () => void;
   large?: boolean;
+  language: Language;
 }) => {
   const isActive =
     typeof window !== "undefined" && window.location.pathname === href;
@@ -61,34 +118,101 @@ const NavLink = ({
     <a
       href={href}
       onClick={onClick}
-      className={`hover-glow relative font-['Space_Grotesk',sans-serif] font-normal transition-colors duration-200 ${
-        large ? "text-[28px]" : "text-[14.5px]"
-      } ${isActive ? "text-[var(--code-white)]" : "text-[var(--mist)]"}`}
+      className={`hover-glow relative ${
+  language === "ar"
+    ? "font-['Alexandria',sans-serif] font-light"
+    : "font-['Space_Grotesk',sans-serif] font-normal"
+} transition-colors duration-200 ${
+  large ? "text-[28px]" : "text-[14.5px]"
+} ${isActive ? "text-[var(--code-white)]" : "text-[var(--mist)]"}`}
     >
       {children}
     </a>
   );
 };
 
+// const StartConversationLink = ({
+//   onClick,
+//   className = "",
+// }: {
+//   onClick?: () => void;
+//   className?: string;
+// }) => (
+//   <a
+//     href="/contact"
+//     onClick={onClick}
+//     className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em]  ${className}`}
+//   >
+//     Start a Conversation
+//   </a>
+// );
 const StartConversationLink = ({
   onClick,
+  language,
   className = "",
 }: {
   onClick?: () => void;
+  language: Language;
   className?: string;
 }) => (
   <a
     href="/contact"
     onClick={onClick}
-    className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em]  ${className}`}
-  >
-    Start a Conversation
+    className={`hover-glow whitespace-nowrap ${
+  language === "ar"
+    ? "font-['Alexandria',sans-serif] font-light"
+    : "font-['Space_Grotesk',sans-serif] font-medium"
+} text-[15px] tracking-[0.10em] ${className}`}>
+    {TRANSLATIONS[language].startConversation}
   </a>
 );
+
+
+const getInitialLanguage = (): Language => {
+  if (typeof window === "undefined") {
+    return "en";
+  }
+
+  const savedLanguage =
+    window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+
+  return savedLanguage === "ar" ? "ar" : "en";
+};
 
 const NavbarNew = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const [language, setLanguage] =
+    useState<Language>(getInitialLanguage);
+
+  const content = TRANSLATIONS[language];
+  const dir = language === "ar" ? "rtl" : "ltr";
+
+  useEffect(() => {
+  // Set complete website direction
+  document.documentElement.dir = dir;
+
+  // Set HTML language
+  document.documentElement.lang = language;
+
+  // Save selected language
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+
+  // Tell other components/pages about language change
+  window.dispatchEvent(
+    new CustomEvent(LANGUAGE_EVENT, {
+      detail: language,
+    })
+  );
+}, [language, dir]);
+
+//   useEffect(() => {
+//   document.documentElement.dir = dir;
+//   document.documentElement.lang = language;
+//   window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+//   window.dispatchEvent(new CustomEvent(LANGUAGE_EVENT, { detail: language }));
+// }, [language, dir]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -104,13 +228,26 @@ const NavbarNew = () => {
     };
   }, [menuOpen]);
 
+  // Pick up a language already chosen on another page, so navigating
+  // here doesn't silently reset the site back to English.
+  // useEffect(() => {
+  //   const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  //   if (saved === "en" || saved === "ar") {
+  //     setLanguage(saved);
+  //   }
+  // }, []);
+
+  // Whenever the language changes, save it for the next page and flip
+  // the whole document to RTL for Arabic. No layout classes change —
+  // Flexbox mirrors `flex`/`gap`/`items-*` automatically under dir="rtl".
+
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         :root {
           --charcoal: #151518;
           --graphite: #1E1F24;
@@ -132,6 +269,8 @@ const NavbarNew = () => {
       `}</style>
 
       <header
+        dir={dir}
+        lang={language}
         className={`fixed inset-x-0 top-0 z-50 border-b bg-black transition-colors duration-300 ${
           scrolled ? "border-white/10" : "border-white/[0.06]"
         }`}
@@ -140,14 +279,37 @@ const NavbarNew = () => {
           <Logo />
 
           {/* Desktop nav */}
-          <div className="hidden items-center gap-10 lg:flex">
+          {/* <div className="hidden items-center gap-10 lg:flex">
             {LINKS.map((l) => (
               <NavLink key={l.href} href={l.href}>
                 {l.label}
               </NavLink>
             ))}
-          </div>        <div className="hidden lg:block">
-            <StartConversationLink />
+          </div> */}
+          <div className="hidden items-center gap-10 lg:flex">
+            {content.links.map((link) => (
+              <NavLink
+  key={link.href}
+  href={link.href}
+  language={language}
+>
+  {link.label}
+</NavLink>
+            ))}
+          </div>
+
+          <div className="hidden items-center gap-8 lg:flex">
+            <button
+              type="button"
+              onClick={() =>
+                setLanguage((prev) => (prev === "en" ? "ar" : "en"))
+              }
+              className="hover-glow font-['Space_Grotesk',sans-serif] text-[14.5px] font-normal text-[var(--mist)] transition-colors duration-200"
+            >
+              {language === "en" ? "العربية" : "English"}
+            </button>
+
+            <StartConversationLink language={language} />
           </div>
 
           {/* Mobile trigger */}
@@ -174,12 +336,14 @@ const NavbarNew = () => {
 
       {/* Mobile full-screen sheet */}
       <div
+        dir={dir}
+        lang={language}
         className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 lg:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
         <div className="flex h-full flex-col justify-center gap-8 px-8">
-          {LINKS.map((l, i) => (
+          {/* {LINKS.map((l, i) => (
             <div
               key={l.href}
               className={`transition-all duration-300 ${
@@ -193,8 +357,32 @@ const NavbarNew = () => {
                 {l.label}
               </NavLink>
             </div>
+          ))} */}
+
+{content.links.map((link, index) => (
+            <div
+              key={link.href}
+              className={`transition-all duration-300 ${
+                menuOpen
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-3 opacity-0"
+              }`}
+              style={{
+                transitionDelay: `${index * 45}ms`,
+              }}
+            >
+              <NavLink
+  href={link.href}
+  onClick={closeMenu}
+  large
+  language={language}
+>
+  {link.label}
+</NavLink>
+            </div>
           ))}
-          <div
+
+          {/* <div
             className={`border-t border-white/10 pt-6 transition-all duration-300 ${
               menuOpen
                 ? "translate-y-0 opacity-100"
@@ -203,6 +391,35 @@ const NavbarNew = () => {
             style={{ transitionDelay: `${LINKS.length * 45}ms` }}
           >
             <StartConversationLink onClick={closeMenu} />
+          </div> */}
+          {/* Desktop nav */}
+
+
+          {/* <div className="hidden items-center gap-10 lg:flex">
+            {LINKS.map((l) => (
+              <NavLink key={l.href} href={l.href}>
+                {l.label}
+              </NavLink>
+            ))}
+          </div> */}
+
+          {/* Desktop language + conversation */}
+          <div className="hidden items-center gap-8 lg:flex">
+            <button
+              type="button"
+              onClick={() =>
+                setLanguage((prev) => (prev === "en" ? "ar" : "en"))
+              }
+              className={`hover-glow ${
+  language === "ar"
+    ? "font-['Alexandria',sans-serif] font-light"
+    : "font-['Space_Grotesk',sans-serif]"
+} text-[14.5px] font-normal text-[var(--mist)] transition-colors duration-200`} >
+              {language === "en" ? "العربية" : "English"}
+            </button>
+
+            <StartConversationLink language={language}
+                onClick={closeMenu} />
           </div>
         </div>
       </div>

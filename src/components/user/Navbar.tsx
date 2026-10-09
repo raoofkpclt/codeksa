@@ -1,156 +1,213 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUpRight, ArrowRight, Menu, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+
+/* ------------------------------------------------------------------
+   CODE — SiteHeader / NavbarNew  (Tailwind-only version)
+
+   Color tokens (from the v3 design system doc) are declared as CSS
+   custom properties in the <style> block below, then consumed
+   throughout via Tailwind arbitrary-value classes, e.g. bg-[var(--charcoal)].
+   This keeps every class Tailwind-native — no inline style objects
+   for anything Tailwind can express (only per-item transition-delay,
+   which Tailwind has no utility for, stays inline).
+------------------------------------------------------------------- */
 
 const ACTIVE_LOGO = "/logo/backgroundless-2.png";
 
-const Logo = ({ size = 34 }) => (
-  <img
-    src={ACTIVE_LOGO}
-    alt="CODE logo"
-    width={size}
-    height={size}
-    style={{ width: size, height: size }}
-    className="object-contain"
-  />
+const LINKS = [
+  { label: "What We Solve", href: "/what-we-solve" },
+  { label: "How We Work", href: "/how-we-work" },
+  { label: "Engagements", href: "/engagements" },
+  { label: "Services", href: "/services" },
+  { label: "Industries", href: "/industries" },
+];
+
+const Logo = () => (
+  <a
+    href="/"
+    aria-label="CODE - Home"
+    className="group flex h-20 w-20 shrink-0 items-center justify-center"
+  >
+    <img
+      src={ACTIVE_LOGO}
+      alt="CODE Logo"
+      className="h-15 w-auto object-contain lg:h-15"
+      onError={(e) => {
+        (e.currentTarget as HTMLImageElement).style.display = "none";
+        const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+        if (fallback) fallback.classList.remove("hidden");
+      }}
+    />
+    <span className="hidden font-['Space_Grotesk',sans-serif] text-[34px] font-bold leading-none text-[var(--code-white)]">
+      C
+    </span>
+  </a>
 );
 
-const Navbar:React.FC = () => {
+const NavLink = ({
+  href,
+  children,
+  onClick,
+  large = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+  large?: boolean;
+}) => {
+  const isActive =
+    typeof window !== "undefined" && window.location.pathname === href;
+
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className={`hover-glow relative font-['Space_Grotesk',sans-serif] font-normal transition-colors duration-200 ${
+        large ? "text-[28px]" : "text-[14.5px]"
+      } ${isActive ? "text-[var(--code-white)]" : "text-[var(--mist)]"}`}
+    >
+      {children}
+    </a>
+  );
+};
+
+const StartConversationLink = ({
+  onClick,
+  className = "",
+}: {
+  onClick?: () => void;
+  className?: string;
+}) => (
+  <a
+    href="/contact"
+    onClick={onClick}
+    className={`hover-glow whitespace-nowrap font-['Space_Grotesk',sans-serif] text-[15px] font-medium uppercase tracking-[0.10em]  ${className}`}
+  >
+    Start a Conversation
+  </a>
+);
+
+const NavbarNew = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-  if (open) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
-  return () => {
-    document.body.style.overflow = "auto";
-  };
-}, [open]);
-
-  const links = [
-    { label: "ABOUT", href: "/about" },
-    { label: "SERVICES", href: "/services" },
-    { label: "WORKS", href: "/works" },
-    { label: "CLIENTS", href: "/clients" },
-  ];
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div>
-      <nav
-  className={`fixed left-1/2 -translate-x-1/2 z-[100] bg-[#111116]/[0.82] backdrop-blur-2xl border rounded-xl md:rounded-full overflow-hidden transition-all duration-[420ms] ${
-    scrolled
-      ? "top-[14px] w-[95vw] md:w-[min(560px,90vw)] border-[#8B5CF6]/35 shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
-      : "top-[18px] w-[95vw] md:w-[min(720px,92vw)] border-[#1C1C24]"
-  }`}
->
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-{/* <nav
-  className={`fixed left-1/2 -translate-x-1/2 z-[100] bg-[#111116]/[0.82] backdrop-blur-2xl border rounded-xl md:rounded-full overflow-hidden transition-all duration-[420ms] ${
-    scrolled
-      ? "top-4 w-[170px] md:w-[min(560px,90vw)] border-[#8B5CF6]/35 shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
-      : "top-4 w-[170px] md:w-[min(720px,92vw)] border-[#1C1C24]"
-  }`}
-> */}
+        :root {
+          --charcoal: #151518;
+          --graphite: #1E1F24;
+          --steel: #2B2C31;
+          --slate-muted: #7D7D86;
+          --mist: #D8D8DE;
+          --code-white: #FFFFFF;
+          --code-purple: #6F4BFF;
+          --code-electric: #8468FF;
+          --violet-glow: #9B83FF;
+        }
 
-  {/* <nav
-  className={`fixed z-[100] bg-[#111116]/[0.82] backdrop-blur-2xl border transition-all duration-[420ms]
-  ${
-    scrolled
-      ? "top-0 left-0 right-0 w-full rounded-none border-x-0 border-t-0 border-b border-[#8B5CF6]/35"
-      : "top-0 left-0 right-0 w-full rounded-none border-x-0 border-t-0 border-b border-[#1C1C24]"
-  }
-  md:left-1/2 md:right-auto md:-translate-x-1/2 md:top-[14px] md:w-[min(560px,90vw)] md:rounded-full`}
-> */}
-        {/* <div className="flex items-center gap-2 pl-[18px] pr-2.5 py-2.5"> */}
-        <div className="flex items-center justify-between px-3 py-2.5">
-          <a
-            href="/"
-            className="flex items-center gap-2 shrink-0"
-            onClick={() => setOpen(false)}
-          >
-            <Logo size={45} />
-          </a>
+        * { font-synthesis: none; }
 
-          <div className="hidden md:flex items-center gap-[26px] mx-auto pl-3">
-            {links.map((l) => (
-  <NavLink
-    key={l.href}
-    to={l.href}
-    className={({ isActive }) =>
-      `text-[13px] font-medium whitespace-nowrap transition-all duration-300 ${
-        isActive
-          ? "text-[#8B5CF6]"
-          : "text-[#6B6B7A] hover:text-[#E8E8ED]"
-      }`
-    }
-  >
-    {l.label}
-  </NavLink>
-))}
-          </div>
+        .hover-glow:hover {
+          color: var(--violet-glow) !important;
+          text-shadow: 0 0 14px rgba(155, 131, 255, 0.55);
+        }
+      `}</style>
 
-          <a
-            href="/contact"
-            className="hidden md:flex items-center gap-1.5 bg-[#eae8ed] text-[#0B0B0F] text-[11px] font-semibold tracking-[0.06em] uppercase px-4 py-2.5 rounded-full border border-[#8B5CF6] whitespace-nowrap transition-all duration-200 hover:shadow-[0_0_0_3px_rgba(139,92,246,0.35)]"
-          >
-            <span>Engagement</span>
-            <ArrowUpRight size={14} strokeWidth={1.75} />
-          </a>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 border-b bg-black transition-colors duration-300 ${
+          scrolled ? "border-white/10" : "border-white/[0.06]"
+        }`}
+      >
+        <nav className="mx-auto flex h-[88px] max-w-[1440px] items-center justify-between px-6 md:px-16">
+          <Logo />
 
-          <button
-            className="flex md:hidden items-center justify-center bg-transparent border border-[#1C1C24] text-[#E8E8ED] rounded-full w-9 h-9"
-            aria-label="Toggle menu"
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? (
-              <X size={18} strokeWidth={1.75} />
-            ) : (
-              <Menu size={18} strokeWidth={1.75} />
-            )}
-          </button>
-        </div>
-
-        {open && (
-          <div className="flex flex-col gap-0.5 px-3.5 pb-4 md:hidden">
-            {links.map((l) => (
-              <NavLink
-  key={l.href}
-  to={l.href}
-  onClick={() => setOpen(false)}
-  className={({ isActive }) =>
-    `px-2 py-3 text-sm border-t border-[#1C1C24] transition-colors ${
-      isActive
-        ? "text-[#8B5CF6]"
-        : "text-[#E8E8ED] hover:text-[#8B5CF6]"
-    }`
-  }
->
-  {l.label}
-</NavLink>
+          {/* Desktop nav */}
+          <div className="hidden items-center gap-10 lg:flex">
+            {LINKS.map((l) => (
+              <NavLink key={l.href} href={l.href}>
+                {l.label}
+              </NavLink>
             ))}
-            <a
-              href="/contact"
-              className="mt-2.5 flex items-center justify-center gap-2 bg-[#E8E8ED] text-[#0B0B0F] text-xs font-semibold tracking-[0.06em] uppercase p-3 rounded-full"
-              onClick={() => setOpen(false)}
-            >
-              Engagement <ArrowRight size={15} strokeWidth={1.75} />
-            </a>
+          </div>        <div className="hidden lg:block">
+            <StartConversationLink />
           </div>
-        )}
-      </nav>
-    </div>
+
+          {/* Mobile trigger */}
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="relative flex h-8 w-8 flex-col items-end justify-center gap-[6px] lg:hidden"
+          >
+            <span
+              className={`block h-[1.5px] w-6 bg-[var(--mist)] transition-transform duration-300 ${
+                menuOpen ? "translate-y-[3.5px] rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-[1.5px] bg-[var(--mist)] transition-all duration-300 ${
+                menuOpen ? "w-6 -translate-y-[3.5px] -rotate-45" : "w-4"
+              }`}
+            />
+          </button>
+        </nav>
+      </header>
+
+      {/* Mobile full-screen sheet */}
+      <div
+        className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 lg:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <div className="flex h-full flex-col justify-center gap-8 px-8">
+          {LINKS.map((l, i) => (
+            <div
+              key={l.href}
+              className={`transition-all duration-300 ${
+                menuOpen
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-3 opacity-0"
+              }`}
+              style={{ transitionDelay: `${i * 45}ms` }}
+            >
+              <NavLink href={l.href} onClick={closeMenu} large>
+                {l.label}
+              </NavLink>
+            </div>
+          ))}
+          <div
+            className={`border-t border-white/10 pt-6 transition-all duration-300 ${
+              menuOpen
+                ? "translate-y-0 opacity-100"
+                : "translate-y-3 opacity-0"
+            }`}
+            style={{ transitionDelay: `${LINKS.length * 45}ms` }}
+          >
+            <StartConversationLink onClick={closeMenu} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default Navbar;
+export default NavbarNew;

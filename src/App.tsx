@@ -12,6 +12,9 @@ import PublicClientWorks from "./pages/user/ClientWorks";
 import Industries from "./pages/user/Industries";
 import StrategyGrowth from "./pages/user/StrategyGrowth";
 
+// import PublicLanguageLoader from "./routes/PublicLanguageLoader";
+import PublicLayout from "./routes/PublicLayout";
+
 // =========================================
 // Admin
 // =========================================
@@ -60,12 +63,13 @@ function App() {
   return (
     <BrowserRouter>
     <ScrollToTop/>
-      <Routes>
+      <Routes >
         {/* =================================
             Public
         ================================== */}
 
-        <Route path="/" element={<PublicHome />} />
+
+        <Route path="/" element={  <PublicHome /> } />
         <Route path="/what-we-solve" element={<WhatWeSolve />} />
         <Route path="/strategy-growth" element={<StrategyGrowth />} />
         <Route path="/brand-creative" element={<BrandCreative />} />
@@ -83,7 +87,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/clientWorks/:clientId" element={<PublicClientWorks />} />
         <Route path="*" element={<NotFound/>} />
-        
+   
 
         {/* =================================
             Client Public Routes
